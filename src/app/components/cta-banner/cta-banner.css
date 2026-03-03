@@ -1,0 +1,117 @@
+.cta-banner {
+  margin: 60px;
+  border-radius: 24px;
+  background: linear-gradient(135deg, #1E3A8A 0%, #1D4ED8 50%, #2563EB 100%);
+  padding: 80px 80px;
+  display: flex; 
+  align-items: center; 
+  justify-content: space-between; 
+  gap: 40px;
+  position: relative; 
+  overflow: hidden;
+}
+
+.cta-banner::before {
+  content: ''; 
+  position: absolute; 
+  right: -60px; 
+  top: -60px;
+  width: 400px; 
+  height: 400px; 
+  border-radius: 50%;
+  background: rgba(255,255,255,0.05);
+}
+
+.cta-banner::after {
+  content: ''; 
+  position: absolute; 
+  right: 100px; 
+  bottom: -80px;
+  width: 250px; 
+  height: 250px; 
+  border-radius: 50%;
+  background: rgba(255,255,255,0.04);
+}
+
+.cta-text h2 { 
+  font-size: clamp(1.6rem, 3vw, 2.4rem); 
+  font-weight: 800; 
+  max-width: 500px; 
+}
+
+.cta-text p { 
+  color: rgba(255,255,255,0.7); 
+  margin-top: 10px; 
+  font-size: .95rem; 
+}
+
+.cta-actions { 
+  display: flex; 
+  gap: 14px; 
+  flex-shrink: 0; 
+  position: relative; 
+  z-index: 1; 
+}
+
+.btn-white { 
+  background: #814501; 
+  color: var(--orange); 
+  padding: 14px 30px; 
+  border-radius: 50px; 
+  font-weight: 600; 
+  border: none; 
+  cursor: pointer; 
+  font-size: .95rem; 
+  transition: transform .2s; 
+}
+
+.btn-white:hover { 
+  transform: translateY(-2px); 
+}
+
+.btn-outline-white { 
+  background: transparent; 
+  color: #fff; 
+  border: 2px solid rgba(255,255,255,0.4); 
+  padding: 14px 30px; 
+  border-radius: 50px; 
+  font-size: .95rem; 
+  cursor: pointer; 
+  transition: all .2s; 
+}
+
+.btn-outline-white:hover { 
+  border-color: #fff; 
+  background: rgba(255,255,255,0.1); 
+}
+
+@media (max-width: 991px) {
+  .cta-banner {
+    flex-direction: column;
+    text-align: center;
+    padding: 60px 40px;
+    margin: 40px 30px;
+  }
+  
+  .cta-text h2 {
+    max-width: 100%;
+  }
+  
+  .cta-actions {
+    flex-direction: column;
+    width: 100%;
+  }
+  
+  .btn-white,
+  .btn-outline-white {
+    width: 100%;
+  }
+}
+
+@media (max-width: 640px) {
+  .cta-banner {
+    padding: 40px 24px;
+    margin: 30px 20px;
+    border-radius: 16px;
+  }
+}
