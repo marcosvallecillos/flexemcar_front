@@ -1,0 +1,89 @@
+<div class="header" [class.header-scrolled]="isScrolled">
+
+    <nav class="navbar navbar-expand-lg" [class.menu-open]="isMenuOpen">
+       
+        <div class="container-fluid">
+            <button routerLink="/index" style="background-color:transparent;border: none;">   <img src="../../../../images/logo.png"  class="logo FlexemCar"alt="" style="font-size:36px;color:white;margin-top:-10px;cursor:pointer"> </button>
+            <button class="navbar-toggler" 
+                    type="button" 
+                    (click)="toggleMenu()"
+                    [attr.aria-expanded]="isMenuOpen">
+                <span class="navbar-toggler-icon"></span>  
+            </button>
+          
+            <div class="collapse navbar-collapse" [class.show]="isMenuOpen">
+                <a class="navbar-brand" href="#" routerLink="/home-barber">
+                 
+                </a>
+                <ul class="navbar-nav mx-auto">
+                    
+                    <hr>  
+                    <li class="nav-item ">
+                        <a class="nav-link ms-3 " routerLink="/show-catalogo" routerLinkActive="active"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                            {{ getText('Catálogo', 'Catalog') }}
+                        </a>
+                    </li>
+                    <hr>  
+                    <li class="nav-item">
+                        <a class="nav-link ms-3" routerLink="/show-reserve" routerLinkActive="active">
+                            {{ getText('Vender', 'Sell') }}
+                        </a>
+                    </li>
+                    <hr>  
+                    <li class="nav-item">
+                        <a class="nav-link ms-3" routerLink="/contact" routerLinkActive="active">
+                            {{ getText('Contacto', 'Contact') }}
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link ms-3" routerLink="/about-us" routerLinkActive="active">
+                            {{ getText('Sobre Nosotros', 'About Us') }}
+                        </a>
+                    </li>
+
+                    <hr>  
+                    <li class="nav-item favorites-item" style="list-style: none;" (click)="openFavorites()">
+                        <i class="bi bi-heart heart-icon"></i>
+                    </li>
+                </ul>
+                <div class="dropdown language-selector">
+                    <button class="btn btn-link dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                        {{ isSpanish ? 'ES' : 'EN' }}
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-start">
+                        <li>
+                            <button class="dropdown-item" (click)="toggleLanguage('es')">
+                                ES
+                            </button>
+                            
+                      
+                        </li>
+                        <li>
+                            <button class="dropdown-item" (click)="toggleLanguage('en')">
+                                EN
+                            </button>
+                        </li>
+                    </ul>
+                </div>
+                <hr>  
+                 
+                 <ul class="navbar-nav">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle user-icon" href="#" id="profileDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="bi bi-person-circle" style="font-size: 1.5rem;"></i>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end user-dropdown" aria-labelledby="profileDropdown">
+                            <li><a class="dropdown-item" routerLink="/showProfile">{{getText('Ver Perfil','Show Profile')}}</a></li>
+                            <li><a class="dropdown-item" routerLink="/editProfile">{{getText('Editar Perfil', 'Edit Profile')}}</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" (click)="signout()">{{getText('Cerrar sesión','Sign Out')}}</a></li>
+                        </ul>
+                    </li>
+                </ul>
+                
+            </div>
+        </div>
+    </nav>
+</div>
