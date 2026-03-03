@@ -1,0 +1,239 @@
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    overflow-y: auto;
+    padding: 20px 0;
+}
+
+    .row {
+        display: flex; 
+        justify-content: space-between;
+        align-items: center; 
+        margin-bottom: 1rem;
+    }
+
+.col-lg-6, .col-md-6, .col-sm-6 {
+    flex: 1; 
+    text-align: center;
+    padding: 0.5rem 0;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+
+hr.bar-login, hr.bar-register {
+  margin: 0 auto;
+    margin-top: -20px;
+    width: 100%;
+    border-radius: 15px;
+    height: 4px;
+    background-color: #000000;
+    border: none;
+    transition: all 0.3s ease;
+}
+
+.bar-login.active, .bar-register.active {
+    background-color: #ffffff; 
+    width: 100%; 
+}
+
+@media (max-width: 768px) {
+    .row {
+        flex-direction: row; 
+    }
+
+    .col-lg-6, .col-md-6, .col-sm-6 {
+        font-size: 0.9rem;
+    }
+}
+span{
+    color: rgb(0, 0, 25);
+}
+.modal-content {
+    background-color: #1a1a1a;
+    padding: 2rem;
+    border-radius: 12px;
+    width: 90%;
+    max-width: 400px;
+    position: relative;
+    animation: modalFadeIn 0.3s ease;
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
+@keyframes modalFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.close-button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: none;
+    border: none;
+    color: white;
+    font-size: 24px;
+    cursor: pointer;
+}
+
+h2 {
+    cursor: pointer;
+    color: white;
+    font-size: 1rem;
+    text-align: center;
+    margin-bottom: 2rem;
+}
+h2:hover{
+    transform: scale(1.1);
+}
+h2.active{
+  font-weight: bold;
+  transform: scale(1.2);
+}
+.form-group {
+    margin-bottom: 1.5rem;
+    position: relative;
+}
+.form-input {
+    width: 100%;
+    padding: 12px;
+    padding-right: 40px;
+    border: 1px solid #333;
+    border-radius: 6px;
+    background-color: #2a2a2a;
+    color: white;
+    font-size: 1rem;
+}
+
+.form-input:focus {
+    outline: none;
+    border-color: #ffffff;
+}
+
+.password-toggle {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #888;
+    cursor: pointer;
+    z-index: 2;
+    transition: color 0.3s ease;
+}
+
+.password-toggle:hover {
+    color: #ffd65b;
+}
+
+.password-toggle i {
+    font-size: 1.2rem;
+}
+
+.login-button {
+    width: 50%;
+    margin-top:1rem;
+    padding: 12px;
+    align-items: center;
+    background: linear-gradient(135deg, #b58801, #ffd65b);
+    color: black;
+    font-weight: bold;
+    border: none;
+    border-radius: 20px;
+    font-size: 1rem;
+    cursor: pointer;
+    box-shadow: 0 6px 15px #b58801;
+    margin: 0 auto;
+    display: block;
+    transition: all 0.3s ease;
+}
+
+.login-button:hover {
+    background: linear-gradient(135deg, #b58801, #ffd65b);
+    transform: translateY(-4px);
+    box-shadow: 0 6px 15px #b58801;
+}
+
+.register-section {
+    margin-top: 2rem;
+    text-align: center;
+    
+}
+
+.register-section p {
+    color: #888;
+    margin-bottom: 1rem;
+}
+
+.register-button {
+    width: 50%;
+    margin-top:1rem;
+    padding: 12px;
+    align-items: center;
+    background: linear-gradient(135deg, #b58801, #ffd65b);
+    color: black;
+    font-weight: bold;
+    border: none;
+    border-radius: 20px;
+    font-size: 1rem;
+    cursor: pointer;
+    box-shadow: 0 6px 15px #b58801;
+    margin: 0 auto;
+    display: block;
+    transition: all 0.3s ease;
+}
+
+.register-button:hover {
+    background: linear-gradient(135deg, #b58801, #ffd65b);
+    transform: translateY(-4px);
+    box-shadow: 0 6px 15px #b58801;
+}
+
+.role-field {
+    cursor: not-allowed;
+}
+
+.role-input {
+    cursor: not-allowed;
+    user-select: none;
+}
+
+.role-input:focus {
+    outline: none;
+}
+
+.register-link {
+    background: none;
+    border: none;
+    color: #007bff;
+    text-decoration: underline;
+    cursor: pointer;
+    padding: 0;
+    font: inherit;
+    transition: color 0.3s ease;
+}
+
+.register-link:hover {
+    color: #0056b3;
+}
+
+@media (max-width: 768px) {
+    .modal-content {
+        width: 95%;
+        padding: 1.5rem;
+    }
+}

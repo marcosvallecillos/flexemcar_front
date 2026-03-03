@@ -1,0 +1,154 @@
+@if(show) {
+  <div class="modal-overlay">
+    <div class="modal-content">
+      <button class="close-button" (click)="onClose()">×</button>
+      <div class="row">
+        <div class="col-lg-6 col-md-6 col-sm-6" (click)="toggleTab(false)">
+          <h2 [class.active]="!isRegister">{{ getText('Iniciar Sesión', 'Sign In') }}</h2>
+          <hr class="bar-login" [class.active]="!isRegister">
+        </div>
+        <div class="col-lg-6 col-md-6 col-sm-6" (click)="toggleTab(true)">
+          <h2 [class.active]="isRegister">{{ getText('Registrarse', 'Sign Up') }}</h2>
+          <hr class="bar-register" [class.active]="isRegister">
+        </div>
+      </div>
+
+      <!-- Error Message -->
+      @if(errorMessage) {
+        <div class="alert alert-danger">{{ errorMessage }}</div>
+      }
+      @if(goodMessage){
+        <div class="alert alert-success">{{ goodMessage }}</div>
+      }
+
+      @if(isRegister) {
+        <form [formGroup]="registerForm" (ngSubmit)="registrarUsuario()">
+          <!-- Nombre -->
+          <div class="form-group">
+            <input type="text" class="form-input" id="nombre" formControlName="nombre"
+              [placeholder]="getText('Introduce el nombre', 'Enter your name')">
+            @if(getControl('nombre')?.invalid && getControl('nombre')?.touched) {
+              <small class="text-danger">{{ getText('El nombre es obligatorio', 'Name is required') }}</small>
+            }
+          </div>
+
+          <!-- Apellidos -->
+          <div class="form-group">
+            <input type="text" class="form-input" id="apellido" formControlName="apellido"
+              [placeholder]="getText('Introduce los apellidos', 'Enter your surname')">
+            @if(getControl('apellido')?.invalid && getControl('apellido')?.touched) {
+              <small class="text-danger">{{ getText('El apellido es obligatorio', 'Surname is required') }}</small>
+            }
+          </div>
+
+          <!-- Teléfono -->
+          <div class="form-group">
+            <input type="number" class="form-input" id="telefono" formControlName="telefono"
+              [placeholder]="getText('Introduce el teléfono', 'Enter your phone number')">
+            @if(getControl('telefono')?.invalid && getControl('telefono')?.touched) {
+              <small class="text-danger">{{ getText('Debe tener 9 dígitos', 'Must be 9 digits') }}</small>
+            }
+          </div>
+
+          <!-- Email -->
+          <div class="form-group">
+            <input type="email" class="form-input" id="email" formControlName="email"
+              [placeholder]="getText('Introduce el correo electrónico', 'Enter your email')">
+            @if(getControl('email')?.invalid && getControl('email')?.touched) {
+              <small class="text-danger">{{ getText('Introduce un email válido', 'Enter a valid email') }}</small>
+            }
+          </div>
+
+          <!-- Contraseña -->
+          <div class="form-group position-relative">
+            <input [type]="showPassword ? 'text' : 'password'" class="form-input" id="password" formControlName="password"
+              [placeholder]="getText('Introduce la contraseña', 'Enter your password')">
+            <span class="password-toggle" (click)="togglePasswordVisibility('password')" style="cursor: pointer;">
+              <i class="bi" [ngClass]="showPassword ? 'bi-eye-slash' : 'bi-eye'"></i>
+            </span>
+            @if(getControl('password')?.invalid && getControl('password')?.touched) {
+              <small class="text-danger">{{ getText('Debe tener al menos 5 caracteres', 'Must be at least 5 characters') }}</small>
+            }
+          </div>
+
+          <!-- Confirmar Contraseña -->
+          <div class="form-group position-relative">
+            <input [type]="showConfirmPassword ? 'text' : 'password'" class="form-input" id="confirmPassword" formControlName="confirmPassword"
+              [placeholder]="getText('Confirma la contraseña', 'Confirm your password')">
+            <span class="password-toggle" (click)="togglePasswordVisibility('confirmPassword')" style="cursor: pointer;">
+              <i class="bi" [ngClass]="showConfirmPassword ? 'bi-eye-slash' : 'bi-eye'"></i>
+            </span>
+            @if(registerForm.hasError('passwordsDoNotMatch')) {
+              <small class="text-danger">{{ getText('Las contraseñas no coinciden', 'Passwords do not match') }}</small>
+            }
+          </div>
+
+          <!-- Rol (solo lectura) -->
+          <div class="form-group role-field" (click)="$event.preventDefault()">
+            <input
+              type="text"
+              formControlName="rol"
+              placeholder="Rol"
+              class="form-input role-input"
+              readonly
+              tabindex="-1"
+            />
+            @if(getControl('rol')?.invalid && getControl('rol')?.touched) {
+              <small class="text-danger">
+                {{ getText('El rol es obligatorio', 'Role is required') }}
+              </small>
+            }
+          </div>
+
+          <button type="submit" class="register-button" [disabled]="registerForm.invalid || isLoading">
+            {{ isLoading ? getText('Registrando...', 'Registering...') : getText('Registrarse', 'Sign Up') }}
+          </button>
+        </form>
+      } @else {
+        <form [formGroup]="loginForm" (ngSubmit)="onLogin()">
+          <div class="form-container">
+            <div class="form-group">
+              <input type="email" formControlName="email" [placeholder]="getText('Correo electrónico', 'Email Address')" class="form-input" />
+              @if(loginForm.get('email')?.invalid && loginForm.get('email')?.touched) {
+                <small class="text-danger">
+                  {{ getText('Por favor, introduce un email válido', 'Please enter a valid email') }}
+                </small>
+              }
+            </div>
+            <div class="form-group position-relative">
+              <input [type]="showPassword ? 'text' : 'password'" formControlName="password" [placeholder]="getText('Contraseña', 'Password')" class="form-input" />
+              <span class="password-toggle position-absolute end-0 top-50 translate-middle-y me-3"
+                    (click)="togglePasswordVisibility('password')" style="cursor: pointer; color:white" role="button">
+                    <i class="bi" [ngClass]="showPassword ? 'bi-eye' : 'bi-eye-slash'"></i>
+                  </span>
+              @if(loginForm.get('password')?.invalid && loginForm.get('password')?.touched) {
+                <small class="text-danger">
+                  {{ getText('La contraseña es obligatoria', 'Password is required') }}
+                </small>
+              }
+            </div>
+          
+            <button class="login-button" [disabled]="loginForm.invalid || isLoading">
+              {{ isLoading ? getText('Iniciando...', 'Logging in...') : getText('Iniciar Sesión', 'Sign In') }}
+            </button>
+            <div class="register-section">
+              <p>{{ getText("¿No tienes una cuenta?", "Don't have an account?") }}
+                <button type="button" class="register-link" (click)="toggleTab(true)">
+                  {{ getText('Regístrate', 'Sign Up') }}
+                </button>
+              </p>
+            </div>
+          </div>
+        </form>
+      }
+    </div>
+  </div>
+}
+
+@if (showAlert) {
+  <div class="alert-overlay">
+    <div class="alert-box">
+      <p>{{ getText('¡Registro exitoso!', 'Registration successful!') }}</p>
+    </div>
+  </div>
+}
