@@ -1,0 +1,20 @@
+<section class="about-section fade-in-up">
+  <div class="about-image">
+    <img src="/images/hero_image.png" alt="Sobre FlexemCar" />
+  </div>
+  <div class="about-content">
+    <div class="section-tag">Sobre Nosotros</div>
+    <h2>Tu portal de confianza
+para <br>comprar y vender</h2>
+    <p>En Flexemcar somos especialistas en la compraventa de furgonetas de segunda mano. Con años de experiencia en el sector, conocemos bien el mercado y te ofrecemos los mejores vehículos y condiciones.</p>
+    <p>Todos nuestros vehículos pasan por <strong style="color:var(--text)">rigurosos controles de calidad</strong> antes de ser puestos a la venta. Compra con total tranquilidad.</p>
+    <div class="about-pills">
+      @for (pill of pills; track pill) {
+        <span class="pill">{{ pill }}</span>
+      }
+    </div>
+    <div class="about-cta">
+      <button class="btn-hero btn-hero-primary" style="margin-top:8px" routerLink="/about-us">Conocer más</button>
+    </div>
+  </div>
+</section>
