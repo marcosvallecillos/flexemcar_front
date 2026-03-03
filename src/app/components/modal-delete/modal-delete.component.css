@@ -1,0 +1,187 @@
+/* Overlay del modal */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6); 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    backdrop-filter: blur(2px); 
+}
+
+/* Contenido del modal */
+.modal-content {
+    background: #ffffff;
+    padding: 2.5rem;
+    border-radius: 16px;
+    width: 90%;
+    max-width: 480px; 
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.555); 
+    border: 1px solid rgba(0, 0, 0, 0.05); 
+    animation: modalFadeIn 0.4s ease-out;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Animación de entrada */
+@keyframes modalFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Título del modal */
+.modal-content h2 {
+    color: #1a1a1a; /* Negro más suave */
+    margin: 0 0 2rem;
+    font-size: 1.75rem; 
+    font-weight: bold; 
+    text-align: center;
+    letter-spacing: 0.5px;
+}
+
+/* Cuerpo del modal */
+.modal-body {
+    margin-bottom: 2rem;
+}
+
+.modal-body p {
+    color: #4a4a4a; /* Gris más oscuro y profesional */
+    margin: 0.75rem 0;
+    text-align: center;
+    font-size: 1.1rem;
+    line-height: 1.6;
+}
+
+/* Detalles de la reserva */
+.reservation-details {
+    background: #f5f6f5; 
+    padding: 1.25rem;
+    border-radius: 10px;
+    margin: 1.25rem 0;
+    border-left: 4px solid #000000; /
+}
+
+.reservation-details p {
+    margin: 0.6rem 0;
+    text-align: left;
+    color: #333;
+    font-size: 1rem;
+    line-height: 1.5;
+}
+
+/* Acciones del modal */
+.modal-actions {
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+}
+
+/* Estilo base de botones */
+.btn-cancel, .btn-confirm {
+    padding: 0.9rem 2rem;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase; 
+    letter-spacing: 1px;
+}
+
+.btn-cancel {
+    background: linear-gradient(135deg, #ff4d4d, #e63939); 
+    color: #fff;
+}
+
+.btn-confirm {
+    background: linear-gradient(135deg, #00b81c, #47ff05); 
+    color: #fff;
+}
+
+.btn-cancel:hover, .btn-confirm:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    filter: brightness(1.1); /* Aumenta el brillo */
+}
+
+@media (max-width: 768px) {
+    .modal-content {
+        padding: 2rem;
+        width: 95%;
+        max-width: 400px;
+    }
+
+    .btn-cancel, .btn-confirm {
+        padding: 0.8rem 1.5rem;
+        font-size: 0.95rem;
+    }
+
+    .modal-content h2 {
+        font-size: 1.5rem;
+    }
+}
+
+/* Overlay de alertas */
+.alert-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    backdrop-filter: blur(2px);
+}
+
+/* Caja de alerta */
+.alert-box {
+    background: linear-gradient(135deg, #2ecc71, #27ae60); 
+    color: #fff;
+    padding: 1.75rem 2.5rem;
+    border-radius: 12px;
+    font-size: 1.25rem;
+    font-weight: 500;
+    text-align: center;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+    animation: fadeIn 0.4s ease-in-out;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.alert-box-cancel {
+    background: linear-gradient(135deg, #e74c3c, #c0392b);
+    color: #fff;
+    padding: 1.75rem 2.5rem;
+    border-radius: 12px;
+    font-size: 1.25rem;
+    font-weight: 500;
+    text-align: center;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+    animation: fadeIn 0.4s ease-in-out;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Animación de fadeIn */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.85);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}

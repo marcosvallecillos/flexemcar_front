@@ -1,0 +1,44 @@
+@if (show) {
+<div class="modal-overlay">
+    <div class="modal-content">
+        <h2>{{ getText('Confirmar Reserva', 'Confirm Reserve') }}</h2>
+        <div class="modal-body">
+            <p>{{ getText('¿Estás seguro que deseas reservar?', 'Are you sure you want to reserve?') }}</p>
+            <div class="reservation-details">
+                <p><strong>{{ getText('Peluquero:', 'Barber:') }}</strong> {{ peluquero }}</p>
+
+                <p><strong>{{ getText('Servicio:', 'Service:') }}</strong> {{ servicio }}</p>
+                <p class="price-container">
+                    <strong>{{ getText('Precio:', 'Price:') }}</strong>
+                    @if (tieneDescuento && precioOriginal) {
+                        <span class="original-price">{{ precioOriginal }}€</span>
+                        <span class="discount-price">{{ precio }}€</span>
+                        <span class="discount-badge">{{ getText('Corte Gratis', 'Free Cut') }}</span>
+                    } @else {
+                        <span>{{ precio }}€</span>
+                    }
+                </p>                <p><strong>{{ getText('Fecha:', 'Date:') }}</strong> {{ fecha }}</p>
+                <p><strong>{{ getText('Hora:', 'Hour:') }}</strong> {{ hora }}</p>
+            </div>
+        </div>
+        <div class="modal-actions">
+            <button class="btn-cancel" (click)="onCancel()">{{ getText('Cancelar', 'Cancel') }}</button>
+            <button class="btn-confirm" (click)="onConfirm()">{{ getText('Confirmar', 'Confirm') }}</button>
+        </div>
+    </div>
+</div>
+}
+
+@if (showAlert) {
+<div class="alert-overlay">
+    <div class="alert-box">
+        <p>{{ getText('¡Cita enviada con éxito!', 'Appointment successfully sent!') }}</p>
+    </div>
+</div>
+} @else if (showAlertCancel) {
+<div class="alert-overlay">
+    <div class="alert-box-cancel">
+        <p>{{ getText('¡Cita cancelada!', 'Canceled Appointment!') }}</p>
+    </div>
+</div>
+}
