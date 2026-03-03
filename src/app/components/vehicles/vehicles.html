@@ -1,0 +1,36 @@
+<section class="vehicles-section fade-in-up">
+  <div class="section-header">
+    <div>
+      <div class="section-tag">Catálogo</div>
+      <h2 style="margin-top:8px">Vehículos <em>destacados</em></h2>
+    </div>
+    <a href="#" class="see-all">Ver todos los vehículos →</a>
+  </div>
+  <div class="vehicles-grid">
+    @for (vehicle of vehicles; track vehicle.id) {
+      <div class="vehicle-card">
+        <div class="vehicle-img">
+          <div class="vehicle-badge" [class.certified]="vehicle.badgeType === 'certified'">
+            {{ vehicle.badge }}
+          </div>
+          <img [src]="vehicle.image" [alt]="vehicle.name" />
+        </div>
+        <div class="vehicle-info">
+          <h3>{{ vehicle.name }}</h3>
+          <div class="vehicle-meta">
+            <span>{{ vehicle.year }}</span>
+            <span>{{ vehicle.km }}</span>
+            <span>{{ vehicle.fuel }}</span>
+          </div>
+          <div class="vehicle-price-row">
+            <div class="vehicle-price">
+              {{ vehicle.price }}
+              <small>+ IVA</small>
+            </div>
+            <button class="btn-card" [routerLink]="['/show-catalogo', vehicle.id]">Ver detalle</button>
+          </div>
+        </div>
+      </div>
+    }
+  </div>
+</section>
