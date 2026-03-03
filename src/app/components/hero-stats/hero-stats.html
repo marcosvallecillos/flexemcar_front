@@ -1,0 +1,14 @@
+<div id="hero-stats" class="metrics-section fade-in-up" #metricsSection>
+  <div class="metrics-grid">
+    @for (metric of metrics; track metric.label; let i = $index) {
+      <div class="metric-card">
+        <div class="metric-icon" [innerHTML]="metric.icon"></div>
+        <div class="metric-value">
+          {{ formatValue(displayValues()[i], metric.decimals) }}<span>{{ metric.suffix }}</span>
+        </div>
+        <div class="metric-label">{{ metric.label }}</div>
+        <div class="metric-trend">{{ metric.trend }}</div>
+      </div>
+    }
+  </div>
+</div>
