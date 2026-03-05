@@ -1,13 +1,13 @@
 import { Component, HostListener } from '@angular/core';
 import { ModalLoginComponent } from '../modal-login/modal-login.component';
 import { LanguageService } from '../../services/language.service';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { ApiService } from '../../services/api-service.service';
 import { ShowFavorites } from '../../views/show-favorites/show-favorites';
 
 @Component({
   selector: 'app-header',
-  imports: [ModalLoginComponent],
+  imports: [ModalLoginComponent,RouterLink],
   templateUrl: './header.html',
   styleUrl: './header.css',
 })

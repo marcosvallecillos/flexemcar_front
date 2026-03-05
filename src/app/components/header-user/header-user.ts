@@ -1,12 +1,12 @@
 import { Component, HostListener } from '@angular/core';
 import { LanguageService } from '../../services/language.service';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { ApiService } from '../../services/api-service.service';
 import { Catalogo } from '../../models/user.interface';
 
 @Component({
   selector: 'app-header-user',
-  imports: [],
+  imports: [RouterLink],
   templateUrl: './header-user.html',
   styleUrl: './header-user.css',
 })
