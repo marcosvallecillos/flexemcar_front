@@ -30,7 +30,8 @@ export interface Usuario {
   usuario_id: number;
   vehiculo_id: number;
   vehiculo_model: string;
-
+  usuario?: Usuario;
+  vehiculo?: Catalogo;
   valoracion_id?: number;
   valoracion_comentario?: string;
   valoracion_servicio?: number;
