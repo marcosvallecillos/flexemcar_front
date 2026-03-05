@@ -2,7 +2,9 @@
   <div class="metrics-grid">
     @for (metric of metrics; track metric.label; let i = $index) {
       <div class="metric-card">
-        <div class="metric-icon" [innerHTML]="metric.icon"></div>
+        <div class="metric-icon" [innerHTML]="metric.icon">
+          
+        </div>
         <div class="metric-value">
           {{ formatValue(displayValues()[i], metric.decimals) }}<span>{{ metric.suffix }}</span>
         </div>

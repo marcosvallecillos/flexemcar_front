@@ -117,7 +117,7 @@ export class ModalLoginComponent {
           this.authService.login(userData);
           this.userStateService.updateUser(userData);
           this.close.emit();
-          this.router.navigate(['/home-barber']);
+          this.router.navigate(['/home']);
         } else {
           this.errorMessage = this.getText('Credenciales inválidas', 'Invalid credentials');
         }
