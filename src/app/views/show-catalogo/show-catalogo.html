@@ -1,1 +1,219 @@
-<p>show-catalogo works!</p>
+<body class="page-reserves">
+  <div class="overlay"></div>
+@if(isUser){
+  @if (isLoading) {
+  <div class="loading">
+    <div class="spinner"></div>
+  </div>
+  } @else if(reserves.length == 0) {
+  <div class="reserva-vacio  mb-5">
+    <img src="../../../../images/disappointed.png" class="fav-icon" alt="Favorito vacío">
+    <h3> {{getText('No se ha encontrado ninguna reserva.','No reservations found.')}} </h3>
+    <p> {{getText('Echa un vistazo a la selección que tenemos para ti.','Check out the selection we have for you.')}}
+    </p>
+
+    <button class="btn-volver mt-5" routerLink="/reserve">
+
+      {{getText('Reservar Ahora','Book Now')}}
+
+    </button>
+  </div>
+  } @else if(reserves.length > 0){
+  <h2 class="reservas mt-5">{{getText('Reservas','Reserves')}} </h2>
+    <div class="reserves-container">
+    <div class="header">
+      <div class="dropdown" [class.show]="showDropdown">
+        <div class="filter-button" (click)="toggleDropdown(); $event.stopPropagation()">
+          <i class="bi bi-funnel-fill fs-4"></i>
+          <span class="current-filter">
+            {{ currentFilter === 'all' ? getText('Todas las Reservas', 'All Reservations') :
+               currentFilter === 'activas' ? getText('Reservas Activas', 'Active Reservations') :
+               getText('Reservas Expiradas', 'Expired Reservations') }}
+          </span>
+        </div>
+        <div class="dropdown-menu">
+          <p [class.active]="currentFilter === 'all'" (click)="filtrar('all')">
+            {{ getText('Todas las Reservas', 'All Reservations') }}
+          </p>
+          <p [class.active]="currentFilter === 'activas'" (click)="filtrar('activas')">
+            {{ getText('Reservas Activas', 'Active Reservations') }}
+          </p>
+          <p [class.active]="currentFilter === 'expiradas'" (click)="filtrar('expiradas')">
+            {{ getText('Reservas Expiradas', 'Expired Reservations') }}
+          </p>
+        </div>
+      </div>
+      @if (isLoading) {
+        <div class="loading">
+          <div class="spinner">Cargando...</div>
+        </div>
+        } 
+      <button class="reserve-btn" routerLink="/reserve">
+        <img src="../../../../images/cita.png" width="30px" height="30px" alt="" style="margin-right:10px">
+        {{getText('Reservar Cita','Reserve Quote')}}
+      </button>
+    </div>
+
+   @if (filterError) {
+    <div class="alert alert-danger mt-3" role="alert">
+      {{ filterError }}
+    </div>
+  }
+
+    <!--[class.disabled]="isReservePast(reserve)"-->
+    <div class="reserves-list">
+    
+      @for (reserve of reserves; track reserve.id) {
+
+      <div class="card"
+        [title]="isReservePast(reserve) ? getText('Cita expirada', 'Expired appointment') : getText('Eliminar reserva', 'Delete appointment')">
+        <div class="card-content">
+          @if(reserve.valoracion_id !== null){
+            <h5 class="valorado">Servicio Valorado</h5>
+          } 
+
+          <div class="card-hero">
+            <img [src]="reserve.vehiculo?.image_url?.[0] || '/images/hero_image.png'"
+                 [alt]="getText('Imagen del vehículo', 'Vehicle Image')"
+                 class="vehicle-image">
+
+            <span class="status-pill"
+                  [ngClass]="{ 'status-expired': isReservePast(reserve), 'status-active': !isReservePast(reserve) }">
+              {{ isReservePast(reserve) ? getText('Completada', 'Completed') : getText('Activa', 'Active') }}
+            </span>
+          </div>
+
+          <div class="card-header-main">
+            <div class="card-title-group">
+              <h3 class="card-title-text">
+                {{ reserve.vehiculo_model || reserve.vehiculo?.modelo }} {{ reserve.vehiculo?.marca }}
+              </h3>
+              <p class="card-subtitle-text">
+                {{ getText('Cita de servicio completada', 'Full Service appointment') }}
+              </p>
+            </div>
+
+          </div>
+
+          <div class="card-meta">
+            <p>
+              <i class="bi bi-car-front-fill"></i>
+              <strong>{{ getText('Modelo', 'Model') }}:</strong>
+              {{ reserve.vehiculo_model || reserve.vehiculo?.modelo }} {{ reserve.vehiculo?.marca }}
+            </p>
+            <p>
+              <i class="bi bi-calendar2-event-fill"></i>
+              <strong>{{ getText('Año', 'Year') }}:</strong>
+              {{ reserve.vehiculo?.year || '-' }}
+            </p>
+            <p>
+              <i class="bi bi-speedometer2"></i>
+              <strong>{{ getText('Km', 'Km') }}:</strong>
+              {{ reserve.vehiculo?.km || reserve.vehiculo?.km || '-' }} km
+            </p>
+            <p>
+              <i class="bi bi-calendar-event-fill"></i>
+              <strong>{{ getText('Dia', 'Day') }}:</strong>
+              {{ reserve.dia }} {{ reserve.hora }}
+            </p>
+          </div>
+
+          <div class="botones">
+            @if (isReservePast(reserve)) {
+              @if (reserve.valoracion_id == null) {
+                <!-- Cita pasada sin valorar: botón de valorar + eliminar -->
+                <button class="rate-button"
+                        [title]="getText('Valorar reserva', 'Rate reservation')"
+                        [routerLink]="['/rate-service', reserve.id]">
+                  <span class="rate-label">
+                    {{ getText('Valorar servicio', 'Rate service') }}
+                  </span>
+                </button>
+                <button class="eliminar"
+                        [title]="getText('Eliminar reserva', 'Delete appointment')"
+                        (click)="deleteReserve(reserve)"
+                        aria-label="Eliminar reserva">
+                  <img src="../../../../images/borrar.png" alt="Eliminar Reserva">
+                </button>
+              } @else {
+                <!-- Cita pasada y valorada: ver valoración + rehacer reserva -->
+                <button class="rate-button"
+                        [title]="getText('Ver valoración', 'View rating')"
+                        [routerLink]="['/rate-service', reserve.id]">
+                  <span class="rate-label">
+                    {{ getText('Ver valoración', 'View rating') }}
+                  </span>
+                </button>
+                <button class="secondary-button"
+                        [title]="getText('Rehacer reserva', 'Book again')"
+                        routerLink="/reserve">
+                  {{ getText('Rehacer reserva', 'Book again') }}
+                </button>
+              }
+            } @else {
+              <!-- Cita futura: botón de detalles -->
+              <button class="rate-button"
+                      [title]="getText('Detalles de la reserva', 'Reservation details')"
+                      (click)="openDetails(reserve)">
+                <span class="rate-label">
+                  {{ getText('Detalles', 'Details') }}
+                </span>
+              </button>
+            }
+          </div>
+
+        </div>
+      </div>
+      }
+    </div>
+  </div>
+  @if (showDetailsModal && selectedReserve) {
+    <div class="details-modal-backdrop" (click)="closeDetailsModal()">
+      <div class="details-modal" (click)="$event.stopPropagation()">
+        <h3>{{ getText('Detalles de la reserva', 'Reservation details') }}</h3>
+
+        <p class="details-meta">
+          <span>
+            <strong>{{ getText('Modelo', 'Model') }}:</strong>
+            {{ selectedReserve.vehiculo_model || selectedReserve.vehiculo?.modelo }} {{ selectedReserve.vehiculo?.marca }}
+          </span>
+          
+        </p>
+        <label class="details-field">
+          <span>
+           {{ getText('Día de la cita', ' Appointment Day') }}: </span>
+            <input type="date" [(ngModel)]="editedDay">
+         
+          <span>{{ getText('Hora de la cita', 'Appointment time') }}</span>
+          <input type="time" [(ngModel)]="editedTime">
+        </label>
+
+        <div class="details-actions">
+          <button class="modal-primary" (click)="saveEditedTime()">
+            {{ getText('Guardar cambios', 'Save changes') }}
+          </button>
+          <button class="modal-secondary" (click)="closeDetailsModal()">
+            {{ getText('Cerrar', 'Close') }}
+          </button>
+          <button class="modal-danger" (click)="cancelReserveFromModal()">
+            {{ getText('Anular reserva', 'Cancel reservation') }}
+          </button>
+        </div>
+      </div>
+    </div>
+  }
+  }
+    }@else {
+
+  <div class="alert-warning">
+    <img src="../../../../images/disappointed.png" class="fav-icon" alt="Favorito vacío">
+    <h2>{{ getText('Debes iniciar sesión para reservar una cita.', 'You must be registered to book an appointment.') }}
+    </h2>
+    <button class="alert-btn" (click)="openLoginModal()">{{ getText('Iniciar Sesión', 'Login') }}</button>
+  </div>
+  }
+</body>
+
+<app-modal-login [show]="showLoginModal" (close)="onModalClose()"></app-modal-login>
+<app-footer></app-footer>
+
