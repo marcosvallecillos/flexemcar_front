@@ -1,0 +1,158 @@
+<div class="overlay"></div>
+
+@if (isLoadingReserve) {
+  <div class="loading-container">
+    <div class="loading-spinner"></div>
+    <p>{{ getText('Cargando información de la reserva...', 'Loading reservation information...') }}</p>
+  </div>
+} @else if (errorLoadingReserve) {
+  <div class="error-container">
+    <div class="error-icon">⚠️</div>
+    <h3>{{ getText('Error al cargar la reserva', 'Error loading reservation') }}</h3>
+    <p>{{ errorMessage }}</p>
+    <div class="error-actions">
+      <button type="button" class="btn btn-primary" (click)="retryLoadReserve()">
+        {{ getText('Reintentar', 'Retry') }}
+      </button>
+      <button type="button" class="btn btn-secondary" (click)="goBack()">
+        {{ getText('Volver', 'Go back') }}
+      </button>
+    </div>
+  </div>
+} @else if (yaValorada && !isEditMode) {
+  <!-- Vista de valoración ya creada (solo lectura) -->
+  <div class="valoracion-container">
+    <div class="vc-header">
+      <h3 class="vc-title">{{ getText('Tu valoración del servicio', 'Your service rating') }}</h3>
+      <button class="close-button" (click)="goBack()">×</button>
+    </div>
+
+  
+    <div class="vc-section">
+      <p class="vc-section-label">TU EXPERIENCIA</p>
+      <div class="stars stars-readonly">
+        @for (star of [5, 4, 3, 2, 1]; track star) {
+          <label
+            [ngClass]="{'selected': servicioRating >= star}"
+          >
+            <i class="fas fa-star"></i>
+          </label>
+        }
+      </div>
+      <div class="vc-rating-label">
+        {{ getRatingLabel() }}
+        <span class="vc-rating-score">{{ servicioRating > 0 ? servicioRating + '.0 out of 5.0' : '' }}</span>
+      </div>
+    </div>
+
+    <div class="vc-section">
+      <label class="vc-section-label">{{ getText('Tu comentario', 'Your comment') }}</label>
+      <p class="vc-comment-readonly">
+        {{ comentario }}
+      </p>
+    </div>
+
+    <div class="botones">
+      <button type="button" class="btn btn-primary" (click)="startEdit()">
+        {{ getText('Editar valoración', 'Edit rating') }}
+      </button>
+      <button type="button" class="btn btn-secondary" (click)="goBack()">
+        {{ getText('Volver a mis reservas', 'Back to my reservations') }}
+      </button>
+    </div>
+  </div>
+} @else {
+<div class="valoracion-container">
+  <form (ngSubmit)="onSubmit()">
+
+    <div class="vc-header">
+      <h3 class="vc-title">
+        {{ yaValorada ? getText('Editar tu valoración', 'Edit your rating') : getText('Valora el servicio', 'Rate the service') }}
+      </h3>
+      <button class="close-button" (click)="goBack()">×</button>
+    </div>
+         
+
+     <div class="vc-vehicle">
+  <div class="image-hero">
+    <img [src]="reserve ? getReserveImage(reserve) : '/images/hero_image.png'"
+         [alt]="getText('Imagen del vehículo', 'Vehicle Image')"
+         class="vehicle-image">
+  </div>
+  <div class="model-vehicle">
+    <h1>{{ reserve?.vehiculo?.marca }} {{ reserve?.vehiculo?.modelo }}</h1>
+    <p>{{ getText('Completado el ', 'Completed on') }} {{ reserve?.dia }}</p>
+    <span>
+      <i class="bi bi-patch-check-fill" style="color:#16a34a"></i>
+      {{ getText('Servicio Verificado', 'Service verified') }}
+    </span>
+  </div>
+</div>
+    <!-- Estrellas -->
+    <div class="vc-section">
+      <p class="vc-section-label">TU EXPERIENCIA</p>
+      <div class="stars" id="stars-servicio">
+        @for (star of [5, 4, 3, 2, 1]; track star) {
+          <input
+            [id]="'servicio-radio' + star"
+            type="radio"
+            name="servicio-estrellas"
+            [value]="star"
+            [(ngModel)]="servicioRating"
+            (change)="onRatingChange('servicio', star)"
+          >
+          <label
+            [for]="'servicio-radio' + star"
+            [attr.aria-label]="star + (star === 1 ? ' estrella' : ' estrellas')"
+            [ngClass]="{'selected': servicioRating >= star}"
+          >
+            <i class="fas fa-star"></i>
+          </label>
+        }
+      </div>
+      <div class="vc-rating-label">
+        {{ getRatingLabel() }}
+        <span class="vc-rating-score">{{ servicioRating > 0 ? servicioRating + '.0 out of 5.0' : '' }}</span>
+      </div>
+    </div>
+
+    <!-- Comentario -->
+    <div class="vc-section">
+      <label class="vc-section-label" for="comentario">Escribe tu comentario</label>
+      <textarea
+        id="comentario"
+        name="comentario"
+        rows="4"
+        class="vc-textarea"
+        placeholder="Cuéntanos tu experiencia con este servicio..."
+        [(ngModel)]="comentario"
+        maxlength="600"
+      ></textarea>
+      <span class="vc-char-count">{{ comentario?.length || 0 }} / 600</span>
+    </div>
+
+    <!-- Botones -->
+    <div class="botones">
+      <button type="submit" class="btn btn-primary">
+        {{ isProcessing
+            ? getText('Enviando...', 'Sending...')
+            : (yaValorada ? getText('Guardar cambios', 'Save changes') : getText('Enviar valoración', 'Submit Rating')) }}
+      </button>
+      <button type="button" class="btn btn-secondary"
+              (click)="yaValorada ? cancelEdit() : reiniciarValoraciones()">
+        {{ yaValorada ? getText('Cancelar', 'Cancel') : getText('Limpiar', 'Clear') }}
+      </button>
+    </div>
+
+    <p class="vc-disclaimer">Tu opinión es pública y está vinculada a tu perfil.</p>
+  </form>
+</div>
+}
+
+@if (showAlert) {
+  <div class="alert-overlay">
+    <div class="alert-box">
+      <p>{{ getText('¡Servicio valorado con éxito!', 'Service rated successfully') }}</p>
+    </div>
+  </div>
+}
