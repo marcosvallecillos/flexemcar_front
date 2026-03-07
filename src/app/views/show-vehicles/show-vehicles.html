@@ -1,0 +1,155 @@
+<div class="overlay"></div>
+
+  <div class="catalog-container">
+
+    <!-- Header -->
+    <div class="catalog-header">
+      <div class="catalog-header-text">
+        <h1 class="catalog-title">{{ getText('Catálogo', 'Catalogue') }}</h1>
+        <p class="catalog-subtitle">
+          {{ filteredVehicles.length }} {{ getText('vehículos disponibles', 'vehicles available') }}
+        </p>
+      </div>
+    </div>
+
+    <div class="catalog-body">
+
+      <!-- Sidebar filtros -->
+      <aside class="filters-panel">
+
+        <div class="filter-section">
+          <p class="filter-title">{{ getText('Marca', 'Brand') }}</p>
+          <div class="filter-options">
+            <button class="filter-option"
+                    [ngClass]="{ 'active': selectedMarca === 'Todas' }"
+                    (click)="filterByMarca('Todas')">
+              {{ getText('Todas', 'All') }}
+            </button>
+            @for (marca of marcas; track marca) {
+              <button class="filter-option"
+                      [ngClass]="{ 'active': selectedMarca === marca }"
+                      (click)="filterByMarca(marca)">
+                {{ marca }}
+              </button>
+            }
+          </div>
+        </div>
+
+        <div class="filter-divider"></div>
+
+        <div class="filter-section">
+          <p class="filter-title">{{ getText('Precio', 'Price') }}</p>
+          <div class="filter-options">
+            <button class="filter-option"
+                    [ngClass]="{ 'active': selectedPrice === 'Todos' }"
+                    (click)="filterByPrice('Todos')">
+              {{ getText('Todos', 'All') }}
+            </button>
+            @for (range of priceRanges; track range.key) {
+              <button class="filter-option"
+                      [ngClass]="{ 'active': selectedPrice === range.key }"
+                      (click)="filterByPrice(range.key)">
+                {{ range.label }}
+              </button>
+            }
+          </div>
+        </div>
+
+      </aside>
+
+      <!-- Grid vehículos -->
+      <div class="vehicles-grid">
+
+        @if (isLoading) {
+          <div class="loading-state">
+            <div class="spinner"></div>
+          </div>
+        } @else if (filteredVehicles.length === 0) {
+          <div class="empty-state">
+            <i class="bi bi-car-front"></i>
+            <p>{{ getText('No se encontraron vehículos', 'No vehicles found') }}</p>
+          </div>
+        } @else {
+          @for (vehicle of filteredVehicles; track vehicle.id; let i = $index) {
+            <div class="vehicle-card" [style.animation-delay]="i * 60 + 'ms'"
+                 (click)="verDetalles(vehicle.id)">
+
+              <!-- Image -->
+            <div class="card-image-wrapper">
+  @if (vehicle.image_url.length <= 1) {
+    
+    <img [src]="getVehicleImage(vehicle)"
+         [alt]="vehicle.marca + ' ' + vehicle.modelo"
+         class="card-image">
+  } @else {
+    <div class="carousel" (click)="$event.stopPropagation()">
+      <div class="carousel-track"
+           [style.transform]="'translateX(-' + (carouselIndex[vehicle.id] || 0) * 100 + '%)'">
+        @for (img of vehicle.image_url; track img) {
+          <img [src]="img"
+               [alt]="vehicle.marca + ' ' + vehicle.modelo"
+               class="card-image carousel-slide">
+        }
+      </div>
+
+      <button class="carousel-btn carousel-btn--prev"
+              (click)="prevSlide(vehicle.id.toString(), vehicle.image_url.length); $event.stopPropagation()">
+        <i class="bi bi-chevron-left"></i>
+      </button>
+      <button class="carousel-btn carousel-btn--next"
+              (click)="nextSlide(vehicle.id.toString(), vehicle.image_url.length); $event.stopPropagation()">
+        <i class="bi bi-chevron-right"></i>
+      </button>
+
+      <div class="carousel-dots">
+        @for (img of vehicle.image_url; track $index) {
+          <span class="carousel-dot"
+                [class.active]="(carouselIndex[vehicle.id] || 0) === $index"
+                (click)="setSlide(vehicle.id.toString(), $index); $event.stopPropagation()">
+          </span>
+        }
+      </div>
+    </div>
+  }
+                @if (vehicle.year >= 2023) {
+                  <span class="card-badge">{{ getText('Nuevo', 'New') }}</span>
+                }
+                @if(!vehicle.is_favorite){
+                <button class="card-fav" (click)="favorite(vehicle)">
+                  <i class="bi bi-heart"></i>
+                </button>
+                }@else {
+                     <button class="card-fav-true" (click)="favorite(vehicle)">
+                        <i class="bi bi-heart-fill"></i>
+                      </button>
+                }
+              </div>
+
+              <!-- Body -->
+              <div class="card-body">
+                <span class="card-brand">{{ vehicle.marca | uppercase }} · {{ vehicle.year }}</span>
+                <h2 class="card-name">{{ vehicle.marca }} {{ vehicle.modelo }}</h2>
+
+                <div class="card-specs">
+                  <span><i class="bi bi-speedometer2"></i> {{ vehicle.km | number }}km</span>
+                  <span class="spec-dot">·</span>
+                  <span><i class="bi bi-fuel-pump"></i> {{ vehicle.motor }}</span>
+                </div>
+
+                <div class="card-footer">
+                  <span class="card-price">{{ vehicle.precio | number:'1.0-0' }} €</span>
+                  <button class="card-cta" (click)="verDetalles(vehicle.id); $event.stopPropagation()">
+                    {{ getText('Ver detalles', 'See details') }} →
+                  </button>
+                </div>
+              </div>
+
+            </div>
+          }
+        }
+
+      </div>
+    </div>
+  </div>
+
+  <app-footer></app-footer>
