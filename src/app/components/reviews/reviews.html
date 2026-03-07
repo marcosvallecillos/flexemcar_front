@@ -13,18 +13,24 @@
     </div>
   </div>
   <div class="reviews-grid">
-    @for (review of reviews; track review.id) {
-      <div class="review-card" [class.featured]="review.featured">
-        <div class="review-stars">{{ getStars(review.stars) }}</div>
-        <p class="review-text">{{ review.text }}</p>
-        <div class="reviewer">
-          <div class="reviewer-avatar">{{ review.reviewerInitials }}</div>
-          <div>
-            <div class="reviewer-name">{{ review.reviewerName }}</div>
-            <div class="reviewer-company">{{ review.reviewerCompany }}</div>
-          </div>
-        </div>
+    @if (isLoading) {
+      <div style="grid-column: 1 / -1; text-align: center; padding: 2rem; color: var(--muted);">
+        {{ getText('Cargando valoraciones...', 'Loading reviews...') }}
       </div>
+    } @else if (valoraciones && valoraciones.length > 0) {
+     @for (review of valoraciones; track review.id) {
+  <div class="review-card" [class.featured]="review.reserva_id">
+    <div class="review-stars">{{ getStars(review.rating) }}</div>
+    <p class="review-text">{{ review.comentario }}</p>
+<div class="reviewer">
+  <div class="reviewer-avatar">{{ getInitials(review.usuario?.nombre, review.usuario?.apellidos) }}</div>
+  <div class="reviewer-info">
+    <div class="reviewer-name">{{ review.usuario?.nombre }} {{ review.usuario?.apellidos }}</div>
+  </div>
+  <div class="reviewer-date">{{ formatDate(review.fecha) }}</div>  <!-- ✅ movida aquí -->
+</div>
+  </div>
+}
     }
   </div>
 </section>

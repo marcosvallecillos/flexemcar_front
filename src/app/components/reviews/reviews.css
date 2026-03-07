@@ -16,6 +16,47 @@
   padding: 30px;
   border: 1px solid var(--border);
   transition: border-color .2s;
+}.review-comment-block {
+  position: relative;
+  margin: 14px 0 18px;
+  padding: 14px 16px 14px 44px;
+  background: linear-gradient(135deg, #f8f9ff 0%, #eef1ff 100%);
+  border-left: 3px solid #6c7ef7;
+  border-radius: 0 10px 10px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.review-comment-icon {
+  position: absolute;
+  left: 12px;
+  top: 14px;
+  font-size: 16px;
+  line-height: 1;
+}
+
+.review-comment-body {
+  margin: 0;
+  font-size: 0.875rem;
+  line-height: 1.6;
+  color: #3a3f5c;
+  font-style: italic;
+  word-break: break-word;
+}
+
+/* Featured variant */
+.review-card.featured .review-comment-block {
+  background: linear-gradient(135deg, #fff8ee 0%, #fff0d6 100%);
+  border-left-color: #f5a623;
+}
+
+.review-card.featured .review-comment-body {
+  color: #4a3000;
+}
+
+.review-card.featured .review-comment-date {
+  color: #b07a20;
 }
 
 .review-card:hover { 
@@ -37,10 +78,14 @@
   font-style: italic; 
 }
 
-.reviewer { 
-  display: flex; 
-  align-items: center; 
-  gap: 12px; 
+.reviewer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between; /* ✅ empuja la fecha a la derecha */
+  gap: 10px;
+}
+.reviewer-info {
+  flex: 1; /* ✅ ocupa el espacio central */
 }
 
 .reviewer-avatar {
@@ -61,9 +106,12 @@
   font-weight: 500; 
 }
 
-.reviewer-company { 
-  font-size: .76rem; 
-  color: var(--muted); 
+
+.reviewer-date {
+  margin-left: auto;
+  font-size: 1rem;
+  color: #ffffff;
+  white-space: nowrap;
 }
 
 .review-card.featured {

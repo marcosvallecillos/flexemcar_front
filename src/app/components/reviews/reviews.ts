@@ -1,5 +1,10 @@
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { LanguageService } from '../../services/language.service';
+import { Reserva } from '../../models/user.interface';
+import { Valoracion } from '../../models/user.interface';
+
+import { ApiService } from '../../services/api-service.service';
 
 interface Review {
   id: number;
@@ -18,44 +23,96 @@ interface Review {
   templateUrl: './reviews.html',
   styleUrl: './reviews.css',
 })
-export class Reviews {
-  reviews: Review[] = [
-    {
-      id: 1,
-      stars: 5,
-      text: 'Compramos dos Sprinters para nuestra empresa de mensajería. El proceso fue impecable: asesoramiento personalizado, documentación sin complicaciones y los vehículos llegaron en perfectas condiciones. Definitivamente volveremos.',
-      reviewerName: 'José Martínez',
-      reviewerCompany: 'CEO · MensaLogística SL',
-      reviewerInitials: 'JM',
-      featured: true
-    },
-    {
-      id: 2,
-      stars: 5,
-      text: 'Rápido, serio y transparente. Sin letra pequeña. Mi furgoneta lleva ya 30.000 km sin ningún problema.',
-      reviewerName: 'Ana López',
-      reviewerCompany: 'Autónoma · Catering',
-      reviewerInitials: 'AL'
-    },
-    {
-      id: 3,
-      stars: 5,
-      text: 'La financiación fue aprobada en menos de 24 horas. Un servicio que no esperaba tan ágil.',
-      reviewerName: 'Pedro Ruiz',
-      reviewerCompany: 'Transportista autónomo',
-      reviewerInitials: 'PR'
-    },
-    {
-      id: 4,
-      stars: 4,
-      text: 'Muy buena atención al cliente y vehículo en excelente estado. Repetiré sin dudarlo.',
-      reviewerName: 'Carlos Sánchez',
-      reviewerCompany: 'Distribución alimentaria',
-      reviewerInitials: 'CS'
-    }
-  ];
+export class Reviews implements OnInit {
+  
+  showUserModal: boolean = false;
+  showReservaModal: boolean = false;
+  valoraciones: Valoracion[] = [];
+  isLoading: boolean = false;
+  isSpanish: boolean = true;
+  selectedReservaId: number | null = null;
+  selectedUserId: number | null = null;
+  selectedReserveId: number | null = null;
+  selectedReserve: Reserva | null = null;
 
-  getStars(count: number): string {
-    return '★'.repeat(count) + '☆'.repeat(5 - count);
+  constructor(
+    private languageService: LanguageService, 
+    private apiService: ApiService,
+    private cdr: ChangeDetectorRef
+  ) {
+    this.languageService.isSpanish$.subscribe(
+      isSpanish => this.isSpanish = isSpanish
+    );
+  }
+
+  getText(es: string, en: string): string {
+    return this.isSpanish ? es : en;
+  }
+
+  ngOnInit(): void {
+    this.getAllValoraciones();
+  }
+
+  getAllValoraciones() {
+    this.isLoading = true;
+    this.apiService.getValoraciones().subscribe({
+      next: (response) => {
+        console.log('Respuesta completa del API:', response);
+        if (response && response.valoraciones && Array.isArray(response.valoraciones)) {
+          this.valoraciones = response.valoraciones.map(valoracion => ({
+            ...valoracion,
+            usuario_id: valoracion.usuario?.id || valoracion.usuario_id,
+            reserva_id: valoracion.reserva?.id || valoracion.reserva_id
+          })).sort((a, b) => {
+            // Ordenar por fecha más reciente primero
+            const dateA = new Date(a.fecha).getTime();
+            const dateB = new Date(b.fecha).getTime();
+            return dateB - dateA;
+          });
+          console.log('Valoraciones procesadas:', this.valoraciones);
+        } else {
+          this.valoraciones = [];
+          console.log('No se encontraron valoraciones en la respuesta');
+        }
+        this.isLoading = false;
+        this.cdr.detectChanges();
+      },
+      error: (error) => {
+        this.isLoading = false;
+        console.error('Error al obtener valoraciones:', error);
+        this.valoraciones = [];
+        this.cdr.detectChanges();
+      }
+    });
+  }
+
+  getInitials(nombre?: string, apellidos?: string): string {
+    if (!nombre && !apellidos) return '??';
+    const firstInitial = nombre ? nombre.charAt(0).toUpperCase() : '';
+    const lastInitial = apellidos ? apellidos.charAt(0).toUpperCase() : '';
+    return firstInitial + lastInitial;
+  }
+
+  formatDate(dateString: string): string {
+    if (!dateString) return '';
+    try {
+      const date = new Date(dateString);
+      return date.toLocaleDateString(this.isSpanish ? 'es-ES' : 'en-US', {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric'
+      });
+    } catch {
+      return dateString;
+    }
+  }
+
+  getStars(rating: number | null | undefined): string {
+    if (rating === null || rating === undefined) {
+      return '☆☆☆☆☆';
+    }
+    const fullStar = '★';
+    const emptyStar = '☆';
+    return fullStar.repeat(rating) + emptyStar.repeat(5 - rating);
   }
 }
