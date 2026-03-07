@@ -2,7 +2,7 @@ import { Component, HostListener, OnInit, OnDestroy, ChangeDetectorRef } from '@
 import { NgClass } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Reviews } from '../../components/reviews/reviews';
-import { Reserva } from '../../models/user.interface';
+import { Catalogo, Reserva } from '../../models/user.interface';
 import { LanguageService } from '../../services/language.service';
 import { ActivatedRoute, Router, RouterLink, NavigationEnd } from '@angular/router';
 import { ApiService } from '../../services/api-service.service';
@@ -37,6 +37,7 @@ valoracion: Reviews[] = [];
 showDetailsModal: boolean = false;
 editedTime: string = '';
 editedDay: string = '';
+vehiculo: Catalogo[] = []
 
 private authSubscription?: Subscription;
 private languageSubscription?: Subscription;
@@ -103,36 +104,36 @@ private checkUserAndLoadReserves() {
 }
 
 loadUserReserves() {
-  if (this.isLoading && this.reserves.length > 0) return; // guard
-
   this.isLoading = true;
   const userId = this.authService.getUserId();
   if (!userId) { 
     this.isLoading = false; 
-    this.cdr.detectChanges();
     return; 
   }
 
   this.apiService.getReserveByUsuario(userId).subscribe({
-    next: (response) => {
+    next: (response: any[]) => {
+      console.log('Response cruda:', response[0]?.vehiculo); 
       const mapped = this.mapReservaResponse(response);
       this.reservasOriginales = this.sortReserves(mapped);
       this.reserves = [...this.reservasOriginales];
+      this.isLoading = false;
       this.cdr.detectChanges();
     },
     error: (err) => {
       console.error(err);
       this.isLoading = false;
       this.cdr.detectChanges();
-    },
-    complete: () => {
-      this.isLoading = false;
-      this.cdr.detectChanges();
     }
   });
 }
-
-// ✅ Filtrado LOCAL — cero llamadas al backend
+getReserveImage(reserve: Reserva): string {
+  const images = reserve.vehiculo?.image_url;
+  if (images && images.length > 0) {
+    return images[0]; 
+  }
+  return '/images/hero_image.png';
+}
 filtrar(tipo: 'all' | 'activas' | 'expiradas') {
   this.filterError = null;
   this.currentFilter = tipo;
@@ -164,38 +165,36 @@ private sortReserves(reservas: Reserva[]): Reserva[] {
   });
 }
 
-private mapReservaResponse(response: any[]): Reserva[] {
-  return response.map((r: any) => ({
-    ...r,
-    // Normalizamos ids
-    usuario_id: r.usuario_id,
-    vehiculo_id: r.vehiculo?.id ?? r.vehiculo_id,
-    vehiculo_model: r.vehiculo_model ?? r.vehiculo?.model ?? '',
-
-    // Normalizamos la info de valoración al shape de la interfaz
-    valoracion_id: r.valoracion ?? r.valoracion_id ?? null,
-    valoracion_comentario: r.valoracion_comentario ?? null,
-    valoracion_servicio: r.valoracion_servicio ?? null,
-    valoracion_fecha: r.valoracion_fecha ?? null,
-
-    // Adaptamos el objeto vehiculo del backend al Catalogo del front
-    vehiculo: r.vehiculo
-      ? {
+  private mapReservaResponse(response: any[]): Reserva[] {
+    return response.map((r: any) => {
+      console.log('image_url del vehiculo:', r.vehiculo?.image_url);
+      return {
+        ...r,
+        vehiculo: r.vehiculo ? {
           id: r.vehiculo.id,
           marca: r.vehiculo.marca,
-          modelo: r.vehiculo.model,            // backend: model
+          modelo: r.vehiculo.model,
           year: r.vehiculo.year ?? 0,
           motor: r.vehiculo.motor ?? '',
-          km: r.vehiculo.kms ?? r.vehiculo.km ?? 0, // backend: kms
+          km: r.vehiculo.kms ?? r.vehiculo.km ?? 0,
           image_url: Array.isArray(r.vehiculo.image_url)
-            ? r.vehiculo.image_url
-            : (r.vehiculo.image?.url ? [r.vehiculo.image.url] : []),
+            ? r.vehiculo.image_url       
+            : [],
           precio: r.vehiculo.precio ?? '',
+          description: r.vehiculo.description ?? '',
+          is_favorite: r.vehiculo.is_favorite ?? false,
           reservas: r.vehiculo.reservas ?? [],
-        }
-      : undefined,
-  }) as Reserva);
-}
+        } : undefined,
+        usuario_id: r.usuario_id,
+        vehiculo_id: r.vehiculo?.id ?? r.vehiculo_id,
+        vehiculo_model: r.vehiculo_model ?? r.vehiculo?.model ?? '',
+        valoracion_id: r.valoracion ?? r.valoracion_id ?? null,
+        valoracion_comentario: r.valoracion_comentario ?? null,
+        valoracion_servicio: r.valoracion_servicio ?? null,
+        valoracion_fecha: r.valoracion_fecha ?? null,
+      } as Reserva;
+    });
+  }
 
 isReservePast(reserve: Reserva): boolean {
   const [year, month, day] = reserve.dia.split('-').map(Number);

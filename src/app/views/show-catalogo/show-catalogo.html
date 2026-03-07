@@ -48,9 +48,9 @@
           <div class="spinner">Cargando...</div>
         </div>
         } 
-      <button class="reserve-btn" routerLink="/reserve">
+      <button class="reserve-btn" routerLink="/show-vehicles">
         <img src="../../../../images/cita.png" width="30px" height="30px" alt="" style="margin-right:10px">
-        {{getText('Reservar Cita','Reserve Quote')}}
+        {{getText('Mostrar Catálogo','Show Vehicles')}}
       </button>
     </div>
 
@@ -71,11 +71,11 @@
           @if(reserve.valoracion_id !== null){
             <h5 class="valorado">Servicio Valorado</h5>
           } 
-
+        
           <div class="card-hero">
-            <img [src]="reserve.vehiculo?.image_url?.[0] || '/images/hero_image.png'"
-                 [alt]="getText('Imagen del vehículo', 'Vehicle Image')"
-                 class="vehicle-image">
+           <img [src]="getReserveImage(reserve)"
+     [alt]="getText('Imagen del vehículo', 'Vehicle Image')"
+     class="vehicle-image">
 
             <span class="status-pill"
                   [ngClass]="{ 'status-expired': isReservePast(reserve), 'status-active': !isReservePast(reserve) }">
