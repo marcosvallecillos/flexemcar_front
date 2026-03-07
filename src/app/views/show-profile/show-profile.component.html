@@ -1,0 +1,146 @@
+<body>
+  <div class="overlay"></div>
+
+  @if (usuario) {
+    <div class="profile-container">
+
+      <!-- Topbar -->
+      <div class="profile-topbar">
+        <h1 class="topbar-title">{{ getText('Perfil', 'Profile') }}</h1>
+        <button class="btn-edit animated-button" (click)="editarPerfil()">
+          <i class="bi bi-pencil-fill"></i>
+          {{ getText('Editar', 'Edit') }}
+        </button>
+      </div>
+
+      <!-- Card desktop 2 columnas / mobile stack -->
+      <div class="profile-desktop-card">
+
+        <!-- COLUMNA IZQUIERDA -->
+        <div class="profile-left-panel">
+          <div class="avatar-section">
+            <div class="avatar-ring">
+              <div class="avatar-initials">
+                {{ usuario.nombre.charAt(0) }}{{ usuario.apellidos.charAt(0) }}
+              </div>
+              <div class="avatar-verified"><i class="bi bi-check-lg"></i></div>
+            </div>
+            <h2 class="avatar-name">{{ usuario.nombre }} {{ usuario.apellidos }}</h2>
+            <p class="avatar-email">{{ usuario.email }}</p>
+          </div>
+
+          <span class="role-pill-desktop">
+            <i class="bi bi-shield-check"></i>{{ usuario.rol }}
+          </span>
+       @if(isLoading){
+<div class="loading">
+      <div class="spinner"></div>
+    </div>} @else {
+  <div class="avatar-stats">
+    <div class="stat-item">
+      <span class="stat-value">{{ reservasUsuario }}</span>
+      <span class="stat-label">{{ getText('Reservas', 'Bookings') }}</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-value">0</span>
+      <span class="stat-label">{{ getText('Favoritos', 'Favorites') }}</span>
+    </div>
+  </div>
+}
+
+        </div>
+
+        <!-- COLUMNA DERECHA -->
+        <div class="profile-right-panel">
+
+          <div class="profile-section">
+            <p class="section-label">{{ getText('Información Personal', 'Personal Information') }}</p>
+
+            <div class="field-card">
+              <div class="field-icon"><i class="bi bi-person"></i></div>
+              <div class="field-body">
+                <span class="field-label">{{ getText('Nombre', 'Name') }}</span>
+                <span class="field-value">{{ usuario.nombre }}</span>
+              </div>
+            </div>
+
+            <div class="field-card">
+              <div class="field-icon"><i class="bi bi-person-badge"></i></div>
+              <div class="field-body">
+                <span class="field-label">{{ getText('Apellido', 'Last Name') }}</span>
+                <span class="field-value">{{ usuario.apellidos }}</span>
+              </div>
+            </div>
+
+            <div class="field-card">
+              <div class="field-icon"><i class="bi bi-telephone"></i></div>
+              <div class="field-body">
+                <span class="field-label">{{ getText('Teléfono', 'Phone') }}</span>
+                <span class="field-value">{{ usuario.telefono }}</span>
+              </div>
+            </div>
+
+            <div class="field-card">
+              <div class="field-icon"><i class="bi bi-envelope"></i></div>
+              <div class="field-body">
+                <span class="field-label">{{ getText('Correo', 'Email') }}</span>
+                <span class="field-value">{{ usuario.email }}</span>
+              </div>
+            </div>
+
+            <div class="field-card">
+              <div class="field-icon"><i class="bi bi-lock"></i></div>
+              <div class="field-body">
+                <span class="field-label">{{ getText('Contraseña', 'Password') }}</span>
+                <span class="field-value password-dots">
+                  {{ showPassword ? usuario.password : '•'.repeat(usuario.password.length) }}
+                </span>
+              </div>
+              <button class="toggle-password" (click)="togglePasswordVisibility('password')" type="button">
+                <i class="bi" [ngClass]="showPassword ? 'bi-eye' : 'bi-eye-slash'"></i>
+              </button>
+            </div>
+          </div>
+
+          <div class="profile-section">
+            <p class="section-label">{{ getText('Ajustes de Cuenta', 'Account Settings') }}</p>
+
+            <div class="field-card field-card--link">
+              <div class="field-icon field-icon--neutral"><i class="bi bi-gear"></i></div>
+              <div class="field-body">
+                <span class="field-value">{{ getText('Configuración General', 'General Settings') }}</span>
+              </div>
+              <i class="bi bi-chevron-right field-chevron"></i>
+            </div>
+
+            <div class="field-card field-card--danger" (click)="cerrarSesion()">
+              <div class="field-icon field-icon--danger"><i class="bi bi-box-arrow-right"></i></div>
+              <div class="field-body">
+                <span class="field-value field-value--danger">{{ getText('Cerrar Sesión', 'Logout') }}</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+  } @else {
+    <div class="not-logged-wrapper">
+      <div class="not-logged-card">
+        <div class="not-logged-icon"><i class="bi bi-person-lock"></i></div>
+        <h2>{{ getText('No has iniciado sesión', 'You are not logged in') }}</h2>
+        <p>{{ getText('Inicia sesión para ver tu perfil', 'Sign in to view your profile') }}</p>
+        <button class="btn-login" (click)="openLoginModal()">
+          <i class="bi bi-box-arrow-in-right"></i>
+          {{ getText('Iniciar Sesión', 'Login') }}
+        </button>
+      </div>
+    </div>
+  }
+
+  <app-footer></app-footer>
+  @if (showLoginModal) {
+    <app-modal-login (closeModal)="showLoginModal = false"></app-modal-login>
+  }
+</body>

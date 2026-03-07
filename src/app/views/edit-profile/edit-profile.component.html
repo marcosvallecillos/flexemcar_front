@@ -1,0 +1,205 @@
+<body>
+  <div class="overlay"></div>
+
+  <div class="edit-profile-container">
+
+    @if (userData) {
+
+      <!-- Topbar -->
+      <div class="profile-topbar">
+        <h1 class="topbar-title">{{ getText('Editar Perfil', 'Edit Profile') }}</h1>
+        <button class="btn-back animated-button" type="button" (click)="cancelar()">
+          <i class="bi bi-arrow-left"></i>
+          {{ getText('Volver', 'Back') }}
+        </button>
+      </div>
+
+      <!-- Main card -->
+      <div class="profile-desktop-card">
+
+        <!-- Panel izquierdo: info estática -->
+        <div class="profile-left-panel">
+          <div class="avatar-section">
+            <div class="avatar-ring">
+              <div class="avatar-initials">
+                {{ userData.nombre.charAt(0) }}{{ userData.apellidos.charAt(0) }}
+              </div>
+              <div class="avatar-verified"><i class="bi bi-pencil-fill"></i></div>
+            </div>
+            <h2 class="avatar-name">{{ userData.nombre }} {{ userData.apellidos }}</h2>
+            <p class="avatar-email">{{ userData.email }}</p>
+          </div>
+
+          <span class="role-pill-desktop">
+            <i class="bi bi-shield-check"></i>{{ userData.rol }}
+          </span>
+
+          <div class="edit-hint">
+            <i class="bi bi-info-circle"></i>
+            <p>{{ getText('Los cambios se aplicarán inmediatamente tras guardar.', 'Changes will apply immediately after saving.') }}</p>
+          </div>
+        </div>
+
+        <!-- Panel derecho: formulario -->
+        <div class="profile-right-panel">
+          <form (ngSubmit)="guardarCambios()" #editForm="ngForm">
+
+            <div class="profile-section">
+              <p class="section-label">{{ getText('Información Personal', 'Personal Information') }}</p>
+
+              <div class="field-row">
+
+                <div class="field-group">
+                  <label for="nombre">{{ getText('Nombre', 'Name') }}</label>
+                  <div class="input-wrapper">
+                    <i class="bi bi-person input-icon"></i>
+                    <input type="text"
+                           class="form-control"
+                           id="nombre" name="nombre"
+                           [(ngModel)]="userData.nombre"
+                           [class.is-invalid]="errors['nombre']"
+                           placeholder="{{ getText('Tu nombre', 'Your name') }}">
+                  </div>
+                  @if (errors['nombre']) {
+                    <span class="invalid-feedback"><i class="bi bi-exclamation-circle"></i>{{ errors['nombre'] }}</span>
+                  }
+                </div>
+
+                <div class="field-group">
+                  <label for="apellidos">{{ getText('Apellidos', 'Last Name') }}</label>
+                  <div class="input-wrapper">
+                    <i class="bi bi-person-badge input-icon"></i>
+                    <input type="text"
+                           class="form-control"
+                           id="apellidos" name="apellidos"
+                           [(ngModel)]="userData.apellidos"
+                           [class.is-invalid]="errors['apellidos']"
+                           placeholder="{{ getText('Tus apellidos', 'Your last name') }}">
+                  </div>
+                  @if (errors['apellidos']) {
+                    <span class="invalid-feedback"><i class="bi bi-exclamation-circle"></i>{{ errors['apellidos'] }}</span>
+                  }
+                </div>
+
+              </div>
+
+              <div class="field-group">
+                <label for="email">{{ getText('Email', 'Email') }}</label>
+                <div class="input-wrapper">
+                  <i class="bi bi-envelope input-icon"></i>
+                  <input type="email"
+                         class="form-control"
+                         id="email" name="email"
+                         [(ngModel)]="userData.email"
+                         [class.is-invalid]="errors['email']"
+                         placeholder="correo@ejemplo.com">
+                </div>
+                @if (errors['email']) {
+                  <span class="invalid-feedback"><i class="bi bi-exclamation-circle"></i>{{ errors['email'] }}</span>
+                }
+              </div>
+
+              <div class="field-group">
+                <label for="telefono">{{ getText('Teléfono', 'Phone') }}</label>
+                <div class="input-wrapper">
+                  <i class="bi bi-telephone input-icon"></i>
+                  <input type="text"
+                         class="form-control"
+                         id="telefono" name="telefono"
+                         [(ngModel)]="userData.telefono"
+                         [class.is-invalid]="errors['telefono']"
+                         placeholder="+34 600 000 000">
+                </div>
+                @if (errors['telefono']) {
+                  <span class="invalid-feedback"><i class="bi bi-exclamation-circle"></i>{{ errors['telefono'] }}</span>
+                }
+              </div>
+
+            </div>
+
+            <div class="profile-section">
+              <p class="section-label">{{ getText('Seguridad', 'Security') }}</p>
+
+              <div class="field-group">
+                <label for="password">{{ getText('Contraseña', 'Password') }}</label>
+                <div class="input-wrapper">
+                  <i class="bi bi-lock input-icon"></i>
+                  <input [type]="showPassword ? 'text' : 'password'"
+                         class="form-control"
+                         id="password" name="password"
+                         [(ngModel)]="userData.password"
+                         [class.is-invalid]="errors['password']"
+                         placeholder="••••••••">
+                  <button type="button" class="toggle-password"
+                          (click)="togglePasswordVisibility('password')">
+                    <i class="bi" [ngClass]="showPassword ? 'bi-eye' : 'bi-eye-slash'"></i>
+                  </button>
+                </div>
+                @if (errors['password']) {
+                  <span class="invalid-feedback"><i class="bi bi-exclamation-circle"></i>{{ errors['password'] }}</span>
+                }
+              </div>
+            </div>
+
+            <!-- Alertas -->
+            @if (successMessage) {
+              <div class="alert alert-success">
+                <i class="bi bi-check-circle-fill"></i>
+                {{ successMessage }}
+              </div>
+            }
+            @if (errorMessage) {
+              <div class="alert alert-danger">
+                <i class="bi bi-exclamation-triangle-fill"></i>
+                {{ errorMessage }}
+              </div>
+            }
+
+            <!-- Acciones -->
+            <div class="profile-actions">
+              <button type="button"
+                      class="btn-action btn-cancel animated-button"
+                      (click)="cancelar()"
+                      [disabled]="loading">
+                <i class="bi bi-x-lg"></i>
+                {{ getText('Cancelar', 'Cancel') }}
+              </button>
+              <button type="submit"
+                      class="btn-action btn-save animated-button"
+                      [disabled]="loading">
+                @if (loading) {
+                  <span class="btn-spinner"></span>
+                  {{ getText('Guardando...', 'Saving...') }}
+                } @else {
+                  <i class="bi bi-check-lg"></i>
+                  {{ getText('Guardar Cambios', 'Save Changes') }}
+                }
+              </button>
+            </div>
+
+          </form>
+        </div>
+
+      </div>
+
+    } @else {
+
+      <div class="not-logged-wrapper">
+        <div class="not-logged-card">
+          <div class="not-logged-icon"><i class="bi bi-person-lock"></i></div>
+          <h2>{{ getText('No se encontraron datos del usuario.', 'No user data found.') }}</h2>
+          <p>{{ getText('Inicia sesión para editar tu perfil.', 'Sign in to edit your profile.') }}</p>
+          <button class="btn-login" (click)="openLoginModal()">
+            <i class="bi bi-box-arrow-in-right"></i>
+            {{ getText('Iniciar Sesión', 'Login') }}
+          </button>
+        </div>
+      </div>
+
+    }
+
+  </div>
+
+  <app-modal-login [show]="showLoginModal" (close)="showLoginModal = false"></app-modal-login>
+  <app-footer></app-footer>
+</body>
