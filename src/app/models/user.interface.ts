@@ -13,8 +13,10 @@ export interface Usuario {
   export interface Valoracion {
   id: number;
   rating: number;
-  comment: string;
-  created_at: string;
+  comentario: string;
+  fecha: string;
+  usuario?: Usuario;
+  reserva?: Reserva;
   usuario_id: number;
   reserva_id: number;
 }
@@ -32,6 +34,8 @@ export interface Usuario {
   vehiculo_model: string;
   usuario?: Usuario;
   vehiculo?: Catalogo;
+  image_url: string[];
+  valoracion?: number;
   valoracion_id?: number;
   valoracion_comentario?: string;
   valoracion_servicio?: number;
@@ -45,6 +49,8 @@ export interface Usuario {
   year: number;
   motor: string;
   km: number;
+  description: string;
+  is_favorite: boolean;
   image_url: string[];
   precio: string; 
   reservas?: Reserva[];

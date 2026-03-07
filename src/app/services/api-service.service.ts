@@ -9,7 +9,7 @@ import { AuthService } from '../services/auth.service';
 export class ApiService {
 private apiUrlUsuarios = 'http://localhost:8000/api/usuarios'
 private apiUrlReservas = 'http://localhost:8000/api/reservas'
-private apiUrlVehiculos = 'http://localhost:8000/api/vehiculos'
+private apiUrlVehiculos = 'http://localhost:8000/api/vehicles'
 private apiUrlCompras = 'http://localhost:8000/api/compras'
 private apiUrlValoracion = 'http://localhost:8000/api/review'
 private apiUrlContact = 'http://localhost:8000/contact'
@@ -75,6 +75,7 @@ getReserveByUsuario(usuario_Id: number): Observable<Reserva[]> {
   newReserve(reserva: any): Observable<any> {
     return this.http.post<any>(`${this.apiUrlReservas}/new`, reserva);
   }
+  
 newReserveByAdmin(reservas: any): Observable<any> {
   return this.http.post<any>(`${this.apiUrlReservas}/admin/new`, reservas);
 }
@@ -125,18 +126,34 @@ filterByDate(date: Date): Observable<FilterDateResponse> {
       })
     );
 }
-newValoracion(valoracion: Valoracion): Observable<Valoracion> {
-  return this.http.post<Valoracion>(`${this.apiUrlValoracion}/valoraciones`,valoracion,
+
+getValoraciones(): Observable<ValoracionesResponse> {
+  return this.http.get<ValoracionesResponse>(`${this.apiUrlValoracion}/list`);
+}
+getValoracionById(id: number): Observable<Valoracion> {
+  return this.http.get<Valoracion>(`${this.apiUrlValoracion}/${id}`);
+}
+newValoracion(valoracion: any): Observable<any> {
+  const payload: any = {
+    rating: valoracion.rating,
+    comentario: valoracion.comentario || valoracion.comment,
+    usuario_id: valoracion.usuario_id,
+    reserva_id: valoracion.reserva_id,
+    created_at: valoracion.created_at || valoracion.fecha || new Date().toISOString()
+  };
+  
+  console.log('Enviando payload al backend:', payload);
+  
+  return this.http.post<any>(`${this.apiUrlValoracion}/new`, payload,
     { headers: { 'Content-Type': 'application/json' } }
   );
+}
+editValoracion(id: number, valoracionData: Valoracion): Observable<Valoracion> {
+  return this.http.put<Valoracion>(`${this.apiUrlValoracion}/${id}/edit`, valoracionData);
 }
 
 deleteReservaAnulada(id:number):Observable <ReservaAnulada>{
   return this.http.delete<ReservaAnulada>(`${this.apiUrlAnuladas}/delete/${id}`);
-}
-
-getValoraciones(): Observable<ValoracionesResponse> {
-  return this.http.get<ValoracionesResponse>(`${this.apiUrlValoracion}/list`);
 }
 deleteValoracion(id: number): Observable<Valoracion> {
   return this.http.delete<Valoracion>(`${this.apiUrlValoracion}/delete/${id}`);
@@ -152,7 +169,6 @@ getReservasAnuladas():Observable<ReservaAnulada[]>{
 getNumeroReservasByUsuarioId(usuario_Id: number){
   return this.http.get<{
     totalReservas: number;
-    paraCorteGratis: number;
   }>(`${this.apiUrlReservas}/usuario/${usuario_Id}/count`);}
 
 removeReserve(reserveId: number) {
@@ -164,8 +180,10 @@ getReserveById(id: number): Observable<Reserva> {
 }
 
 
-getAllVehiculos():Observable<Catalogo[]>{
-  return this.http.get<Catalogo[]>(`${this.apiUrlVehiculos}/list`)
+getAllVehiculos(): Observable<Catalogo[]> {
+  const userId = this.authService.getUserId();
+  const params = userId ? `?usuario_id=${userId}` : '';
+  return this.http.get<Catalogo[]>(`${this.apiUrlVehiculos}${params}`);
 }
 
 getVehiculos(): Catalogo[] {
@@ -189,7 +207,7 @@ getFavoritesByUsuarioId(usuario_Id: number): Observable<any> {
 addFavorite(Vehiculo: Catalogo) {
   const existingFavorite = this.favorites.find(p => p.id === Vehiculo.id);
   if (!existingFavorite) {
-    const VehiculoToAdd = { ...Vehiculo, isFavorite: true };
+    const VehiculoToAdd = { ...Vehiculo, is_favorite: true };
     this.favorites.push(VehiculoToAdd);
   }
 }
