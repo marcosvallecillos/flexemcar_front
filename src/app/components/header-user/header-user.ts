@@ -79,7 +79,7 @@ export class HeaderUser {
       localStorage.removeItem('userData');
       this.isUser = false;
       this.isAuthenticated = false;
-      this.router.navigate(['/home-barber']);
+      this.router.navigate(['/home']);
       window.location.reload()
       
     }

@@ -1,13 +1,13 @@
 <section class="reviews-section fade-in-up">
   <div style="max-width:100%">
-    <div class="section-tag">Testimonios</div>
+    <div class="section-tag">{{getText('Testimonios','Reviews')}} </div>
     <div style="display:flex;align-items:flex-end;justify-content:space-between;margin-top:8px;margin-bottom:0">
-      <h2 style="font-size:clamp(1.8rem,3vw,2.6rem);font-weight:800">Lo que dicen<br><em style="color:var(--orange-light);font-style:normal">nuestros clientes</em></h2>
+      <h2 style="font-size:clamp(1.8rem,3vw,2.6rem);font-weight:800">{{getText('Lo que dicen','What they say')}} <br><em style="color:var(--orange-light);font-style:normal">{{getText('nuestros clientes','our customers')}} </em></h2>
       <div style="display:flex;align-items:center;gap:16px;padding-bottom:4px">
         <div style="font-family:'Syne',sans-serif;font-size:2.5rem;font-weight:800">4.2</div>
         <div>
           <div style="color:#FBBF24;font-size:1.1rem">★★★★★</div>
-          <div style="color:var(--muted);font-size:.78rem">+56 reseñas en Google</div>
+          <div style="color:var(--muted);font-size:.78rem">{{getText('+56 reseñas en Google','+56 reviews on Google')}} </div>
         </div>
       </div>
     </div>
@@ -27,10 +27,24 @@
   <div class="reviewer-info">
     <div class="reviewer-name">{{ review.usuario?.nombre }} {{ review.usuario?.apellidos }}</div>
   </div>
-  <div class="reviewer-date">{{ formatDate(review.fecha) }}</div>  <!-- ✅ movida aquí -->
+  <div class="reviewer-date">{{ formatDate(review.fecha) }}</div>  
 </div>
   </div>
-}
+} 
+    } @else {
+      <div class="no-reviews">
+        <div class="no-reviews-icon">
+          <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+            <circle cx="12" cy="7" r="4"></circle>
+            <path d="M12 14v.01"></path>
+          </svg>
+        </div>
+        <h3 class="no-reviews-title">{{ getText('Aún no hay valoraciones', 'No reviews yet') }}</h3>
+        <p class="no-reviews-description">
+          {{ getText('Sé el primero en compartir tu experiencia con nosotros', 'Be the first to share your experience with us') }}
+        </p>
+      </div>
     }
   </div>
 </section>

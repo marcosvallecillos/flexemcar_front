@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { RouterModule } from '@angular/router';
+import { LanguageService } from '../../services/language.service';
 
 @Component({
   selector: 'app-hero',
@@ -8,6 +9,7 @@ import { RouterModule } from '@angular/router';
   styleUrl: './hero.css',
 })
 export class Hero {
+  isSpanish: boolean = true;
   scrollToStats() {
     const statsSection = document.getElementById('hero-stats');
     if (statsSection) {
@@ -18,4 +20,14 @@ export class Hero {
       });
     }
   }
+  constructor(private languageService: LanguageService) {
+      this.languageService.isSpanish$.subscribe(
+        isSpanish => this.isSpanish = isSpanish
+      );
+    }
+  
+    getText(es: string, en: string): string {
+      return this.isSpanish ? es : en;
+    }
+  
 }

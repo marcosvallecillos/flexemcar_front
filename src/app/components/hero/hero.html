@@ -2,12 +2,15 @@
   <div class="hero-bg"></div>
   <div class="hero-grid"></div>
   <div class="hero-content">
-    <div class="hero-tag">Furgonetas de Ocasión Premium</div>
-    <h1>No vendemos furgonetas.<br><em>Impulsamos tu negocio.</em></h1>
-    <p>Vehículos revisados, certificados y listos para trabajar. La confianza que tu negocio necesita.</p>
+    <div class="hero-tag">Furgonetas de Ocasión</div>
+    <h1>{{getText('No vendemos furgonetas.','We dont sell vans 
+')}} <br><em>{{getText('Impulsamos tu negocio.','We boost your business.  
+')}} </em></h1>
+
+    <p>{{getText('Vehículos revisados, certificados y listos para trabajar. La confianza que tu negocio necesita.','Vehicles inspected, certified, and ready to work. The confidence your business needs.')}} </p>
     <div class="hero-cta">
-      <button class="btn-hero btn-hero-primary" routerLink="/show-vehicles">🔍 Explorar catálogo</button>
-      <button class="btn-hero btn-hero-secondary">🚐 Vender mi furgoneta</button>
+      <button class="btn-hero btn-hero-primary" routerLink="/show-vehicles">🔍 {{getText('Explorar catálogo','Explore catalog')}} </button>
+      <button class="btn-hero btn-hero-secondary">🚐{{getText('Vender mi furgoneta','Sell my van')}} </button>
     </div>
   </div>
   <!-- Van placeholder -->

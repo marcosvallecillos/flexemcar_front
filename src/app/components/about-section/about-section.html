@@ -3,18 +3,18 @@
     <img src="/images/hero_image.png" alt="Sobre FlexemCar" />
   </div>
   <div class="about-content">
-    <div class="section-tag">Sobre Nosotros</div>
-    <h2>Tu portal de confianza
-para <br>comprar y vender</h2>
-    <p>En Flexemcar somos especialistas en la compraventa de furgonetas de segunda mano. Con años de experiencia en el sector, conocemos bien el mercado y te ofrecemos los mejores vehículos y condiciones.</p>
-    <p>Todos nuestros vehículos pasan por <strong style="color:var(--text)">rigurosos controles de calidad</strong> antes de ser puestos a la venta. Compra con total tranquilidad.</p>
+    <div class="section-tag">{{getText('Sobre Nosotros','About us')}} </div>
+    <h2> {{getText('Tu portal de confianza para','Your trusted portal for')}} <br>{{getText('comprar y vender','buy and sell')}} </h2>
+    <p>{{getText('En Flexemcar somos especialistas en la compraventa de furgonetas de segunda mano. Con años de experiencia en el sector, conocemos bien el mercado y te ofrecemos los mejores vehículos y condiciones.',
+        'At Flexemcar, we specialize in buying and selling used vans. With years of experience in the industry, we know the market well and offer you the best vehicles and terms.')}} </p>
+    <p>{{getText('Todos nuestros vehículos pasan por ','All our vehicles go through')}} <strong style="color:var(--text)">{{getText('rigurosos controles de calidad','rigorous quality controls')}} </strong>{{getText('antes de ser puestos a la venta. Compra con total tranquilidad.','before being put on sale. Buy with complete peace of mind.')}} </p>
     <div class="about-pills">
       @for (pill of pills; track pill) {
         <span class="pill">{{ pill }}</span>
       }
     </div>
     <div class="about-cta">
-      <button class="btn-hero btn-hero-primary" style="margin-top:8px" routerLink="/about-us">Conocer más</button>
+      <button class="btn-hero btn-hero-primary" style="margin-top:8px" routerLink="/about-us">{{getText('Conocer más','Know more')}} </button>
     </div>
   </div>
 </section>
