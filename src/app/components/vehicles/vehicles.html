@@ -1,10 +1,10 @@
 <section class="vehicles-section fade-in-up">
   <div class="section-header">
     <div>
-      <div class="section-tag">Catálogo</div>
-      <h2 style="margin-top:8px">Vehículos <em>destacados</em></h2>
+      <div class="section-tag">{{getText('Catálogo','Catalog')}} </div>
+      <h2 style="margin-top:8px">{{getText('Vehículos','Vehicles')}}  <em>{{getText('destacados','featured')}} </em></h2>
     </div>
-    <a href="#" class="see-all">Ver todos los vehículos →</a>
+    <a href="#" class="see-all" routerLink="/show-vehicles">{{getText('Ver todos los vehículos →','Show all vehicles →')}} </a>
   </div>
   <div class="vehicles-grid">
     @for (vehicle of vehicles; track vehicle.id) {

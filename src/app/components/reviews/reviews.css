@@ -16,7 +16,9 @@
   padding: 30px;
   border: 1px solid var(--border);
   transition: border-color .2s;
-}.review-comment-block {
+}
+
+.review-comment-block {
   position: relative;
   margin: 14px 0 18px;
   padding: 14px 16px 14px 44px;
@@ -45,7 +47,6 @@
   word-break: break-word;
 }
 
-/* Featured variant */
 .review-card.featured .review-comment-block {
   background: linear-gradient(135deg, #fff8ee 0%, #fff0d6 100%);
   border-left-color: #f5a623;
@@ -81,11 +82,12 @@
 .reviewer {
   display: flex;
   align-items: center;
-  justify-content: space-between; /* ✅ empuja la fecha a la derecha */
+  justify-content: space-between;
   gap: 10px;
 }
+
 .reviewer-info {
-  flex: 1; /* ✅ ocupa el espacio central */
+  flex: 1;
 }
 
 .reviewer-avatar {
@@ -106,7 +108,6 @@
   font-weight: 500; 
 }
 
-
 .reviewer-date {
   margin-left: auto;
   font-size: 1rem;
@@ -125,6 +126,58 @@
   color: var(--text); 
 }
 
+/* No Reviews State - Professional Design */
+.no-reviews {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 80px 40px;
+  text-align: center;
+  background: var(--dark-card);
+  border-radius: var(--radius);
+  border: 1px dashed var(--border);
+  min-height: 320px;
+}
+
+.no-reviews-icon {
+  width: 80px;
+  height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 24px;
+  color: var(--muted);
+  opacity: 0.6;
+  background: rgba(59,130,246,0.05);
+  border-radius: 50%;
+  padding: 16px;
+}
+
+.no-reviews-icon svg {
+  width: 100%;
+  height: 100%;
+  stroke-width: 1.5;
+}
+
+.no-reviews-title {
+  font-family: 'Syne', sans-serif;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--text);
+  margin: 0 0 12px 0;
+  letter-spacing: -0.02em;
+}
+
+.no-reviews-description {
+  font-size: 0.95rem;
+  color: var(--muted);
+  margin: 0;
+  max-width: 400px;
+  line-height: 1.6;
+}
+
 @media (max-width: 991px) {
   .review-card.featured {
     grid-column: span 1;
@@ -137,6 +190,21 @@
   .reviews-section {
     padding: 60px 40px;
   }
+
+  .no-reviews {
+    padding: 60px 30px;
+    min-height: 280px;
+  }
+
+  .no-reviews-icon {
+    width: 64px;
+    height: 64px;
+    margin-bottom: 20px;
+  }
+
+  .no-reviews-title {
+    font-size: 1.3rem;
+  }
 }
 
 @media (max-width: 640px) {
@@ -146,5 +214,24 @@
   
   .reviews-section {
     padding: 40px 20px;
+  }
+
+  .no-reviews {
+    padding: 48px 24px;
+    min-height: 240px;
+  }
+
+  .no-reviews-icon {
+    width: 56px;
+    height: 56px;
+    margin-bottom: 16px;
+  }
+
+  .no-reviews-title {
+    font-size: 1.2rem;
+  }
+
+  .no-reviews-description {
+    font-size: 0.9rem;
   }
 }

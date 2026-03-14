@@ -1,5 +1,6 @@
 import { Component, OnInit, AfterViewInit, ElementRef, ViewChild, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { LanguageService } from '../../services/language.service';
 
 interface Metric {
   icon: string;
@@ -19,48 +20,58 @@ interface Metric {
 })
 export class HeroStats implements OnInit, AfterViewInit {
   @ViewChild('metricsSection', { static: false }) metricsSection!: ElementRef;
-
-  metrics: Metric[] = [
+get metrics(): Metric[] {
+  return [
     {
       icon: `&#128200;`,
       value: 1247,
       suffix: '+',
-      label: 'Furgonetas vendidas',
-      trend: '↑ +18% este año',
+      label: this.getText('Furgonetas vendidas','Vans sold'),
+      trend: this.getText('↑ +18% este año','↑ +18% this year'),
       decimals: 0
     },
     {
       icon: `👥`,
       value: 98,
       suffix: '%',
-      label: 'Clientes satisfechos',
-      trend: '↑ Consistente en 3 años',
+      label: this.getText('Clientes satisfechos','Satisfied customers'),
+      trend: this.getText('↑ Consistente en 3 años','↑ Consistent for 3 years'),
       decimals: 0
     },
     {
-      icon: `    <i class="icono fas fa-shield-alt"></i>`,
+      icon: `<i class="icono fas fa-shield-alt"></i>`,
       value: 100,
       suffix: '%',
-      label: 'Vehículos certificados',
-      trend: '✓ Garantía incluida',
+      label: this.getText('Vehículos certificados','Certified vehicles'),
+      trend: this.getText('✓ Garantía incluida','✓ Warranty included'),
       decimals: 0
     },
     {
       icon: `<i class="icono fas fa-star"></i>`,
       value: 4.2,
       suffix: '/5',
-      label: 'Valoración media',
-      trend: '★★★★★ en Google',
+      label: this.getText('Valoración media','Average rating'),
+      trend: this.getText('★★★★★ en Google','★★★★★ on Google'),
       decimals: 1
     }
   ];
+}
 
   displayValues = signal<number[]>([0, 0, 0, 0]);
   hasAnimated = false;
   private rafIds: number[] = [];
+  isSpanish:boolean = true;
   private readonly DURATION = 1800; // 1.8 segundos
   private readonly STAGGER = 120; // 120ms entre cada contador
-
+ constructor(private languageService: LanguageService) {
+      this.languageService.isSpanish$.subscribe(
+        isSpanish => this.isSpanish = isSpanish
+      );
+    }
+  
+    getText(es: string, en: string): string {
+      return this.isSpanish ? es : en;
+    }
   ngOnInit() {
     // Inicializar valores en 0
     this.displayValues.set([0, 0, 0, 0]);

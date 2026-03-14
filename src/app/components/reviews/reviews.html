@@ -1,13 +1,13 @@
 <section class="reviews-section fade-in-up">
   <div style="max-width:100%">
-    <div class="section-tag">Testimonios</div>
+    <div class="section-tag">{{getText('Testimonios','Reviews')}} </div>
     <div style="display:flex;align-items:flex-end;justify-content:space-between;margin-top:8px;margin-bottom:0">
-      <h2 style="font-size:clamp(1.8rem,3vw,2.6rem);font-weight:800">Lo que dicen<br><em style="color:var(--orange-light);font-style:normal">nuestros clientes</em></h2>
+      <h2 style="font-size:clamp(1.8rem,3vw,2.6rem);font-weight:800">{{getText('Lo que dicen','What they say')}} <br><em style="color:var(--orange-light);font-style:normal">{{getText('nuestros clientes','our customers')}} </em></h2>
       <div style="display:flex;align-items:center;gap:16px;padding-bottom:4px">
         <div style="font-family:'Syne',sans-serif;font-size:2.5rem;font-weight:800">4.2</div>
         <div>
           <div style="color:#FBBF24;font-size:1.1rem">★★★★★</div>
-          <div style="color:var(--muted);font-size:.78rem">+56 reseñas en Google</div>
+          <div style="color:var(--muted);font-size:.78rem">{{getText('+56 reseñas en Google','+56 reviews on Google')}} </div>
         </div>
       </div>
     </div>
@@ -27,7 +27,7 @@
   <div class="reviewer-info">
     <div class="reviewer-name">{{ review.usuario?.nombre }} {{ review.usuario?.apellidos }}</div>
   </div>
-  <div class="reviewer-date">{{ formatDate(review.fecha) }}</div>  <!-- ✅ movida aquí -->
+  <div class="reviewer-date">{{ formatDate(review.fecha) }}</div>  
 </div>
   </div>
 }
@@ -57,10 +57,7 @@
     <p style="font-family: 'Syne', sans-serif; font-size: 1.15rem; font-weight: 700;
               color: var(--text); margin: 0 0 10px;">Aún no hay valoraciones</p>
 
-    <p style="font-size: 0.875rem; color: var(--muted); margin: 0 0 32px;
-              max-width: 320px; line-height: 1.6;">
-      Cuando tus clientes compartan su experiencia, sus opiniones aparecerán aquí.
-    </p>
+   
 
     <a routerLink="/reservar" style="display: inline-flex; align-items: center; gap: 8px;
        padding: 12px 24px; border-radius: 8px; border: 1px solid rgba(251,191,36,0.35);

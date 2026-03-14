@@ -72,11 +72,11 @@ export class ShowProfileComponent implements OnInit {
     } catch (e) {
       console.error('Error parsing:', e);
       this.usuario = null;
-      this.router.navigate(['/home-barber']);
+      this.router.navigate(['/home']);
     }
   } else {
     this.usuario = null;
-    this.router.navigate(['/home-barber']);
+    this.router.navigate(['/home']);
   }
 }
 

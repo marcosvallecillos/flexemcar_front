@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { RouterLink, RouterModule } from '@angular/router';
+import { REACTIVE_NODE } from '@angular/core/primitives/signals';
+import { LanguageService } from '../../services/language.service';
 
 interface Vehicle {
   id: number;
@@ -17,12 +19,13 @@ interface Vehicle {
 @Component({
   selector: 'app-vehicles',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule,RouterLink],
   templateUrl: './vehicles.html',
   styleUrl: './vehicles.css',
 })
 export class Vehicles {
-  vehicles: Vehicle[] = [
+ get vehicles(): Vehicle[]  { 
+    return [
     {
       id: 1,
       name: 'Mercedes-Benz Sprinter 314',
@@ -57,4 +60,16 @@ export class Vehicles {
       image: '/images/hero_image.png'
     }
   ];
+}
+
+isSpanish: boolean = true;
+constructor(private languageService: LanguageService) {
+      this.languageService.isSpanish$.subscribe(
+        isSpanish => this.isSpanish = isSpanish
+      );
+    }
+  
+    getText(es: string, en: string): string {
+      return this.isSpanish ? es : en;
+    }
 }
