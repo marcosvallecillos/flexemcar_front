@@ -6,10 +6,11 @@ import { AboutSection } from "../../components/about-section/about-section";
 import { Vehicles } from "../../components/vehicles/vehicles";
 import { Reviews } from "../../components/reviews/reviews";
 import { CtaBanner } from "../../components/cta-banner/cta-banner";
+import { ChatbotComponent } from '../../components/Chatbot/chatbot.component';
 
 @Component({
   selector: 'app-home',
-  imports: [Hero, HeroStats, Footer, AboutSection, Vehicles, Reviews, CtaBanner],
+  imports: [Hero, HeroStats, Footer, AboutSection, Vehicles, Reviews, CtaBanner, ChatbotComponent],
   templateUrl: './home.html',
   styleUrl: './home.css',
 })
