@@ -26,7 +26,21 @@
       <h3 class="vc-title">{{ getText('Tu valoración del servicio', 'Your service rating') }}</h3>
       <button class="close-button" (click)="goBack()">×</button>
     </div>
-
+ <div class="vc-vehicle">
+  <div class="image-hero">
+    <img [src]="reserve ? getReserveImage(reserve) : '/images/hero_image.png'"
+         [alt]="getText('Imagen del vehículo', 'Vehicle Image')"
+         class="vehicle-image">
+  </div>
+  <div class="model-vehicle">
+    <h1>{{ reserve?.vehiculo?.marca }} {{ reserve?.vehiculo?.modelo }}</h1>
+    <p>{{ getText('Completado el ', 'Completed on') }} {{ reserve?.dia }}</p>
+    <span>
+      <i class="bi bi-patch-check-fill" style="color:#16a34a"></i>
+      {{ getText('Servicio Verificado', 'Service verified') }}
+    </span>
+  </div>
+</div>
   
     <div class="vc-section">
       <p class="vc-section-label">TU EXPERIENCIA</p>
@@ -41,7 +55,7 @@
       </div>
       <div class="vc-rating-label">
         {{ getRatingLabel() }}
-        <span class="vc-rating-score">{{ servicioRating > 0 ? servicioRating + '.0 out of 5.0' : '' }}</span>
+        <span class="vc-rating-score">{{ servicioRating > 0 ? servicioRating  : ''  }} {{getText('0 de 5.0:','.0 out of 5.0:')}} </span>
       </div>
     </div>
 
@@ -112,7 +126,7 @@
       </div>
       <div class="vc-rating-label">
         {{ getRatingLabel() }}
-        <span class="vc-rating-score">{{ servicioRating > 0 ? servicioRating + '.0 out of 5.0' : '' }}</span>
+        <span class="vc-rating-score">{{ servicioRating > 0 ? servicioRating  : ''  }} {{getText('0 de 5.0:','.0 out of 5.0:')}} </span>
       </div>
     </div>
 
@@ -128,7 +142,9 @@
         [(ngModel)]="comentario"
         maxlength="600"
       ></textarea>
-      <span class="vc-char-count">{{ comentario?.length || 0 }} / 600</span>
+     
+      <span class="vc-char-count">{{ comentario.length || 0 }} / 600</span>
+      
     </div>
 
     <!-- Botones -->

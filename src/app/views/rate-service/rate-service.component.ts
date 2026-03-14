@@ -226,66 +226,49 @@ if (this.yaValorada) {
     }
 
     onSubmit(): void {
-        if (!this.comentario.trim()) {
-            alert(this.getText('Por favor, escribe un comentario.', 'Please write a comment.'));
-            return;
-        }
-
-        if (this.servicioRating === 0) {
-            alert(this.getText('Por favor, selecciona una calificación con estrellas.', 'Please select a star rating.'));
-            return;
-        }
-    
-        const userId = this.authService.getUserId();
-        if (!userId) {
-            alert(this.getText('No se pudo obtener el ID del usuario. Inicia sesión nuevamente.', 'Could not get user ID. Please log in again.'));
-            return;
-        }
-    
-        if (!this.reserve) {
-            alert(this.getText('No se pudo obtener la reserva seleccionada. Por favor, inténtalo de nuevo.', 'Could not get the selected reservation. Please try again.'));
-            return;
-        }
-
-        this.isProcessing = true;
-        this.formSubmitted = true;
-    
-        const fechaActual = new Date().toISOString();
-        
-        const valoracionData: any = {
-            rating: this.servicioRating,
-            comment: this.comentario,
-            usuario_id: userId,
-            reserva_id: this.reserve.id,
-            created_at: fechaActual
-        };
-
-   if (!this.reserve.valoracion) {
-    alert(this.getText('No se encontró la valoración a editar.', 'Rating not found.'));
-    return;
-}
-console.log('Enviando valoración al backend:', valoracionData);
-        
-        this.apiService.editValoracion(this.reserve.valoracion,valoracionData).subscribe({
-            next: (response) => {
-                console.log('Valoración enviada exitosamente:', response);
-                
-                this.reiniciarValoraciones();
-                this.showAlert = true;
-                this.isProcessing = false;
-                this.cdr.detectChanges();
-                
-                setTimeout(() => {
-                    this.router.navigate(['/show-catalogo']);
-                }, 2000);
-            },
-            error: (error) => {
-                console.error('Error al enviar la valoración:', error);
-                alert(this.getText('Error al enviar la valoración. Por favor, inténtalo de nuevo más tarde.', 'Error sending rating. Please try again later.'));
-                this.isProcessing = false;
-                this.showAlert = false;
-                this.cdr.detectChanges();
-            }
-        });
+    if (!this.comentario.trim()) {
+        alert(this.getText('Por favor, escribe un comentario.', 'Please write a comment.'));
+        return;
     }
+    if (this.servicioRating === 0) {
+        alert(this.getText('Por favor, selecciona una calificación.', 'Please select a star rating.'));
+        return;
+    }
+
+    const userId = this.authService.getUserId();
+    if (!userId || !this.reserve) return;
+
+    this.isProcessing = true;
+    this.formSubmitted = true;
+
+    const valoracionData: any = {
+        rating: this.servicioRating,
+        comment: this.comentario,
+        usuario_id: userId,
+        reserva_id: this.reserve.id,
+        created_at: new Date().toISOString()
+    };
+
+    //  nueva valoración o edición según si ya existe
+    const request$ = this.reserve.valoracion
+        ? this.apiService.editValoracion(this.reserve.valoracion, valoracionData)
+        : this.apiService.newValoracion(valoracionData);
+
+    request$.subscribe({
+        next: (response) => {
+            console.log('Valoración enviada:', response);
+            this.reiniciarValoraciones();
+            this.showAlert = true;
+            this.isProcessing = false;
+            this.cdr.detectChanges();
+            setTimeout(() => this.router.navigate(['/show-catalogo']), 2000);
+        },
+        error: (error) => {
+            console.error('Error:', error);
+            alert(this.getText('Error al enviar la valoración.', 'Error sending rating.'));
+            this.isProcessing = false;
+            this.cdr.detectChanges();
+        }
+    });
+}
 }

@@ -393,7 +393,87 @@
   gap: 5px;
   z-index: 10;
 }
+/* ── Reserve CTA Section ── */
+.reserve-cta-section {
+  position: relative;
+  margin: 0 0 2rem;
+  background: transparent;
+  border: none;
+  border-radius: 20px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 
+
+/* ── Botón ── */
+.reserve-cta-btn {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.9rem 2rem;
+  background: transparent;
+  border: 1.5px solid rgba(59, 130, 246, 0.5);
+  border-radius: 12px;
+  color: #ffffff;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  overflow: hidden;
+  transition: border-color 0.3s ease, transform 0.2s ease;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.reserve-cta-btn-bg {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, #3b82f6, #6366f1);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  z-index: 0;
+}
+
+.reserve-cta-btn i,
+.reserve-cta-btn span {
+  position: relative;
+  z-index: 1;
+}
+
+.reserve-cta-btn:hover .reserve-cta-btn-bg {
+  opacity: 1;
+  height: 25px;
+}
+
+.reserve-cta-btn:hover {
+  transform: scale(1);
+}
+
+.reserve-cta-arrow {
+  transition: transform 0.3s ease;
+}
+
+.reserve-cta-btn:hover .reserve-cta-arrow {
+  transform: scale(1.1);
+}
+
+/* ── Responsive ── */
+@media (max-width: 600px) {
+  .reserve-cta-section {
+    padding: 2rem 1.5rem;
+  }
+  .reserve-cta-content {
+    flex-direction: column;
+    text-align: center;
+    align-items: center;
+  }
+  .reserve-cta-title {
+    font-size: 1.2rem;
+  }
+}
 .carousel-dot {
   width: 6px;
   height: 6px;
