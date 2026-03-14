@@ -9,7 +9,7 @@ import { DecimalPipe, NgClass, UpperCasePipe } from '@angular/common';
 
 @Component({
   selector: 'app-show-vehicles',
-  imports: [Footer, NgClass, RouterLink, DecimalPipe, UpperCasePipe],
+  imports: [Footer, NgClass, DecimalPipe, UpperCasePipe],
   templateUrl: './show-vehicles.html',
   styleUrl: './show-vehicles.css',
 })
