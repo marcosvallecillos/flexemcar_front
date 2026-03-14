@@ -140,7 +140,9 @@
   }
 
   <app-footer></app-footer>
-  @if (showLoginModal) {
-    <app-modal-login (closeModal)="showLoginModal = false"></app-modal-login>
-  }
+   <app-modal-login
+        [show]="showLoginModal"
+        (close)="closeLoginModal()">
+    </app-modal-login>
+
 </body>

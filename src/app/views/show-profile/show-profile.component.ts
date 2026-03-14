@@ -11,7 +11,7 @@ import { ApiService } from '../../services/api-service.service';
 
 @Component({
   selector: 'app-show-profile',
-  imports: [FormsModule, Footer, ModalLoginComponent, NgClass, RouterLink,],
+  imports: [FormsModule, Footer, ModalLoginComponent,NgClass],
   templateUrl: './show-profile.component.html',
   styleUrl: './show-profile.component.css'
 })
@@ -92,6 +92,13 @@ export class ShowProfileComponent implements OnInit {
   openLoginModal() {
     this.showLoginModal = true;
   }
+  
+  closeLoginModal() {
+    this.showLoginModal = false;
+    
+    this.router.navigate(['home']);
+    window.location.reload()
+  }
 
   editarPerfil() {
     console.log("abriendo editProfile")
@@ -101,7 +108,7 @@ export class ShowProfileComponent implements OnInit {
   cerrarSesion() {
     localStorage.removeItem('userData');
     this.usuario = null;
-    this.router.navigate(['/home-barber']);
+    this.router.navigate(['home']);
     window.location.reload()
   }
   reserves: Reserva[] = [];
