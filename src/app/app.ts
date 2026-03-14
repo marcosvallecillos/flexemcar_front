@@ -26,7 +26,6 @@ export class App {
         if (this.router.url !== '/home') {
           window.scrollTo(0, 0);
         }
-        this.mostrarHeader = this.router.url !== '/index' ; 
         
 
 
@@ -47,7 +46,7 @@ export class App {
     }, 0);
     
     this.router.events.subscribe(() => {
-      this.mostrarHeader = this.router.url !== '/index' && this.router.url !== '/policy-cookies' && this.router.url !== '/privacy-policy'; 
+      this.mostrarHeader = this.router.url !== '/policy-cookies' && this.router.url !== '/privacy-policy'; 
     });
     console.log('Mostrando header:', this.mostrarHeader);
 

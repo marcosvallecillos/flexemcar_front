@@ -13,7 +13,7 @@
     </div>
   </div>
   <div class="reviews-grid">
-    @if (isLoading) {
+    @if (isLoading ) {
       <div style="grid-column: 1 / -1; text-align: center; padding: 2rem; color: var(--muted);">
         {{ getText('Cargando valoraciones...', 'Loading reviews...') }}
       </div>
@@ -31,6 +31,44 @@
 </div>
   </div>
 }
-    }
+    } @else {
+  <div style="grid-column: 1 / -1; display: flex; flex-direction: column; align-items: center;
+              justify-content: center; padding: 64px 24px; text-align: center;">
+
+    <div style="width: 72px; height: 72px; border-radius: 50%;
+                background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08);
+                display: flex; align-items: center; justify-content: center; margin-bottom: 24px;">
+      <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+        <path d="M16 3L19.5 11H28L21.5 16.5L24 25L16 20L8 25L10.5 16.5L4 11H12.5L16 3Z"
+              stroke="rgba(251,191,36,0.5)" stroke-width="1.5" stroke-linejoin="round" fill="none"/>
+        <path d="M16 7L18.5 13H24.5L19.5 16.8L21.5 23L16 19.5L10.5 23L12.5 16.8L7.5 13H13.5L16 7Z"
+              fill="rgba(251,191,36,0.12)"/>
+      </svg>
+    </div>
+
+    <div style="display: flex; gap: 4px; margin-bottom: 20px;">
+      <span style="width: 8px; height: 8px; border-radius: 50%; background: rgba(251,191,36,0.18); display: inline-block;"></span>
+      <span style="width: 8px; height: 8px; border-radius: 50%; background: rgba(251,191,36,0.18); display: inline-block;"></span>
+      <span style="width: 8px; height: 8px; border-radius: 50%; background: rgba(251,191,36,0.18); display: inline-block;"></span>
+      <span style="width: 8px; height: 8px; border-radius: 50%; background: rgba(251,191,36,0.18); display: inline-block;"></span>
+      <span style="width: 8px; height: 8px; border-radius: 50%; background: rgba(251,191,36,0.18); display: inline-block;"></span>
+    </div>
+
+    <p style="font-family: 'Syne', sans-serif; font-size: 1.15rem; font-weight: 700;
+              color: var(--text); margin: 0 0 10px;">Aún no hay valoraciones</p>
+
+    <p style="font-size: 0.875rem; color: var(--muted); margin: 0 0 32px;
+              max-width: 320px; line-height: 1.6;">
+      Cuando tus clientes compartan su experiencia, sus opiniones aparecerán aquí.
+    </p>
+
+    <a routerLink="/reservar" style="display: inline-flex; align-items: center; gap: 8px;
+       padding: 12px 24px; border-radius: 8px; border: 1px solid rgba(251,191,36,0.35);
+       background: rgba(251,191,36,0.07); color: #FBBF24; font-size: 0.875rem;
+       font-weight: 600; cursor: pointer; text-decoration: none; font-family: inherit;">
+      Sé el primero en valorar
+    </a>
+  </div>
+}
   </div>
 </section>
