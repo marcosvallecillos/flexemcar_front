@@ -86,52 +86,60 @@ export class ModalLoginComponent {
   }
 
   onLogin() {
-    if (this.loginForm.invalid) {
-      this.errorMessage = this.getText('Por favor, completa todos los campos correctamente', 'Please fill all fields correctly');
-      this.loginForm.markAllAsTouched();
-      return;
-    }
-  
-    this.isLoading = true;
-    this.errorMessage = '';
-  
-    const { email, password } = this.loginForm.value;
-
-    this.apiService.loginUser(email, password).subscribe({
-      next: (response: any) => {
-        this.isLoading = false;
-        
-        if (response && response.status === 'ok') {
-          const userData: Usuario = {
-            id: response.id,
-            email: response.email,
-            nombre: response.nombre,
-            apellidos: response.apellidos,
-            telefono: response.telefono,
-            password: '',
-            confirm_password: '',
-            rol: response.rol,
-            citas_reservadas: [],
-          };
-          
-          this.authService.login(userData);
-          this.userStateService.updateUser(userData);
-          this.close.emit();
-          this.router.navigate(['/home']);
-        } else {
-          this.errorMessage = this.getText('Credenciales inválidas', 'Invalid credentials');
-        }
-      },
-      error: (error) => {
-        this.isLoading = false;
-        console.error('Login error:', error);
-        this.errorMessage = this.getText(
-          'Error al iniciar sesión. Por favor, verifica tus credenciales.',
-          'Login error. Please check your credentials.'
-        );
-      }
-    });
+  if (this.loginForm.invalid) {
+    this.errorMessage = this.getText('Por favor, completa todos los campos correctamente', 'Please fill all fields correctly');
+    this.loginForm.markAllAsTouched();
+    return;
   }
+
+  this.isLoading = true;
+  this.errorMessage = '';
+
+  const { email, password } = this.loginForm.value;
+
+  this.apiService.loginUser(email, password).subscribe({
+    next: (response: any) => {
+      this.isLoading = false;
+
+      if (response && response.status === 'ok') {
+        const userData: Usuario = {
+          id: response.id,
+          email: response.email,
+          nombre: response.nombre,
+          apellidos: response.apellidos,
+          telefono: response.telefono,
+          password: '',
+          confirm_password: '',
+          rol: response.rol,
+          citas_reservadas: [],
+        };
+
+        this.authService.login(userData);
+        
+        this.apiService.updateLastLogin(userData.id).subscribe();
+        this.userStateService.updateUser(userData);
+        this.close.emit();
+
+        if (userData.rol === 'admin') {
+          this.router.navigate(['/admin/dashboard']);
+        } else {
+          this.router.navigate(['/home']);
+        }
+
+      } else {
+        this.errorMessage = this.getText('Credenciales inválidas', 'Invalid credentials');
+      }
+    },
+    error: (error) => {
+      this.isLoading = false;
+      console.error('Login error:', error);
+      this.errorMessage = this.getText(
+        'Error al iniciar sesión. Por favor, verifica tus credenciales.',
+        'Login error. Please check your credentials.'
+      );
+    }
+  });
+}
   
   registrarUsuario() {
     if (this.registerForm.invalid || this.registerForm.hasError('passwordsDoNotMatch')) {
