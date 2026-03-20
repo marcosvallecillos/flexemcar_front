@@ -129,7 +129,7 @@
                          id="password" name="password"
                          [(ngModel)]="userData.password"
                          [class.is-invalid]="errors['password']"
-                         placeholder="••••••••">
+                         placeholder="{{ getText('Ingrese una nueva contraseña', 'Enter a new password') }}">
                   <button type="button" class="toggle-password"
                           (click)="togglePasswordVisibility('password')">
                     <i class="bi" [ngClass]="showPassword ? 'bi-eye' : 'bi-eye-slash'"></i>

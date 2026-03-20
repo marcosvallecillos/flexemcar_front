@@ -7,6 +7,12 @@ import { Vehicles } from "../../components/vehicles/vehicles";
 import { Reviews } from "../../components/reviews/reviews";
 import { CtaBanner } from "../../components/cta-banner/cta-banner";
 import { ChatbotComponent } from '../../components/Chatbot/chatbot.component';
+import { NavigationEnd, Router } from '@angular/router';
+import { ApiService } from '../../services/api-service.service';
+import { fromReadableStreamLike } from 'rxjs/internal/observable/innerFrom';
+import { Usuario } from '../../models/user.interface';
+import { Observable } from 'rxjs';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-home',
@@ -15,8 +21,34 @@ import { ChatbotComponent } from '../../components/Chatbot/chatbot.component';
   styleUrl: './home.css',
 })
 export class Home implements OnInit, AfterViewInit {
-  ngOnInit() {
-    // Animación inicial al cargar
+  mostrarhome: boolean = false;
+   
+  constructor(private router: Router, private apiService: ApiService,    private authService: AuthService  
+
+
+  ) {
+    }
+usuario: Usuario | null = null;
+esAdmin = false;
+
+ngOnInit() {
+  const usuario = this.authService.getUserData();
+  this.esAdmin = usuario?.rol === 'admin'; 
+   const userData = localStorage.getItem('userData');
+  if (userData) {
+    try {
+      const usuario = JSON.parse(userData);
+      if (usuario?.rol === 'admin') {
+        this.router.navigate(['/admin/dashboard']);
+        return; 
+      }
+    } catch (e) {}
+  }
+  if (this.esAdmin) {
+    this.router.navigate(['/admin/dashboard']);
+    return;
+  }
+
     if (typeof document !== 'undefined') {
       document.body.style.opacity = '0';
       setTimeout(() => {
@@ -27,7 +59,7 @@ export class Home implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit() {
-    // Configurar Intersection Observer para animaciones de scroll
+        if (this.usuario?.rol === 'admin') return; 
     if (typeof window !== 'undefined' && 'IntersectionObserver' in window) {
       const observerOptions = {
         root: null,
@@ -39,13 +71,11 @@ export class Home implements OnInit, AfterViewInit {
         entries.forEach(entry => {
           if (entry.isIntersecting) {
             entry.target.classList.add('visible');
-            // Opcional: dejar de observar después de animar para mejor rendimiento
             observer.unobserve(entry.target);
           }
         });
       }, observerOptions);
 
-      // Observar todos los elementos con clase fade-in-up después de un pequeño delay
       setTimeout(() => {
         const elements = document.querySelectorAll('.fade-in-up');
         elements.forEach(el => observer.observe(el));

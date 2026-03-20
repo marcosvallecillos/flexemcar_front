@@ -1,22 +1,12 @@
-<div class="home-container">
-  <!-- Hero Section -->
-  <app-hero></app-hero>
-
-  <!-- Metrics Section -->
-  <app-hero-stats></app-hero-stats>
-
-  <!-- About Section -->
-  <app-about-section></app-about-section>
-
-  <!-- Vehicles Section -->
-  <app-vehicles></app-vehicles>
-
-
-  <!-- Reviews Section -->
-  <app-reviews></app-reviews>  <!-- CTA Banner -->
-  <app-cta-banner></app-cta-banner>  <!-- Footer -->
-
-      <app-chatbot></app-chatbot>
-
-  <app-footer></app-footer>
-</div>
+@if (!esAdmin) {
+    <div class="home-container">
+    <app-hero></app-hero>
+    <app-hero-stats></app-hero-stats>
+    <app-about-section></app-about-section>
+    <app-vehicles></app-vehicles>
+    <app-reviews></app-reviews>
+    <app-cta-banner></app-cta-banner>
+    <app-chatbot></app-chatbot>
+    <app-footer></app-footer>
+  </div>
+}
