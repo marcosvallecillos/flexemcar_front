@@ -1,0 +1,322 @@
+/* create-user.component.css */
+/* Dark theme — coherente con el admin dashboard */
+
+:host {
+  display: block;
+  min-height: 100vh;
+  background: #0f1117;
+  font-family: 'Inter', 'Segoe UI', sans-serif;
+}
+
+/* ── Fondo con overlay sutil ── */
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: radial-gradient(ellipse at 60% 20%, rgba(16,185,129,0.06) 0%, transparent 60%),
+              radial-gradient(ellipse at 20% 80%, rgba(99,102,241,0.05) 0%, transparent 50%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ── Contenedor principal ── */
+.container {
+  position: relative;
+  margin-top:8%;
+  margin-right: 50%;
+  z-index: 1;
+}
+
+/* ── Card ── */
+.card {
+  background: #161b27;
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 24px 48px rgba(0,0,0,0.4);
+}
+
+/* ── Header de la card ── */
+.card-header {
+  background: transparent;
+  border-bottom: 1px solid rgba(255,255,255,0.07);
+  padding: 28px 32px 22px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.card-header::before {
+  content: '';
+  display: inline-block;
+  width: 36px;
+  height: 36px;
+  background: linear-gradient(135deg, #10b981, #059669);
+  border-radius: 10px;
+  flex-shrink: 0;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='white'%3E%3Cpath d='M8 9a3 3 0 100-6 3 3 0 000 6zM8 11a6 6 0 016 6H2a6 6 0 016-6zM16 7a1 1 0 10-2 0v1h-1a1 1 0 100 2h1v1a1 1 0 102 0v-1h1a1 1 0 100-2h-1V7z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 18px;
+}
+
+.card-header h2 {
+  font-size: 18px;
+  font-weight: 600;
+  color: #f1f5f9;
+  margin: 0;
+  text-align: left !important;
+  letter-spacing: -0.01em;
+}
+
+/* ── Body ── */
+.card-body {
+  padding: 28px 32px 32px;
+}
+
+/* ── Grid de 2 columnas para los campos ── */
+form {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0 20px;
+}
+
+/* Campos que ocupan toda la fila */
+.mb-3:nth-child(5),  /* email */
+.mb-4:nth-child(6),  /* password */
+.mb-4:nth-child(7),  /* confirmPassword */
+.text-center {
+  grid-column: 1 / -1;
+}
+
+/* ── Labels ── */
+.form-label {
+  display: block;
+  font-size: 12px;
+  font-weight: 500;
+  color: rgba(255,255,255,0.5);
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  margin-bottom: 8px;
+}
+
+/* ── Inputs ── */
+.form-control {
+  width: 100%;
+  background: rgba(255,255,255,0.04) !important;
+  border: 1px solid rgba(255,255,255,0.1) !important;
+  border-radius: 10px !important;
+  padding: 11px 14px !important;
+  font-size: 14px !important;
+  color: #e2e8f0 !important;
+  transition: all 0.2s ease;
+  outline: none;
+}
+
+.form-control::placeholder {
+  color: rgba(255,255,255,0.2) !important;
+}
+
+.form-control:focus {
+  background: rgba(255,255,255,0.06) !important;
+  border-color: rgba(16,185,129,0.5) !important;
+  box-shadow: 0 0 0 3px rgba(16,185,129,0.1) !important;
+  color: #f1f5f9 !important;
+}
+
+.form-control:hover:not(:focus) {
+  border-color: rgba(255,255,255,0.18) !important;
+}
+
+/* Quitar fondo blanco del autofill del navegador */
+.form-control:-webkit-autofill,
+.form-control:-webkit-autofill:hover,
+.form-control:-webkit-autofill:focus {
+  -webkit-box-shadow: 0 0 0 1000px #1e2535 inset !important;
+  -webkit-text-fill-color: #e2e8f0 !important;
+  border-color: rgba(255,255,255,0.1) !important;
+}
+
+/* Input number — quitar flechas */
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+}
+
+/* ── Campos con toggle de password ── */
+.position-relative {
+  position: relative;
+}
+
+.password-toggle {
+  position: absolute;
+  right: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: rgba(255,255,255,0.3);
+  transition: color 0.15s;
+  line-height: 1;
+  margin-top: 10px; /* compensa el label */
+}
+
+.password-toggle:hover {
+  color: rgba(255,255,255,0.7);
+}
+
+/* ── Mensajes de error ── */
+.text-danger {
+  font-size: 11px !important;
+  color: #f87171 !important;
+  display: block;
+  margin-top: 5px;
+}
+
+/* ── Botones ── */
+.text-center {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 8px;
+  padding-top: 20px;
+  border-top: 1px solid rgba(255,255,255,0.06);
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 11px 28px;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: none;
+  text-decoration: none;
+}
+
+.btn i {
+  font-size: 15px;
+}
+
+/* Botón primario — verde */
+.btn-primary {
+  background: #10b981 !important;
+  color: #fff !important;
+  border: none !important;
+  box-shadow: 0 4px 14px rgba(16,185,129,0.3);
+}
+
+.btn-primary:hover:not(:disabled) {
+  background: #059669 !important;
+  box-shadow: 0 4px 18px rgba(16,185,129,0.45);
+  transform: translateY(-1px);
+}
+
+.btn-primary:active {
+  transform: translateY(0);
+}
+
+.btn-primary:disabled {
+  background: rgba(16,185,129,0.3) !important;
+  color: rgba(255,255,255,0.4) !important;
+  cursor: not-allowed;
+  box-shadow: none;
+  transform: none;
+}
+
+/* Botón secundario — outline */
+.btn-secondary {
+  background: rgba(255,255,255,0.05) !important;
+  color: rgba(255,255,255,0.6) !important;
+  border: 1px solid rgba(255,255,255,0.12) !important;
+}
+
+.btn-secondary:hover {
+  background: rgba(255,255,255,0.09) !important;
+  color: rgba(255,255,255,0.9) !important;
+  border-color: rgba(255,255,255,0.2) !important;
+}
+
+/* ── Separadores de sección ── */
+.mb-3, .mb-4 {
+  margin-bottom: 18px !important;
+}
+
+/* ── Alert de éxito ── */
+.alert-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.6);
+  backdrop-filter: blur(6px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  animation: fadeIn 0.2s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.alert-box {
+  background: #161b27;
+  border: 1px solid rgba(16,185,129,0.3);
+  border-radius: 14px;
+  padding: 28px 36px;
+  text-align: center;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.5), 0 0 0 1px rgba(16,185,129,0.1);
+  animation: slideUp 0.25s ease;
+}
+
+@keyframes slideUp {
+  from { transform: translateY(12px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+.alert-box::before {
+  content: '✓';
+  display: block;
+  width: 48px;
+  height: 48px;
+  background: rgba(16,185,129,0.15);
+  border-radius: 50%;
+  line-height: 48px;
+  font-size: 20px;
+  color: #10b981;
+  margin: 0 auto 14px;
+}
+
+.alert-box p {
+  color: #e2e8f0;
+  font-size: 15px;
+  font-weight: 500;
+  margin: 0;
+}
+
+/* ── Responsive ── */
+@media (max-width: 640px) {
+  form {
+    grid-template-columns: 1fr;
+  }
+
+  .mb-3:nth-child(5),
+  .mb-4:nth-child(6),
+  .mb-4:nth-child(7) {
+    grid-column: 1;
+  }
+
+  .card-body {
+    padding: 20px;
+  }
+
+  .text-center {
+    flex-direction: column;
+  }
+
+  .btn {
+    width: 100%;
+    justify-content: center;
+  }
+}
