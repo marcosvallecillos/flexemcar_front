@@ -23,26 +23,38 @@
     <div class="reserves-container">
     <div class="header">
       <div class="dropdown" [class.show]="showDropdown">
-        <div class="filter-button" (click)="toggleDropdown(); $event.stopPropagation()">
-          <i class="bi bi-funnel-fill fs-4"></i>
-          <span class="current-filter">
-            {{ currentFilter === 'all' ? getText('Todas las Reservas', 'All Reservations') :
-               currentFilter === 'activas' ? getText('Reservas Activas', 'Active Reservations') :
-               getText('Reservas Expiradas', 'Expired Reservations') }}
-          </span>
-        </div>
-        <div class="dropdown-menu">
-          <p [class.active]="currentFilter === 'all'" (click)="filtrar('all')">
-            {{ getText('Todas las Reservas', 'All Reservations') }}
-          </p>
-          <p [class.active]="currentFilter === 'activas'" (click)="filtrar('activas')">
-            {{ getText('Reservas Activas', 'Active Reservations') }}
-          </p>
-          <p [class.active]="currentFilter === 'expiradas'" (click)="filtrar('expiradas')">
-            {{ getText('Reservas Expiradas', 'Expired Reservations') }}
-          </p>
-        </div>
-      </div>
+  <div class="filter-button" (click)="toggleDropdown()">
+    <i class="bi bi-funnel-fill"></i>
+    <span class="current-filter">
+      {{ currentFilter === 'all' ? getText('Todas las Reservas', 'All Reservations') :
+         currentFilter === 'activas' ? getText('Reservas Activas', 'Active Reservations') :
+         getText('Reservas Expiradas', 'Expired Reservations') }}
+    </span>
+    <i class="bi bi-chevron-down chevron-icon"></i>
+  </div>
+
+  <div class="dropdown-menu">
+    <div class="filter-item" [class.active]="currentFilter === 'all'" (click)="filtrar('all')">
+      <span class="filter-dot"></span>
+      <span class="filter-label">{{ getText('Todas las Reservas', 'All Reservations') }}</span>
+      <span class="filter-badge badge-all">{{ reservasOriginales.length }}</span>
+    </div>
+
+    <div class="filter-divider"></div>
+
+    <div class="filter-item" [class.active]="currentFilter === 'activas'" (click)="filtrar('activas')">
+      <span class="filter-dot"></span>
+      <span class="filter-label">{{ getText('Reservas Activas', 'Active Reservations') }}</span>
+      <span class="filter-badge badge-active">{{ getCountByType('activas') }}</span>
+    </div>
+
+    <div class="filter-item" [class.active]="currentFilter === 'expiradas'" (click)="filtrar('expiradas')">
+      <span class="filter-dot"></span>
+      <span class="filter-label">{{ getText('Reservas Expiradas', 'Expired Reservations') }}</span>
+      <span class="filter-badge badge-expired">{{ getCountByType('expiradas') }}</span>
+    </div>
+  </div>
+</div>
       @if (isLoading) {
         <div class="loading">
           <div class="spinner">Cargando...</div>
@@ -88,9 +100,15 @@
               <h3 class="card-title-text">
                 {{ reserve.vehiculo_model || reserve.vehiculo?.modelo }} {{ reserve.vehiculo?.marca }}
               </h3>
-              <p class="card-subtitle-text">
-                {{ getText('Cita de servicio completada', 'Full Service appointment') }}
-              </p>
+              @if(isReservePast(reserve)){
+                <p class="card-subtitle-text">
+                  {{ getText('Cita de servicio completada', 'Full Service appointment') }}
+                </p>
+              } @else {
+                <p class="card-subtitle-text">
+                  {{ getText('Cita de servicio pendiente', 'Pending Service appointment') }}
+                </p>
+              }
             </div>
 
           </div>

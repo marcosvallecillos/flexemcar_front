@@ -19,155 +19,153 @@ import { Subscription, filter } from 'rxjs';
 })
 export class ShowCatalogo implements OnInit, OnDestroy {
 
-reserves: Reserva[] = [];
-reservasOriginales: Reserva[] = []; 
-isUser = false;
-isAuthenticated = true;
-isSpanish: boolean = true;
-showLoginModal: boolean = false;
-showModal: boolean = false;
-selectedReserve: Reserva | null = null;
-isLoading: boolean = true;
-showDropdown = false;
-currentFilter: 'all' | 'activas' | 'expiradas' = 'all';
-filterError: string | null = null;
-codigoReserva: string = '';
-showModalCode: boolean = false;
-valoracion: Reviews[] = [];
-showDetailsModal: boolean = false;
-editedTime: string = '';
-editedDay: string = '';
-vehiculo: Catalogo[] = []
+  reserves: Reserva[] = [];
+  reservasOriginales: Reserva[] = [];
+  isUser = false;
+  isAuthenticated = true;
+  isSpanish: boolean = true;
+  showLoginModal: boolean = false;
+  showModal: boolean = false;
+  selectedReserve: Reserva | null = null;
+  isLoading: boolean = true;
+  showDropdown = false;
+  currentFilter: 'all' | 'activas' | 'expiradas' = 'all';
+  filterError: string | null = null;
+  codigoReserva: string = '';
+  showModalCode: boolean = false;
+  valoracion: Reviews[] = [];
+  showDetailsModal: boolean = false;
+  editedTime: string = '';
+  editedDay: string = '';
+  vehiculo: Catalogo[] = []
 
-private authSubscription?: Subscription;
-private languageSubscription?: Subscription;
-private routerSubscription?: Subscription;
+  private authSubscription?: Subscription;
+  private languageSubscription?: Subscription;
+  private routerSubscription?: Subscription;
 
-constructor(
-  private authService: AuthService,
-  private router: Router,
-  private languageService: LanguageService,
-  private apiService: ApiService,
-  private cdr: ChangeDetectorRef,
-) {
-  this.languageSubscription = this.languageService.isSpanish$.subscribe(isSpanish => {
-    this.isSpanish = isSpanish;
-    this.cdr.detectChanges();
-  });
-}
-
-ngOnInit() {
-  this.checkUserAndLoadReserves();
-  
-  // Suscribirse a cambios de autenticación
-  this.authSubscription = this.authService.isLoggedIn$.subscribe(isLoggedIn => {
-    this.checkUserAndLoadReserves();
-  });
-
-  // Suscribirse a eventos de navegación para recargar cuando se vuelve a esta página
-  this.routerSubscription = this.router.events
-    .pipe(filter(event => event instanceof NavigationEnd))
-    .subscribe(() => {
-      // Pequeño delay para asegurar que el componente está listo
-      setTimeout(() => {
-        this.checkUserAndLoadReserves();
-      }, 50);
+  constructor(
+    private authService: AuthService,
+    private router: Router,
+    private languageService: LanguageService,
+    private apiService: ApiService,
+    private cdr: ChangeDetectorRef,
+  ) {
+    this.languageSubscription = this.languageService.isSpanish$.subscribe(isSpanish => {
+      this.isSpanish = isSpanish;
+      this.cdr.detectChanges();
     });
-}
-
-ngOnDestroy() {
-  if (this.authSubscription) {
-    this.authSubscription.unsubscribe();
-  }
-  if (this.languageSubscription) {
-    this.languageSubscription.unsubscribe();
-  }
-  if (this.routerSubscription) {
-    this.routerSubscription.unsubscribe();
-  }
-}
-
-private checkUserAndLoadReserves() {
-  const userId = this.authService.getUserId();
-  const userData = this.authService.getUserData();
-
-  if (userId && userData) {
-    this.isUser = true;
-    this.loadUserReserves();
-  } else {
-    this.isUser = false;
-    this.isLoading = false;
-    this.reserves = [];
-    this.reservasOriginales = [];
-  }
-  this.cdr.detectChanges();
-}
-
-loadUserReserves() {
-  this.isLoading = true;
-  const userId = this.authService.getUserId();
-  if (!userId) { 
-    this.isLoading = false; 
-    return; 
   }
 
-  this.apiService.getReserveByUsuario(userId).subscribe({
-    next: (response: any[]) => {
-      console.log('Response cruda:', response[0]?.vehiculo); 
-      const mapped = this.mapReservaResponse(response);
-      this.reservasOriginales = this.sortReserves(mapped);
-      this.reserves = [...this.reservasOriginales];
-      this.isLoading = false;
-      this.cdr.detectChanges();
-    },
-    error: (err) => {
-      console.error(err);
-      this.isLoading = false;
-      this.cdr.detectChanges();
+  ngOnInit() {
+    this.checkUserAndLoadReserves();
+
+    // Suscribirse a cambios de autenticación
+    this.authSubscription = this.authService.isLoggedIn$.subscribe(isLoggedIn => {
+      this.checkUserAndLoadReserves();
+    });
+
+    // Suscribirse a eventos de navegación para recargar cuando se vuelve a esta página
+    this.routerSubscription = this.router.events
+      .pipe(filter(event => event instanceof NavigationEnd))
+      .subscribe(() => {
+        // Pequeño delay para asegurar que el componente está listo
+        setTimeout(() => {
+          this.checkUserAndLoadReserves();
+        }, 50);
+      });
+  }
+
+  ngOnDestroy() {
+    if (this.authSubscription) {
+      this.authSubscription.unsubscribe();
     }
-  });
-}
-getReserveImage(reserve: Reserva): string {
-  const images = reserve.vehiculo?.image_url;
-  if (images && images.length > 0) {
-    return images[0]; 
-  }
-  return '/images/hero_image.png';
-}
-filtrar(tipo: 'all' | 'activas' | 'expiradas') {
-  this.filterError = null;
-  this.currentFilter = tipo;
-  this.showDropdown = false;
-
-  if (tipo === 'all') {
-    this.reserves = this.reservasOriginales;
-    return;
+    if (this.languageSubscription) {
+      this.languageSubscription.unsubscribe();
+    }
+    if (this.routerSubscription) {
+      this.routerSubscription.unsubscribe();
+    }
   }
 
-  const ahora = new Date();
+  private checkUserAndLoadReserves() {
+    const userId = this.authService.getUserId();
+    const userData = this.authService.getUserData();
 
-  this.reserves = this.reservasOriginales.filter(reserve => {
-    const [year, month, day] = reserve.dia.split('-').map(Number);
-    const [hours, minutes] = reserve.hora.split(':').map(Number);
-    const fechaReserva = new Date(year, month - 1, day, hours, minutes);
-    const isPast = fechaReserva < ahora;
+    if (userId && userData) {
+      this.isUser = true;
+      this.loadUserReserves();
+    } else {
+      this.isUser = false;
+      this.isLoading = false;
+      this.reserves = [];
+      this.reservasOriginales = [];
+    }
+    this.cdr.detectChanges();
+  }
 
-    return tipo === 'activas' ? !isPast : isPast;
-  });
-}
+  loadUserReserves() {
+    this.isLoading = true;
+    const userId = this.authService.getUserId();
+    if (!userId) {
+      this.isLoading = false;
+      return;
+    }
 
-// --- El resto sin cambios ---
+    this.apiService.getReserveByUsuario(userId).subscribe({
+      next: (response: any[]) => {
+        const mapped = this.mapReservaResponse(response);
+        this.reservasOriginales = this.sortReserves(mapped);
+        this.reserves = [...this.reservasOriginales];
+        this.isLoading = false;
+        this.cdr.detectChanges();
+      },
+      error: (err) => {
+        console.error(err);
+        this.isLoading = false;
+        this.cdr.detectChanges();
+      }
+    });
+  }
+  getReserveImage(reserve: Reserva): string {
+    const images = reserve.vehiculo?.image_url;
+    if (images && images.length > 0) {
+      return images[0];
+    }
+    return '/images/hero_image.png';
+  }
+  filtrar(tipo: 'all' | 'activas' | 'expiradas') {
+    this.filterError = null;
+    this.currentFilter = tipo;
+    this.showDropdown = false;
 
-private sortReserves(reservas: Reserva[]): Reserva[] {
-  return reservas.sort((a, b) => {
-    const ordenDia = a.dia.localeCompare(b.dia);
-    return ordenDia !== 0 ? ordenDia : a.hora.localeCompare(b.hora);
-  });
-}
+    if (tipo === 'all') {
+      this.reserves = this.reservasOriginales;
+      return;
+    }
+
+    const ahora = new Date();
+
+    this.reserves = this.reservasOriginales.filter(reserve => {
+      const [year, month, day] = reserve.dia.split('-').map(Number);
+      const [hours, minutes] = reserve.hora.split(':').map(Number);
+      const fechaReserva = new Date(year, month - 1, day, hours, minutes);
+      const isPast = fechaReserva < ahora;
+
+      return tipo === 'activas' ? !isPast : isPast;
+    });
+  }
+
+  // --- El resto sin cambios ---
+
+  private sortReserves(reservas: Reserva[]): Reserva[] {
+    return reservas.sort((a, b) => {
+      const ordenDia = a.dia.localeCompare(b.dia);
+      return ordenDia !== 0 ? ordenDia : a.hora.localeCompare(b.hora);
+    });
+  }
 
   private mapReservaResponse(response: any[]): Reserva[] {
     return response.map((r: any) => {
-      console.log('image_url del vehiculo:', r.vehiculo?.image_url);
       return {
         ...r,
         vehiculo: r.vehiculo ? {
@@ -178,7 +176,7 @@ private sortReserves(reservas: Reserva[]): Reserva[] {
           motor: r.vehiculo.motor ?? '',
           km: r.vehiculo.kms ?? r.vehiculo.km ?? 0,
           image_url: Array.isArray(r.vehiculo.image_url)
-            ? r.vehiculo.image_url       
+            ? r.vehiculo.image_url
             : [],
           precio: r.vehiculo.precio ?? '',
           description: r.vehiculo.description ?? '',
@@ -196,98 +194,105 @@ private sortReserves(reservas: Reserva[]): Reserva[] {
     });
   }
 
-isReservePast(reserve: Reserva): boolean {
-  const [year, month, day] = reserve.dia.split('-').map(Number);
-  const [hours, minutes] = reserve.hora.split(':').map(Number);
-  return new Date(year, month - 1, day, hours, minutes) < new Date();
-}
+  isReservePast(reserve: Reserva): boolean {
+    const [year, month, day] = reserve.dia.split('-').map(Number);
+    const [hours, minutes] = reserve.hora.split(':').map(Number);
+    return new Date(year, month - 1, day, hours, minutes) < new Date();
+  }
 
-deleteReserve(reserve: Reserva) {
-  this.selectedReserve = reserve;
-  this.showModal = true;
-}
+  deleteReserve(reserve: Reserva) {
+    this.selectedReserve = reserve;
+    this.showModal = true;
+  }
 
-onConfirmDelete() {
-  if (this.selectedReserve) {
+  onConfirmDelete() {
+    if (this.selectedReserve) {
+      this.deleteReservation(this.selectedReserve.id);
+    }
+  }
+
+  private deleteReservation(reserveId: number) {
+    this.apiService.deleteReserve(reserveId).subscribe({
+      next: () => {
+        // ✅ Eliminar también del caché original
+        this.reservasOriginales = this.reservasOriginales.filter(r => r.id !== reserveId);
+        this.reserves = this.reserves.filter(r => r.id !== reserveId);
+        this.selectedReserve = null;
+        this.showModal = false;
+        this.showDetailsModal = false;
+      },
+      error: (error) => console.error('Error al eliminar la reserva:', error)
+    });
+  }
+
+  openDetails(reserve: Reserva) {
+    this.selectedReserve = reserve;
+    this.editedDay = reserve.dia;
+    this.editedTime = reserve.hora;
+    this.showDetailsModal = true;
+  }
+
+  closeDetailsModal() {
+    this.showDetailsModal = false;
+    this.selectedReserve = null;
+  }
+
+  saveEditedTime() {
+    if (!this.selectedReserve || !this.editedTime || !this.editedDay) {
+      this.closeDetailsModal();
+      return;
+    }
+
+    const reserveId = this.selectedReserve.id;
+    const updatedReserve: Reserva = { ...this.selectedReserve, dia: this.editedDay, hora: this.editedTime };
+
+    this.apiService.editReserve(reserveId, updatedReserve).subscribe({
+      next: () => {
+        // Recargamos las reservas para mantener la lógica de mapeo y orden
+        this.loadUserReserves();
+        this.showDetailsModal = false;
+        this.selectedReserve = null;
+      },
+      error: (err) => {
+        console.error('Error al actualizar la reserva:', err);
+      }
+    });
+  }
+
+  cancelReserveFromModal() {
+    if (!this.selectedReserve) { return; }
     this.deleteReservation(this.selectedReserve.id);
   }
-}
 
-private deleteReservation(reserveId: number) {
-  this.apiService.deleteReserve(reserveId).subscribe({
-    next: () => {
-      // ✅ Eliminar también del caché original
-      this.reservasOriginales = this.reservasOriginales.filter(r => r.id !== reserveId);
-      this.reserves = this.reserves.filter(r => r.id !== reserveId);
-      this.selectedReserve = null;
-      this.showModal = false;
-      this.showDetailsModal = false;
-    },
-    error: (error) => console.error('Error al eliminar la reserva:', error)
-  });
-}
-
-openDetails(reserve: Reserva) {
-  this.selectedReserve = reserve;
-  this.editedDay = reserve.dia;
-  this.editedTime = reserve.hora;
-  this.showDetailsModal = true;
-}
-
-closeDetailsModal() {
-  this.showDetailsModal = false;
-  this.selectedReserve = null;
-}
-
-saveEditedTime() {
-  if (!this.selectedReserve || !this.editedTime || !this.editedDay ) {
-    this.closeDetailsModal();
-    return;
+  getText(es: string, en: string): string { return this.isSpanish ? es : en; }
+  openLoginModal() { this.showLoginModal = true; }
+  onModalClose() {
+    this.showLoginModal = false;
+    // Verificar si el usuario ahora está autenticado y recargar reservas
+    setTimeout(() => {
+      this.checkUserAndLoadReserves();
+    }, 100);
+  }
+  onCancelReserve() { this.showModal = false; this.selectedReserve = null; }
+  closeModalCode() { this.showModalCode = false; this.codigoReserva = ''; }
+  toggleDropdown() {
+    this.showDropdown = !this.showDropdown;
   }
 
-  const reserveId = this.selectedReserve.id;
-  const updatedReserve: Reserva = { ...this.selectedReserve, dia:this.editedDay ,hora: this.editedTime };
-
-  this.apiService.editReserve(reserveId, updatedReserve).subscribe({
-    next: () => {
-      // Recargamos las reservas para mantener la lógica de mapeo y orden
-      this.loadUserReserves();
-      this.showDetailsModal = false;
-      this.selectedReserve = null;
-    },
-    error: (err) => {
-      console.error('Error al actualizar la reserva:', err);
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: MouseEvent) {
+    if (!(event.target as HTMLElement).closest('.dropdown')) {
+      this.showDropdown = false;
     }
-  });
-}
-
-cancelReserveFromModal() {
-  if (!this.selectedReserve) { return; }
-  this.deleteReservation(this.selectedReserve.id);
-}
-
-getText(es: string, en: string): string { return this.isSpanish ? es : en; }
-openLoginModal() { this.showLoginModal = true; }
-onModalClose() { 
-  this.showLoginModal = false;
-  // Verificar si el usuario ahora está autenticado y recargar reservas
-  setTimeout(() => {
-    this.checkUserAndLoadReserves();
-  }, 100);
-}
-onCancelReserve() { this.showModal = false; this.selectedReserve = null; }
-closeModalCode() { this.showModalCode = false; this.codigoReserva = ''; }
-getStars(rating: number | null | undefined): string {
-  if (rating == null) return '☆☆☆☆☆';
-  return '★'.repeat(rating) + '☆'.repeat(5 - rating);
-}
-toggleDropdown() { this.showDropdown = !this.showDropdown; }
-
-@HostListener('document:click', ['$event'])
-onDocumentClick(event: MouseEvent) {
-  if (!(event.target as HTMLElement).closest('.dropdown')) {
-    this.showDropdown = false;
   }
-}
- 
+  getCountByType(tipo: 'activas' | 'expiradas'): number {
+    const ahora = new Date();
+    return this.reservasOriginales.filter(reserve => {
+      const [year, month, day] = reserve.dia.split('-').map(Number);
+      const [hours, minutes] = reserve.hora.split(':').map(Number);
+      const fecha = new Date(year, month - 1, day, hours, minutes);
+      return tipo === 'activas' ? fecha >= ahora : fecha < ahora;
+    }).length;
+  }
+
 }

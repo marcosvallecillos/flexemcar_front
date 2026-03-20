@@ -203,7 +203,7 @@ h2.reservas {
 
 /* ── Reserves Container ──────────────────────────────────── */
 .reserves-container {
-  max-width: 1440px;
+  max-width: 100%;
   margin: 0 auto;
   padding: var(--space-xl) var(--space-2xl);
   position: relative;
@@ -213,47 +213,209 @@ h2.reservas {
 /* ── Header Toolbar ──────────────────────────────────────── */
 .header {
   display: flex;
+  position: relative; 
+  z-index: 10000;  
   align-items: center;
   justify-content: space-between;
   flex-wrap: wrap;
   gap: var(--space-md);
-  margin-bottom: var(--space-xl);
-  padding: var(--space-md) var(--space-lg);
-  background: var(--reserve-bg-surface);
-  border: 1px solid var(--reserve-border);
-  border-radius: var(--radius-lg);
-  backdrop-filter: blur(12px);
+  margin: 0 auto var(--space-xl);
+  padding: 0.5rem 0.75rem;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 100px;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  width: 80%;
+  max-width: 100%;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
 }
 
 /* ── Dropdown Filter ─────────────────────────────────────── */
 .dropdown {
   position: relative;
+  
+}
 
-  &.show .dropdown-menu {
-    opacity: 1;
-    transform: translateY(0);
-    pointer-events: all;
-  }
+.filter-button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 18px;
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 100px;
+  color: var(--txt-primary);
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all var(--transition-base);
+  user-select: none;
+  white-space: nowrap;
+}
 
-  &.show .filter-button {
-    background: var(--reserve-bg-elevated);
-    border-color: var(--reserve-accent);
-  }
+.filter-button i.bi-funnel-fill {
+  color: var(--reserve-accent);
+  font-size: 1rem;
+}
+
+.filter-button .current-filter {
+  flex: 1;
+}
+
+.filter-button .chevron-icon {
+  font-size: 0.7rem;
+  color: var(--txt-muted);
+  transition: transform var(--transition-base);
+}
+
+.filter-button:hover {
+  border-color: rgba(59, 130, 246, 0.4);
+  background: rgba(59, 130, 246, 0.06);
+}
+
+.dropdown.show .filter-button {
+  background: rgba(28, 35, 51, 0.95);
+  border-color: var(--reserve-accent);
+}
+
+.dropdown.show .chevron-icon {
+  transform: rotate(180deg);
+}
+
+/* ── Dropdown Menu ── */
+.dropdown-menu {
+  display: block;
+  position: absolute;
+  top: calc(100% + 10px);
+  left: 50%;
+  transform: translateX(-50%) translateY(-8px);
+  min-width: 260px;
+  background: rgba(12, 17, 29, 0.98);
+  border: 1px solid rgba(59, 130, 246, 0.2);
+  border-radius: 16px;
+  padding: 6px;
+  box-shadow:
+    0 24px 60px rgba(0, 0, 0, 0.7),
+    0 0 0 1px rgba(255, 255, 255, 0.03),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  z-index: 9999;
+  opacity: 0;
+  pointer-events: none;
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  transition: opacity 200ms cubic-bezier(0.4, 0, 0.2, 1),
+              transform 200ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.dropdown.show .dropdown-menu {
+  opacity: 1;
+  pointer-events: all;
+  transform: translateX(-50%) translateY(0);
+}
+
+/* ── Dropdown Items ── */
+.filter-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 150ms;
+  color: var(--txt-secondary);
+  font-size: 0.875rem;
+}
+
+.filter-item:hover {
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--txt-primary);
+}
+
+.filter-item.active {
+  background: rgba(59, 130, 246, 0.12);
+  color: #93c5fd;
+  font-weight: 600;
+}
+
+/* ── Dot indicator ── */
+.filter-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(255, 255, 255, 0.2);
+  flex-shrink: 0;
+  transition: all 150ms;
+}
+
+.filter-item:hover .filter-dot {
+  border-color: var(--reserve-accent);
+}
+
+.filter-item.active .filter-dot {
+  background: var(--reserve-accent);
+  border-color: var(--reserve-accent);
+  box-shadow: 0 0 8px rgba(59, 130, 246, 0.6);
+}
+
+/* ── Label ── */
+.filter-label {
+  flex: 1;
+  white-space: nowrap;
+}
+
+/* ── Badges ── */
+.filter-badge {
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 100px;
+  letter-spacing: 0.02em;
+  min-width: 22px;
+  text-align: center;
+}
+
+.badge-all {
+  background: rgba(59, 130, 246, 0.15);
+  color: #93c5fd;
+  border: 1px solid rgba(59, 130, 246, 0.25);
+}
+
+.badge-active {
+  background: rgba(245, 158, 11, 0.15);
+  color: #fbbf24;
+  border: 1px solid rgba(245, 158, 11, 0.25);
+}
+
+.badge-expired {
+  background: rgba(107, 114, 128, 0.15);
+  color: #9ca3af;
+  border: 1px solid rgba(107, 114, 128, 0.25);
+}
+
+/* ── Divider ── */
+.filter-divider {
+  height: 1px;
+  background: rgba(255, 255, 255, 0.06);
+  margin: 4px 6px;
+}
+.dropdown.show .filter-button {
+  background: var(--reserve-bg-elevated);
+  border-color: var(--reserve-accent);
 }
 
 .filter-button {
   display: flex;
   align-items: center;
   gap: var(--space-sm);
-  padding: 0.625rem 1rem;
-  background: var(--reserve-bg-elevated);
-  border: 1px solid var(--reserve-border);
-  border-radius: var(--radius-md);
+  padding: 0.625rem 1.25rem;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 100px;
   color: var(--txt-primary);
-  font-size: 0.875rem;
+  font-size: 0.9rem;
   font-weight: 500;
   cursor: pointer;
-  transition: all var(--transition-fast);
+  transition: all var(--transition-base);
   user-select: none;
 
   i {
@@ -275,32 +437,39 @@ h2.reservas {
 }
 
 .dropdown-menu {
+  display: block;
   position: absolute;
-  top: calc(100% + 8px);
-  left: 0;
-  min-width: 220px;
-  background: var(--reserve-bg-elevated);
-  border: 1px solid var(--reserve-border);
-  border-radius: var(--radius-md);
-  padding: var(--space-xs);
-  box-shadow: var(--shadow-elevated);
-  z-index: 100;
+  z-index: 9999;
+  top: calc(100% + 12px);
+  left: 50%;
+  transform: translateX(-50%) translateY(-8px);
+  min-width: 240px;
+  background: rgba(28, 35, 51, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius-lg);
+  padding: 0.5rem;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
   opacity: 0;
-  transform: translateY(-8px);
   pointer-events: none;
   transition: opacity var(--transition-base), transform var(--transition-base);
 
   p {
-    margin: 0;
-    padding: 0.625rem 0.875rem;
-    font-size: 0.875rem;
+    margin: 0 0 0.25rem 0;
+    padding: 0.75rem 1rem;
+    font-size: 0.9rem;
     color: var(--txt-secondary);
     border-radius: var(--radius-sm);
     cursor: pointer;
-    transition: background var(--transition-fast), color var(--transition-fast);
+    transition: all var(--transition-fast);
+    display: flex;
+    align-items: center;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
 
     &:hover {
-      background: var(--reserve-bg-card);
+      background: rgba(255, 255, 255, 0.05);
       color: var(--txt-primary);
     }
 
@@ -310,6 +479,13 @@ h2.reservas {
       font-weight: 600;
     }
   }
+}
+.dropdown.show .dropdown-menu {
+  opacity: 1;
+  position: absolute;
+
+  transform: translateX(-50%) translateY(0);
+  pointer-events: all;
 }
 
 /* ── Reserve Button ──────────────────────────────────────── */
@@ -352,35 +528,43 @@ h2.reservas {
 
 /* ── Reserves List Grid ──────────────────────────────────── */
 .reserves-list {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-lg);
-  align-items: stretch;
+  display: grid;
+  grid-template-columns: 1fr;
+  width: 100%;
+  gap: var(--space-2xl); /* Espacio amplio entre tarjetas */
+  justify-items: center; /* Centra la tarjeta si crece demasiado */
+}
+
+@media (min-width: 768px) {
+  .reserves-list {
+    grid-template-columns: repeat(2, 1fr); /* 2 en tablet */
+  }
+}
+
+@media (min-width: 1200px) {
+  .reserves-list {
+    grid-template-columns: repeat(3, 1fr); /* 3 en 3 fijamente en PC */
+  }
 }
 
 /* ── Card ────────────────────────────────────────────────── */
 .card {
-  background: var(--reserve-bg-card);
-  border: 1px solid var(--reserve-border);
+  width: 100%;
+  max-width: 580px; /* Mismo tamaño estricto para todas */
+  background: linear-gradient(180deg, rgba(26, 32, 53, 0.8) 0%, rgba(20, 24, 39, 0.9) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.05);
   border-radius: var(--radius-xl);
   overflow: hidden;
-  box-shadow: var(--shadow-card);
-  flex: 1 1 420px;
-  max-width: 520px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
   transition: transform var(--transition-base), box-shadow var(--transition-base), border-color var(--transition-base);
   animation: cardReveal 0.4s ease both;
-
+  
   &:hover {
     transform: translateY(-4px);
     box-shadow: var(--shadow-elevated);
     border-color: var(--reserve-border-hover);
-  }
-
-  /* Staggered entrance animation */
-  @for $i from 1 through 12 {
-    &:nth-child(#{$i}) {
-      animation-delay: #{$i * 60}ms;
-    }
   }
 }
 
@@ -421,14 +605,15 @@ h2.reservas {
 /* ── Vehicle Image ───────────────────────────────────────── */
 .vehicle-image {
   width: 100%;
-  height: 180px;
+  height: 200px;
   object-fit: cover;
   object-position: center;
   display: block;
-  transition: transform var(--transition-slow);
+  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  border-bottom: 1px solid rgba(255,255,255,0.03);
 
   .card:hover & {
-    transform: scale(1.03);
+    transform: scale(1.05);
   }
 }
 
@@ -441,26 +626,30 @@ h2.reservas {
   position: absolute;
   right: var(--space-md);
   top: var(--space-md);
-  padding: 0.25rem 0.75rem;
+  padding: 0.35rem 0.85rem;
   border-radius: var(--radius-full);
-  font-size: 0.7rem;
-  font-weight: 700;
-  letter-spacing: 0.08em;
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
   background: rgba(34, 197, 94, 0.12);
   color: #bbf7d0;
   border: 1px solid rgba(34, 197, 94, 0.6);
-  backdrop-filter: blur(10px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
 }
 
 .status-expired {
-  background: var(--reserve-expired-bg);
-  color: #e5e7eb;
-  border-color: rgba(107, 114, 128, 0.8);
+  background: rgba(107, 114, 128, 0.6);
+  text-decoration: line-through;
+  color: #fff;
+  border-color: rgba(255, 255, 255, 0.2);
 }
 
 .status-active {
-  background: rgba(34, 197, 94, 0.14);
+  background: linear-gradient(135deg, #f59e0b, #d97706);
+  color: white;
+  border-color: rgba(255, 165, 0, 0.5);
+  text-shadow: 0 1px 2px rgba(0,0,0,0.2);
 }
 
 .card-header-main {
@@ -508,7 +697,7 @@ h2.reservas {
 /* ── Card Body ───────────────────────────────────────────── */
 .card-meta {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   border-top: 1px solid var(--reserve-border);
 }
 
