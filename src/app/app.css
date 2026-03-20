@@ -1,0 +1,13 @@
+/* Fix — el header no debe bloquear el contenido */
+.header {
+  position: relative;
+  z-index: 100;
+}
+.header:empty {
+  pointer-events: none;
+  height: 0;
+}
+
+.header-hidden {
+  display: none !important;  
+}

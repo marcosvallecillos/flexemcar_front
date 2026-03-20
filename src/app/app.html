@@ -1,26 +1,13 @@
-<div class="header">
-   
-         @if (mostrarHeader) {
-        @if (usuario && usuario.rol === 'admin') {
-          <app-header-admin></app-header-admin>
-        } @else if (isUser) {
-          <app-header-user></app-header-user>
-        } @else {
-          <app-header></app-header>
-        }
-      }
-    </div>
-        
-    <router-outlet></router-outlet>
- <!--
-      @if (mostrarHeader) {
-        @if (usuario && usuario.rol === 'admin') {
-          <app-header-admin></app-header-admin>
-        } @else if (isUser) {
-          <app-header-user></app-header-user>
-        } @else {
-          <app-header></app-header>
-        }
-      }
-    </div>
-    -->
+<div class="header" [class.header-hidden]="usuario?.rol === 'admin'">
+  @if (mostrarHeader) {
+    @if (usuario?.rol === 'admin') {
+      <app-dashboard-admin></app-dashboard-admin>
+    } @else if (isUser) {
+      <app-header-user></app-header-user>
+    } @else {
+      <app-header></app-header>
+    }
+  }
+</div>
+
+<router-outlet></router-outlet>
