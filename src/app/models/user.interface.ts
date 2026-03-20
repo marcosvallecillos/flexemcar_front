@@ -6,6 +6,8 @@ export interface Usuario {
     password: string;
     confirm_password: string;
     telefono: number;
+    create_at?: Date;
+    last_login?: string;
     citas_reservadas: Reserva[];
     rol?: string;
   }
@@ -15,6 +17,7 @@ export interface Usuario {
   rating: number;
   comentario: string;
   fecha: string;
+  rol?: string;
   usuario?: Usuario;
   reserva?: Reserva;
   usuario_id: number;
