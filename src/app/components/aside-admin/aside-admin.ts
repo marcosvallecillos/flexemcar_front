@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { LanguageService } from '../../services/language.service';
 import { ApiService } from '../../services/api-service.service';
-import { Router, RouterLink, RouterOutlet } from '@angular/router';
+import { Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { UserStateService } from '../../services/user-state.service';
 import { AuthUserGuard } from '../../guards/auth-user.guard';
 import { AuthService } from '../../services/auth.service';
@@ -10,11 +10,12 @@ import { ShowClients } from "../../views/show-clients/show-clients";
 
 @Component({
   selector: 'app-aside-admin',
-  imports: [RouterLink, RouterOutlet],
+  imports: [RouterLink, RouterOutlet,RouterLinkActive],
   templateUrl: './aside-admin.html',
   styleUrl: './aside-admin.css',
 })
 export class AsideAdmin {
+  
    isSpanish: boolean = false;
 
   constructor(
