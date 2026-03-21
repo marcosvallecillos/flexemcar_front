@@ -43,7 +43,8 @@
               <div class="mb-3">
                 <label for="email" class="form-label">Correo Electrónico</label>
                 <input type="email" class="form-control" id="email" formControlName="email"
-                  placeholder="Introduce el correo electrónico" [class.is-invalid]="emailEnUso">
+  placeholder="Introduce el correo electrónico" 
+  [class.is-invalid]="(getControl('email')?.invalid && getControl('email')?.touched) || emailEnUso">
                 @if (getControl('email')?.invalid && getControl('email')?.touched) {
                 <small class="text-danger">Introduce un email válido.</small>
                 }

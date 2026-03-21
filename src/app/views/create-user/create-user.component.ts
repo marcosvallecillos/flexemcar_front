@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, Input, Output } from '@angular/core';
 import { AbstractControl, FormControl, FormGroup, FormsModule, ReactiveFormsModule, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { ApiService } from '../../services/api-service.service';
@@ -26,7 +26,8 @@ export class CreateUserComponent {
     private apiService: ApiService,
     private router: Router,
     private languageService: LanguageService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private cdr: ChangeDetectorRef
 
   ) {
     this.languageService.isSpanish$.subscribe(
@@ -80,20 +81,21 @@ export class CreateUserComponent {
                 setTimeout(() => {
                     this.showAlert = false;
                     this.confirm.emit();
+                    this.router.navigate(['/admin/users']);
                 }, 3000);
-                this.router.navigate(['/admin/users']);
             }
         },
-        error: (err) => {
+        error: (error) => {
             this.isProcessing = false;
-            if (err.status === 409) {
-                this.emailEnUso = true; // ✅ activa el mensaje de error
+            if (error.status === 409) {
+                this.emailEnUso = true;
             } else {
-                console.error("Error al crear el usuario.", err);
+                console.error("Error al crear el usuario.", error);
             }
+            this.cdr.detectChanges();
         }
     });
-  }
+}
 
   onSubmit() {
     if (this.createPupil.invalid) {
@@ -113,12 +115,7 @@ export class CreateUserComponent {
       rol: 'usuario',
     };
     this.isProcessing = true;
-
-    setTimeout(() => {
-      this.isProcessing = false;
-
-      this.confirm.emit();
-    }, 3000);
+    this.cdr.detectChanges();
     this.createPupils(pupil);
   }
 
