@@ -1,0 +1,70 @@
+@if(show){
+  <div class="modal-overlay modern-modal" (click)="onClose()">
+    <div class="modal-card fade-in-up" (click)="$event.stopPropagation()">
+      
+      <!-- Close button -->
+      <button class="btn-close-premium" (click)="onClose()">
+        <i class="bi bi-x-lg"></i>
+      </button>
+
+      <!-- Loading State -->
+      @if(isLoading) {
+        <div class="loading-state">
+          <div class="spinner-modern"></div>
+          <p>{{ getText('Cargando perfil...', 'Loading profile...') }}</p>
+        </div>
+      } @else {
+        <!-- Profile Header -->
+        <div class="modal-header-profile">
+          <div class="avatar-glow">
+            <div class="avatar-circle">
+              <i class="bi bi-person-fill"></i>
+            </div>
+          </div>
+          <h2 class="profile-name">{{ nombre || 'Usuario' }} {{ apellidos || '' }}</h2>
+          <span class="profile-badge" [class.admin-badge]="rol === 'admin'">
+            @if(rol === 'admin') { <i class="bi bi-shield-check"></i> }
+            @else { <i class="bi bi-person-badge"></i> }
+            {{ rol || 'Usuario' }}
+          </span>
+        </div>
+
+        <div class="modal-divider"></div>
+
+        <!-- Contact Info Grid -->
+        <div class="info-grid">
+          <div class="info-card">
+            <div class="info-icon"><i class="bi bi-envelope-fill"></i></div>
+            <div class="info-content">
+              <span class="info-label">{{ getText('Correo Electrónico', 'Email Address') }}</span>
+              <span class="info-value">{{ email || '-' }}</span>
+            </div>
+          </div>
+
+          <div class="info-card">
+            <div class="info-icon"><i class="bi bi-telephone-fill"></i></div>
+            <div class="info-content">
+              <span class="info-label">{{ getText('Teléfono', 'Phone Number') }}</span>
+              <span class="info-value">{{ telefono || '-' }}</span>
+            </div>
+          </div>
+          
+          <div class="info-card">
+            <div class="info-icon"><i class="bi bi-fingerprint"></i></div>
+            <div class="info-content">
+              <span class="info-label">{{ getText('ID de Usuario', 'User ID') }}</span>
+              <span class="info-value">#{{ id }}</span>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Actions -->
+        <div class="modal-footer-actions mt-4">
+          <button class="btn-premium-outline w-100" (click)="onClose()">
+            {{ getText('Cerrar Perfil', 'Close Profile') }}
+          </button>
+        </div>
+      }
+    </div>
+  </div>
+}
