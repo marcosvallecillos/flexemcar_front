@@ -12,6 +12,7 @@ import { DashboardAdmin } from './components/dashboard-admin/dashboard-admin';
 import { ShowClients } from './views/show-clients/show-clients';
 import { CreateUserComponent } from './views/create-user/create-user.component';
 import { AsideAdmin } from './components/aside-admin/aside-admin';
+import { ReservationsComponent } from './views/reservations/reservations.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/home', pathMatch: 'full' },
@@ -33,7 +34,8 @@ export const routes: Routes = [
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
       { path: 'dashboard', component: DashboardAdmin },
       { path: 'users', component: ShowClients },
-       { path: 'create-users', component: CreateUserComponent },
+      { path: 'create-users', component: CreateUserComponent },
+      { path: 'reservations', component: ReservationsComponent },
     ]
   },
 ];
