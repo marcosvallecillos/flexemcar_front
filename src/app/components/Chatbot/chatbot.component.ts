@@ -17,7 +17,7 @@ export class ChatbotComponent implements OnInit, OnDestroy {
   private langSub!: Subscription;
 
   // 👇 Pon aquí el número de tu chatbot de WhatsApp (con prefijo internacional, sin + ni espacios)
-  private readonly WHATSAPP_NUMBER = '34600000000';
+  private readonly WHATSAPP_NUMBER = '34622404661';
   private readonly WHATSAPP_MESSAGE_ES = 'Hola, estoy interesado en una furgoneta de ocasión. ¿Pueden ayudarme?';
   private readonly WHATSAPP_MESSAGE_EN = 'Hello, I am interested in a used van. Can you help me?';
 

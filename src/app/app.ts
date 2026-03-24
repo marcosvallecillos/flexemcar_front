@@ -5,11 +5,10 @@ import { Usuario } from './models/user.interface';
 import { Header } from "./components/header/header";
 import { HeaderUser } from './components/header-user/header-user';
 import { DashboardAdmin } from "./components/dashboard-admin/dashboard-admin";
-import { Footer } from "./components/footer/footer";
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, Header, HeaderUser, DashboardAdmin, Footer], // ← elimina DashboardAdmin aquí
+  imports: [RouterOutlet, Header, HeaderUser, DashboardAdmin],
   templateUrl: './app.html',
   styleUrl: './app.css'
 })

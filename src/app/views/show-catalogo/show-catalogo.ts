@@ -9,11 +9,12 @@ import { ApiService } from '../../services/api-service.service';
 import { AuthService } from '../../services/auth.service';
 import { Footer } from "../../components/footer/footer";
 import { ModalLoginComponent } from "../../components/modal-login/modal-login.component";
+import { ModalDeleteComponent } from "../../components/modal-delete/modal-delete.component";
 import { Subscription, filter } from 'rxjs';
 
 @Component({
   selector: 'app-show-catalogo',
-  imports: [Footer, ModalLoginComponent, RouterLink, NgClass, FormsModule],
+  imports: [Footer, ModalLoginComponent, ModalDeleteComponent, RouterLink, NgClass, FormsModule],
   templateUrl: './show-catalogo.html',
   styleUrl: './show-catalogo.css',
 })
@@ -37,38 +38,42 @@ export class ShowCatalogo implements OnInit, OnDestroy {
   showDetailsModal: boolean = false;
   editedTime: string = '';
   editedDay: string = '';
-  vehiculo: Catalogo[] = []
-
+  vehiculo: Catalogo[] = [];
+  allReserves: Reserva[] = [];
+  todayStr: string = '';
+  morningHours = ['09:00', '09:30', '10:00', '10:30', '11:00', '11:30', '12:00', '12:30', '13:00', '13:30', '14:00', '14:30'];
+  afternoonHours = ['16:00', '16:30', '17:00', '17:30', '18:00', '18:30', '19:00', '19:30', '20:00'];
+  messageReserved: string | null = null;
   private authSubscription?: Subscription;
   private languageSubscription?: Subscription;
   private routerSubscription?: Subscription;
 
   constructor(
-    private authService: AuthService,
+    public authService: AuthService,
     private router: Router,
     private languageService: LanguageService,
     private apiService: ApiService,
     private cdr: ChangeDetectorRef,
-  ) {
+  ) {}
+
+  ngOnInit() {
+    // Suscripción al idioma AQUI (no en constructor) para evitar detectChanges antes del init de la vista
     this.languageSubscription = this.languageService.isSpanish$.subscribe(isSpanish => {
       this.isSpanish = isSpanish;
       this.cdr.detectChanges();
     });
-  }
 
-  ngOnInit() {
     this.checkUserAndLoadReserves();
+    this.loadAllReserves();
+    this.todayStr = new Date().toISOString().split('T')[0];
 
-    // Suscribirse a cambios de autenticación
-    this.authSubscription = this.authService.isLoggedIn$.subscribe(isLoggedIn => {
+    this.authSubscription = this.authService.isLoggedIn$.subscribe(() => {
       this.checkUserAndLoadReserves();
     });
 
-    // Suscribirse a eventos de navegación para recargar cuando se vuelve a esta página
     this.routerSubscription = this.router.events
       .pipe(filter(event => event instanceof NavigationEnd))
       .subscribe(() => {
-        // Pequeño delay para asegurar que el componente está listo
         setTimeout(() => {
           this.checkUserAndLoadReserves();
         }, 50);
@@ -126,6 +131,21 @@ export class ShowCatalogo implements OnInit, OnDestroy {
       }
     });
   }
+
+  loadAllReserves() {
+    this.apiService.getReserves().subscribe({
+      next: (response: any[]) => {
+        this.allReserves = response.map((r: any) => ({
+          ...r,
+          usuario_id: r.usuarioId ?? r.usuario_id,
+          vehiculo_id: r.vehiculo?.id ?? r.vehiculo_id,
+          vehiculo_model: r.vehiculo_model ?? r.vehiculo?.model ?? ''
+        }));
+      },
+      error: (err) => console.error('Error loading all reserves:', err)
+    });
+  }
+
   getReserveImage(reserve: Reserva): string {
     const images = reserve.vehiculo?.image_url;
     if (images && images.length > 0) {
@@ -133,6 +153,27 @@ export class ShowCatalogo implements OnInit, OnDestroy {
     }
     return '/images/hero_image.png';
   }
+  /** Normaliza dia y hora a strings siempre, aunque vengan como Date u objeto */
+  private norm(value: any): string {
+    if (!value) return '';
+    if (typeof value === 'string') return value.slice(0, 10); // toma solo YYYY-MM-DD si viene con tiempo
+    if (value instanceof Date) {
+      const mm = String(value.getMonth() + 1).padStart(2, '0');
+      const dd = String(value.getDate()).padStart(2, '0');
+      return `${value.getFullYear()}-${mm}-${dd}`;
+    }
+    return String(value);
+  }
+
+  private normHora(value: any): string {
+    if (!value) return '00:00';
+    if (typeof value === 'string') return value.slice(0, 5); // toma solo HH:mm
+    if (value instanceof Date) {
+      return `${String(value.getHours()).padStart(2, '0')}:${String(value.getMinutes()).padStart(2, '0')}`;
+    }
+    return String(value);
+  }
+
   filtrar(tipo: 'all' | 'activas' | 'expiradas') {
     this.filterError = null;
     this.currentFilter = tipo;
@@ -146,11 +187,13 @@ export class ShowCatalogo implements OnInit, OnDestroy {
     const ahora = new Date();
 
     this.reserves = this.reservasOriginales.filter(reserve => {
-      const [year, month, day] = reserve.dia.split('-').map(Number);
-      const [hours, minutes] = reserve.hora.split(':').map(Number);
+      const dia = this.norm(reserve.dia);
+      const hora = this.normHora(reserve.hora);
+      if (!dia) return false;
+      const [year, month, day] = dia.split('-').map(Number);
+      const [hours, minutes] = hora.split(':').map(Number);
       const fechaReserva = new Date(year, month - 1, day, hours, minutes);
       const isPast = fechaReserva < ahora;
-
       return tipo === 'activas' ? !isPast : isPast;
     });
   }
@@ -159,8 +202,10 @@ export class ShowCatalogo implements OnInit, OnDestroy {
 
   private sortReserves(reservas: Reserva[]): Reserva[] {
     return reservas.sort((a, b) => {
-      const ordenDia = a.dia.localeCompare(b.dia);
-      return ordenDia !== 0 ? ordenDia : a.hora.localeCompare(b.hora);
+      const diaA = this.norm(a.dia);
+      const diaB = this.norm(b.dia);
+      const ordenDia = diaA.localeCompare(diaB);
+      return ordenDia !== 0 ? ordenDia : this.normHora(a.hora).localeCompare(this.normHora(b.hora));
     });
   }
 
@@ -195,21 +240,32 @@ export class ShowCatalogo implements OnInit, OnDestroy {
   }
 
   isReservePast(reserve: Reserva): boolean {
-    const [year, month, day] = reserve.dia.split('-').map(Number);
-    const [hours, minutes] = reserve.hora.split(':').map(Number);
+    const dia = this.norm(reserve.dia);
+    const hora = this.normHora(reserve.hora);
+    if (!dia) return false;
+    const [year, month, day] = dia.split('-').map(Number);
+    const [hours, minutes] = hora.split(':').map(Number);
     return new Date(year, month - 1, day, hours, minutes) < new Date();
   }
 
   deleteReserve(reserve: Reserva) {
+    console.log("deleteReserve", reserve);
     this.selectedReserve = reserve;
     this.showModal = true;
   }
 
-  onConfirmDelete() {
-    if (this.selectedReserve) {
-      this.deleteReservation(this.selectedReserve.id);
-    }
+onConfirmDelete() {
+  if (this.showModal) {
+    this.showModal = false;
   }
+  if (this.showDetailsModal) {
+    this.showDetailsModal = false;
+  }
+  if (this.selectedReserve) {
+    const reserveId = this.selectedReserve.id;
+    this.deleteReservation(reserveId);
+  }
+}
 
   private deleteReservation(reserveId: number) {
     this.apiService.deleteReserve(reserveId).subscribe({
@@ -220,6 +276,7 @@ export class ShowCatalogo implements OnInit, OnDestroy {
         this.selectedReserve = null;
         this.showModal = false;
         this.showDetailsModal = false;
+        this.loadUserReserves();
       },
       error: (error) => console.error('Error al eliminar la reserva:', error)
     });
@@ -244,18 +301,73 @@ export class ShowCatalogo implements OnInit, OnDestroy {
     }
 
     const reserveId = this.selectedReserve.id;
+    const vehicleId = this.selectedReserve.vehiculo_id;
+    const isSat = new Date(this.editedDay).getDay() === 6;
+    const availableHours = isSat ? this.morningHours : this.morningHours.concat(this.afternoonHours);
+    
+    if(!availableHours.includes(this.editedTime)){
+      const msgEs = isSat 
+        ? 'Los sábados solo abrimos por la mañana (9:00 - 14:30).'
+        : 'Escoge un horario disponible. Lunes a Viernes: 9:00-14:30 y 16:00-20:00.';
+      const msgEn = isSat
+        ? 'Saturdays only morning slots are available (9:00 - 2:30 PM).'
+        : 'Choose a valid time slot. Mon-Fri: 9:00-14:30 and 16:00-20:00.';
+
+      this.messageReserved = this.isSpanish ? msgEs : msgEn;
+      setTimeout(() => {
+        this.messageReserved = null;
+      }, 2000);
+      return;
+    }
+    if (this.isTimePastDetailed(this.editedDay, this.editedTime)) {
+      this.messageReserved = this.getText('La fecha y hora elegidas ya han pasado.', 'The selected date and time have already passed.');
+      setTimeout(() => {
+        this.messageReserved = null;
+      }, 2000);
+      return;
+    }
+
+    if (this.isTimeReservedDetailed(this.editedDay, this.editedTime, vehicleId, reserveId)) {
+      this.messageReserved = this.getText('Este horario ya está reservado para este vehículo.', 'This time slot is already reserved for this vehicle.');
+      setTimeout(() => {
+        this.messageReserved = null;
+      }, 2000);
+      return;
+    }
+
     const updatedReserve: Reserva = { ...this.selectedReserve, dia: this.editedDay, hora: this.editedTime };
 
     this.apiService.editReserve(reserveId, updatedReserve).subscribe({
       next: () => {
-        // Recargamos las reservas para mantener la lógica de mapeo y orden
         this.loadUserReserves();
+        this.loadAllReserves(); // Recargar todo para actualizar disponibilidad
         this.showDetailsModal = false;
         this.selectedReserve = null;
       },
       error: (err) => {
         console.error('Error al actualizar la reserva:', err);
       }
+    });
+  }
+
+  isTimePastDetailed(day: string, time: string): boolean {
+    if (!day || !time) return false;
+    const now = new Date();
+    const [year, month, d] = day.split('-').map(Number);
+    const [hours, minutes] = time.split(':').map(Number);
+    const slotDateTime = new Date(year, month - 1, d, hours, minutes);
+    return slotDateTime <= now;
+  }
+
+  isTimeReservedDetailed(day: string, time: string, vehicleId: number, currentReserveId: number): boolean {
+    if (!day || !time) return false;
+    return this.allReserves.some(reserve => {
+      const dbDay = this.norm(reserve.dia);
+      const dbTime = this.normHora(reserve.hora);
+      return reserve.id !== currentReserveId && 
+             dbDay === day && 
+             dbTime === time && 
+             Number(reserve.vehiculo_id) === Number(vehicleId);
     });
   }
 
@@ -288,8 +400,11 @@ export class ShowCatalogo implements OnInit, OnDestroy {
   getCountByType(tipo: 'activas' | 'expiradas'): number {
     const ahora = new Date();
     return this.reservasOriginales.filter(reserve => {
-      const [year, month, day] = reserve.dia.split('-').map(Number);
-      const [hours, minutes] = reserve.hora.split(':').map(Number);
+      const dia = this.norm(reserve.dia);
+      const hora = this.normHora(reserve.hora);
+      if (!dia) return false;
+      const [year, month, day] = dia.split('-').map(Number);
+      const [hours, minutes] = hora.split(':').map(Number);
       const fecha = new Date(year, month - 1, day, hours, minutes);
       return tipo === 'activas' ? fecha >= ahora : fecha < ahora;
     }).length;

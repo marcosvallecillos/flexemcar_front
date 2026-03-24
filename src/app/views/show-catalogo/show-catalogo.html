@@ -12,7 +12,7 @@
     <p> {{getText('Echa un vistazo a la selección que tenemos para ti.','Check out the selection we have for you.')}}
     </p>
 
-    <button class="btn-volver mt-5" routerLink="/reserve">
+    <button class="btn-volver mt-5" routerLink="/new-reserve">
 
       {{getText('Reservar Ahora','Book Now')}}
 
@@ -132,7 +132,12 @@
             <p>
               <i class="bi bi-calendar-event-fill"></i>
               <strong>{{ getText('Dia', 'Day') }}:</strong>
-              {{ reserve.dia }} {{ reserve.hora }}
+              {{ reserve.dia }}
+            </p>
+            <p>
+              <i class="bi bi-calendar-event-fill"></i>
+              <strong>{{ getText('Hora', 'Hour') }}:</strong>
+              {{ reserve.hora }}
             </p>
           </div>
 
@@ -197,10 +202,15 @@
           </span>
           
         </p>
+        @if (messageReserved) {
+      <div class="alert-error">
+        {{ messageReserved }}
+      </div>
+    }
         <label class="details-field">
           <span>
            {{ getText('Día de la cita', ' Appointment Day') }}: </span>
-            <input type="date" [(ngModel)]="editedDay">
+            <input type="date" [(ngModel)]="editedDay" [min]="todayStr">
          
           <span>{{ getText('Hora de la cita', 'Appointment time') }}</span>
           <input type="time" [(ngModel)]="editedTime">
@@ -213,7 +223,7 @@
           <button class="modal-secondary" (click)="closeDetailsModal()">
             {{ getText('Cerrar', 'Close') }}
           </button>
-          <button class="modal-danger" (click)="cancelReserveFromModal()">
+          <button class="modal-danger" (click)="deleteReserve(selectedReserve)">
             {{ getText('Anular reserva', 'Cancel reservation') }}
           </button>
         </div>
@@ -231,6 +241,17 @@
   </div>
   }
 </body>
+
+<app-modal-delete 
+  [show]="showModal" 
+  [fecha]="selectedReserve?.dia ?? ''" 
+  [hora]="selectedReserve?.hora ?? ''" 
+  [peluquero]="selectedReserve?.vehiculo_model || selectedReserve?.vehiculo?.modelo || ''"
+  [servicio]="'Servicio de mantenimiento'"
+  [nombreUsuario]="authService.getUserData()?.name"
+  (confirm)="onConfirmDelete()" 
+  (cancel)="onCancelReserve()">
+</app-modal-delete>
 
 <app-modal-login [show]="showLoginModal" (close)="onModalClose()"></app-modal-login>
 <app-footer></app-footer>

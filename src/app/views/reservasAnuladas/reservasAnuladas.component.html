@@ -1,0 +1,120 @@
+<div class="modern-dashboard">
+  <div class="container mt-5 mb-5 pb-5 fade-in-up">
+    <!-- Top Action Bar -->
+    
+
+    <!-- Header & Filters -->
+    <div class="header-panel mb-4">
+      <div class="header-info">
+        <h2 class="title-glow">
+          <i class="bi bi-calendar2-check text-primary me-2"></i>
+          {{ getText('Gestión de Reservas Anuladas', 'Reservations Management') }}
+        </h2>
+        <p class="subtitle">{{ getText('Administra todas las reservas del sistema.', 'Manage all system reservations.') }}</p>
+      </div>
+
+    
+    </div>
+
+    <!-- Delete All Action -->
+    @if (allReservesPast()) {
+      <div class="delete-all-container mb-4 fade-in">
+        <button class="btn-glass-danger" (click)="deleteReserveAll()">
+          <i class="bi bi-trash3-fill"></i>
+          <span>{{ getText('Eliminar todas las reservas', 'Delete all') }}</span>
+        </button>
+      </div>
+    }
+
+    <!-- Content Area -->
+    @if (isLoading) {
+      <div class="loading-state fade-in">
+        <div class="spinner-modern"></div>
+        <p>{{ getText('Cargando...', 'Loading...') }}</p>
+      </div>
+    } @else if (reservasAnuladas.length === 0) {
+      <div class="empty-state fade-in">
+        <div class="empty-icon"><i class="bi bi-calendar-x"></i></div>
+        <h3>{{ getText('No hay reservas', 'No reservations') }}</h3>
+      </div>
+    } @else {
+      <div class="reservasAnuladas-grid">
+        @for (reservasAnuladas of reservasAnuladas; track reservasAnuladas.id) {
+          <div class="premium-card fade-in-up" [class.card-expired]="isReservePast(reservasAnuladas)">
+            <div class="card-status-bar">
+              <span class="status-badge badge-active"><i class="bi-x-circle-fill"></i> {{ getText('Anulada', 'Anulled') }}</span>
+
+              <button class="btn-icon-danger" (click)="deleteReserve(reservasAnuladas)"><i class="bi bi-trash"></i></button>
+            </div>
+
+            <div class="user-header">
+              <div class="user-avatar"><i class="bi bi-person-fill"></i></div>
+              <div class="user-info">
+                <span class="user-id-label">ID <strong>{{ reservasAnuladas.usuario_id }}</strong></span>
+                <span class="user-name">{{reservasAnuladas.usuario?.nombre ?? 'Usuario'}} {{reservasAnuladas.usuario?.apellidos ?? ''}}</span>
+              </div>
+              <button class="btn-icon-view ms-auto" (click)="openUserModal(reservasAnuladas.usuario_id)"><i class="bi bi-eye"></i></button>
+            </div>
+            
+            <div class="card-divider"></div>
+
+            <div class="reservasAnuladas-details">
+              <div class="detail-item">
+                <div class="detail-icon"><i class="bi bi-car-front-fill"></i></div>
+                <div class="detail-text">
+                  <span class="label">{{ getText('Vehículo', 'Vehicle') }}</span>
+                  <span class="value">
+                    {{ reservasAnuladas.vehiculo?.marca }} {{ reservasAnuladas.vehiculo?.modelo || reservasAnuladas.vehiculo_model }}
+                  </span>
+                </div>
+              </div>
+              
+              <div class="detail-group">
+                <div class="detail-item">
+                  <div class="detail-icon"><i class="bi bi-calendar-event"></i></div>
+                  <div class="detail-text">
+                    <span class="label">{{ getText('Año', 'Year') }}</span>
+                    <span class="value">{{ reservasAnuladas.vehiculo?.year || '-' }}</span>
+                  </div>
+                </div>
+                <div class="detail-item">
+                  <div class="detail-icon"><i class="bi bi-speedometer2"></i></div>
+                  <div class="detail-text">
+                    <span class="label">Km</span>
+                    <span class="value">{{ reservasAnuladas.vehiculo?.km || '-' }} km</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="detail-item highlight-box">
+                <div class="detail-icon date-icon"><i class="bi bi-calendar2-check-fill"></i></div>
+                <div class="detail-text">
+                  <span class="label">{{ getText('Fecha/Hora', 'Date/Time') }}</span>
+                  <span class="value date-value">{{ reservasAnuladas.dia }} &bull; {{ reservasAnuladas.hora }}</span>
+                </div>
+              </div>
+
+              <div class="detail-item total-reservations">
+                <i class="bi bi-bar-chart-fill"></i>
+                
+                
+                <strong>{{ getText('Total de reservas anuladas de', 'Total reservations anulated for') }} {{reservasAnuladas.usuario?.nombre ?? ''}} {{reservasAnuladas.usuario?.apellidos ?? ''}}:</strong>
+                {{ reservasPorUsuario[reservasAnuladas.usuario_id] || 0 }}
+           
+              </div>
+            </div>
+          </div>
+        }
+      </div>
+    }
+  </div>
+</div>
+<!-- Modal Delete -->
+ <app-modal-user [show]="showLoginModal" [id]="selectedUserId" (close)="showLoginModal = false"></app-modal-user>
+
+@if (showModalDeleteAll) {
+  <app-modal-delete (confirm)="onConfirmDeleteAll()" (cancel)="onCancelDeleteAll()"></app-modal-delete>
+}
+@if (showModal) {
+  <app-modal-delete (confirm)="onConfirmDelete()" (cancel)="onCancelDeleteAll()"></app-modal-delete>
+}

@@ -70,7 +70,8 @@ export interface Usuario {
   usuario_id: number;
   vehiculo_id: number;
   vehiculo_model: string;
-
+  vehiculo?: Catalogo;
+  usuario?: Usuario;
   valoracion_id?: number;
   valoracion_comentario?: string;
   valoracion_servicio?: number;

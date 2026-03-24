@@ -48,7 +48,9 @@ loginUser(email: string, password: string): Observable<any> {
 
   return this.http.post(`${this.apiUrlUsuarios}/login`, body, httpOptions);
 }
-  
+updateLastLogin(id: number): Observable<any> {
+    return this.http.post(`${this.apiUrlUsuarios}/${id}/last-login`, {});
+}
 showProfile(id: number):Observable<Usuario>{
   return this.http.get<Usuario>(`${this.apiUrlUsuarios}/${id}`)
 }
@@ -83,11 +85,11 @@ newReserveByAdmin(reservas: any): Observable<any> {
 editReserve(id: number, reservaData: Reserva): Observable<Reserva> {
   return this.http.put<Reserva>(`${this.apiUrlReservas}/${id}/edit`, reservaData);
 }
-deleteReserve(id: number): Observable<Reserva> { //elimina directamente sin mover a reserva_anuladas
+deleteReserve(id: number): Observable<Reserva> { 
   return this.http.delete<Reserva>(`${this.apiUrlReservas}/delete/${id}`);
 }
 
-deleteReserves(id: number): Observable<Reserva> { //elimina directamente sin mover a reserva_anuladas
+deleteReserves(id: number): Observable<Reserva> { 
   return this.http.delete<Reserva>(`${this.apiUrlReservas}/eliminar/${id}`);
 }
 filterReserveActivas(): Observable<Reserva[]> {
@@ -163,7 +165,7 @@ deleteAllReserves(): Observable<any> {
 }
 
 getReservasAnuladas():Observable<ReservaAnulada[]>{
-  return this.http.get<ReservaAnulada[]>(`${this.apiUrlAnuladas}/list`);
+  return this.http.get<ReservaAnulada[]>(`${this.apiUrlAnuladas}`);
 }
 
 getNumeroReservasByUsuarioId(usuario_Id: number){

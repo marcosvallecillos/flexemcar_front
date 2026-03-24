@@ -3,20 +3,18 @@ import { LanguageService } from '../../services/language.service';
 import { ApiService } from '../../services/api-service.service';
 import { Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { UserStateService } from '../../services/user-state.service';
-import { AuthUserGuard } from '../../guards/auth-user.guard';
 import { AuthService } from '../../services/auth.service';
-import { DashboardAdmin } from '../dashboard-admin/dashboard-admin';
-import { ShowClients } from "../../views/show-clients/show-clients";
 
 @Component({
   selector: 'app-aside-admin',
-  imports: [RouterLink, RouterOutlet,RouterLinkActive],
+  imports: [RouterLink, RouterOutlet, RouterLinkActive],
   templateUrl: './aside-admin.html',
   styleUrl: './aside-admin.css',
 })
 export class AsideAdmin {
-  
-   isSpanish: boolean = false;
+
+  isSpanish: boolean = false;
+  sidebarOpen: boolean = false;   // controla colapso (false = colapsado)
 
   constructor(
     private languageService: LanguageService,
@@ -39,4 +37,3 @@ export class AsideAdmin {
     return this.isSpanish ? es : en;
   }
 }
-

@@ -1,22 +1,35 @@
 <section class="hero">
   <div class="hero-bg"></div>
   <div class="hero-grid"></div>
-  <div class="hero-content">
-    <div class="hero-tag">Furgonetas de Ocasión</div>
-    <h1>{{getText('No vendemos furgonetas.','We dont sell vans 
-')}} <br><em>{{getText('Impulsamos tu negocio.','We boost your business.  
-')}} </em></h1>
+    <div class="hero-overlay"></div>
 
-    <p>{{getText('Vehículos revisados, certificados y listos para trabajar. La confianza que tu negocio necesita.','Vehicles inspected, certified, and ready to work. The confidence your business needs.')}} </p>
+  <div class="hero-content">
+    <div class="hero-tag">
+      <span class="tag-dot"></span>
+      {{ getText('Furgonetas de Ocasión', 'Used Vans') }}
+    </div>
+    <h1>
+      {{ getText('No vendemos furgonetas.', "We don't sell vans.") }}
+      <em>{{ getText('Impulsamos tu negocio.', 'We boost your business.') }}</em>
+    </h1>
+    <p>{{ getText('Vehículos revisados, certificados y listos para trabajar. La confianza que tu negocio necesita.', 'Vehicles inspected, certified, and ready to work. The confidence your business needs.') }}</p>
     <div class="hero-cta">
-      <button class="btn-hero btn-hero-primary" routerLink="/show-vehicles">🔍 {{getText('Explorar catálogo','Explore catalog')}} </button>
-      <button class="btn-hero btn-hero-secondary">🚐{{getText('Vender mi furgoneta','Sell my van')}} </button>
+      <button class="btn-hero btn-hero-primary" routerLink="/show-vehicles">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+        {{ getText('Explorar catálogo', 'Explore catalog') }}
+      </button>
+      <button class="btn-hero btn-hero-secondary">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="1" y="3" width="15" height="13" rx="2"/><path d="M16 8h4l3 5v3h-7V8zM5.5 21a1.5 1.5 0 100-3 1.5 1.5 0 000 3zM18.5 21a1.5 1.5 0 100-3 1.5 1.5 0 000 3z"/></svg>
+        {{ getText('Vender mi furgoneta', 'Sell my van') }}
+      </button>
     </div>
   </div>
-  <!-- Van placeholder -->
+
   <div class="hero-van">
     <img src="/images/hero_image.png" alt="Furgoneta FlexemCar" />
   </div>
+
+
   <div class="scroll-indicator">
     <button class="scroll-dot" (click)="scrollToStats()" aria-label="Scroll to stats">↓</button>
   </div>

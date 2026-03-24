@@ -706,6 +706,7 @@ h2.reservas {
   align-items: center;
   gap: 0.5rem;
   margin: 0;
+  width: auto;
   padding: 0.5rem var(--space-lg);
   font-size: 0.875rem;
   color: var(--txt-secondary);
@@ -723,8 +724,43 @@ h2.reservas {
     color: var(--txt-primary);
     font-weight: 600;
     margin-right: 0.25rem;
+    white-space: nowrap;
   }
 }
+@media (max-width: 1550px) {
+  .card-meta {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .card-meta p {
+    width: 100%;
+    padding: 0.5rem var(--space-md);
+    border-bottom: 1px solid var(--reserve-border);
+
+    &:last-child {
+      border-bottom: none;
+    }
+  }
+}
+@media (max-width: 768px) {
+  .card-meta {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .card-meta p {
+    width: 100%;
+    padding: 0.5rem var(--space-md);
+    border-bottom: 1px solid var(--reserve-border);
+
+    &:last-child {
+      border-bottom: none;
+    }
+  }
+}
+/* ── No quiero q se junten el boton de servicio valorado y completado ───────────────────────────────────── */
+
 
 /* ── Botones de Acción ───────────────────────────────────── */
 .botones {
@@ -821,7 +857,15 @@ h2.reservas {
     transform: scale(0.95);
   }
 }
-
+.alert-error{
+  background-color: #f8d7da;
+  color: #721c24;
+  padding: 0.75rem 1.25rem;
+  margin-bottom: 1rem;
+  border: 1px solid transparent;
+  border-radius: 0.25rem;
+  text-align: center;
+}
 /* ── Details Modal ─────────────────────────────────────────── */
 .details-modal-backdrop {
   position: fixed;

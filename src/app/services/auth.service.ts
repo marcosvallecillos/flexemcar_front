@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
+import { ApiService } from './api-service.service';
 
 @Injectable({
   providedIn: 'root'
@@ -8,8 +9,10 @@ export class AuthService {
   private isLoggedInSubject = new BehaviorSubject<boolean>(false);
   isLoggedIn$ = this.isLoggedInSubject.asObservable();
 
-  constructor() {
+  constructor(
+  ) {
     this.checkLoginStatus();
+
   }
 
   private checkLoginStatus() {
@@ -43,6 +46,7 @@ export class AuthService {
       localStorage.setItem('userType', 'usuario');
     }
     this.isLoggedInSubject.next(true);
+    
   }
 
   logout() {

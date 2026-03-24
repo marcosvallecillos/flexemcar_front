@@ -13,6 +13,8 @@ import { ShowClients } from './views/show-clients/show-clients';
 import { CreateUserComponent } from './views/create-user/create-user.component';
 import { AsideAdmin } from './components/aside-admin/aside-admin';
 import { ReservationsComponent } from './views/reservations/reservations.component';
+import { ReserveComponent } from './views/reserve/reserve.component';
+import { reservasAnuladas } from './views/reservasAnuladas/reservasAnuladas.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/home', pathMatch: 'full' },
@@ -25,7 +27,7 @@ export const routes: Routes = [
   { path: 'login', component: ModalLoginComponent },
   { path: 'showProfile', component: ShowProfileComponent, canActivate: [AuthUserGuard] },
   { path: 'editProfile', component: EditProfileComponent, canActivate: [AuthUserGuard] },
-
+  { path: 'new-reserve', component: ReserveComponent, canActivate: [AuthUserGuard] },
   {
     path: 'admin',
       component: AsideAdmin,
@@ -36,6 +38,7 @@ export const routes: Routes = [
       { path: 'users', component: ShowClients },
       { path: 'create-users', component: CreateUserComponent },
       { path: 'reservations', component: ReservationsComponent },
+      { path: 'reservasAnuladas', component: reservasAnuladas },
     ]
   },
 ];

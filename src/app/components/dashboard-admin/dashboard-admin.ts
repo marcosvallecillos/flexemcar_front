@@ -76,14 +76,10 @@ export class DashboardAdmin implements OnInit, AfterViewInit {
     this.renderBarChart();
   }
 
-  // ═══════════════════════════════════════════
-  // AREA CHART con tooltip hover
-  // ═══════════════════════════════════════════
   renderAreaChart() {
     const canvas = this.areaChartRef?.nativeElement;
     if (!canvas) return;
 
-    // Generar datos
     this.areaLabels = [];
     this.areaData = [];
     for (let i = 30; i >= 0; i -= 3) {
@@ -111,7 +107,6 @@ export class DashboardAdmin implements OnInit, AfterViewInit {
       const chartH = h - padT - padB;
       const maxVal = Math.max(...this.areaData) * 1.2;
 
-      // Grid
       ctx.strokeStyle = 'rgba(255,255,255,0.06)';
       ctx.lineWidth = 1;
       for (let i = 0; i <= 5; i++) {
@@ -128,7 +123,6 @@ export class DashboardAdmin implements OnInit, AfterViewInit {
         y: padT + chartH - (v / maxVal) * chartH
       }));
 
-      // Area gradient
       const grad = ctx.createLinearGradient(0, padT, 0, padT + chartH);
       grad.addColorStop(0, 'rgba(16,185,129,0.45)');
       grad.addColorStop(1, 'rgba(16,185,129,0.0)');
@@ -155,7 +149,6 @@ export class DashboardAdmin implements OnInit, AfterViewInit {
       ctx.lineWidth = 2.5;
       ctx.stroke();
 
-      // X labels
       ctx.fillStyle = 'rgba(255,255,255,0.35)';
       ctx.font = '10px sans-serif';
       ctx.textAlign = 'center';
@@ -163,11 +156,10 @@ export class DashboardAdmin implements OnInit, AfterViewInit {
         if (i % 2 === 0) ctx.fillText(l, pts[i].x, h - 8);
       });
 
-      // ── HOVER ──
+      // HOVER dentro del grafico
       if (hoverIdx !== null) {
         const p = pts[hoverIdx];
 
-        // Línea vertical punteada
         ctx.beginPath();
         ctx.moveTo(p.x, padT);
         ctx.lineTo(p.x, padT + chartH);
@@ -177,7 +169,6 @@ export class DashboardAdmin implements OnInit, AfterViewInit {
         ctx.stroke();
         ctx.setLineDash([]);
 
-        // Punto verde con centro blanco
         ctx.beginPath();
         ctx.arc(p.x, p.y, 6, 0, Math.PI * 2);
         ctx.fillStyle = '#10b981';
@@ -213,7 +204,6 @@ export class DashboardAdmin implements OnInit, AfterViewInit {
 
     draw(null);
 
-    // Eventos hover
     const onMove = (e: MouseEvent) => {
       const rect = canvas.getBoundingClientRect();
       const mx = e.clientX - rect.left;

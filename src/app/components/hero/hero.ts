@@ -13,21 +13,21 @@ export class Hero {
   scrollToStats() {
     const statsSection = document.getElementById('hero-stats');
     if (statsSection) {
-      statsSection.scrollIntoView({ 
-        behavior: 'smooth', 
+      statsSection.scrollIntoView({
+        behavior: 'smooth',
         inline: 'start',
-        block: 'center' 
+        block: 'center'
       });
     }
   }
   constructor(private languageService: LanguageService) {
-      this.languageService.isSpanish$.subscribe(
-        isSpanish => this.isSpanish = isSpanish
-      );
-    }
-  
-    getText(es: string, en: string): string {
-      return this.isSpanish ? es : en;
-    }
-  
+    this.languageService.isSpanish$.subscribe(
+      isSpanish => this.isSpanish = isSpanish
+    );
+  }
+
+  getText(es: string, en: string): string {
+    return this.isSpanish ? es : en;
+  }
+
 }

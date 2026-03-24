@@ -113,7 +113,24 @@ export class ShowVehicles implements OnInit {
   }
 
   verDetalles(id: number) {
-    this.router.navigate(['/http://localhost:8000/api/vehicles/', id]);
+    this.router.navigate(['/vehicles', id]);
+  }
+
+  reservarCita(vehicle: Catalogo) {
+    console.log('Vehicle seleccionado:', vehicle); // debug: verifica que vehicle.id llega
+    const modelo = `${vehicle.marca} ${vehicle.modelo}`;
+    const imagen = vehicle.image_url && vehicle.image_url.length > 0
+      ? this.backendUrl + vehicle.image_url[0]
+      : '/images/hero_image.png';
+    this.router.navigate(['/new-reserve'], {
+      queryParams: {
+        vehicle_id: String(vehicle.id),   
+        vehiculo: modelo,
+        imagen: imagen,
+        marca: vehicle.marca,
+        year: vehicle.year
+      }
+    });
   }
 
   favorite(vehicle: Catalogo): void {

@@ -13,11 +13,17 @@
           <h5>{{ getText('¿Estás seguro que deseas anular esta reserva?', 'Are you sure you want to cancel this reservation?') }}</h5>
         }
         <div class="reservation-details">
-          <p><strong>{{ getText('Peluquero:', 'Barber:') }}</strong> {{ peluquero }}</p>
-          <p><strong>{{ getText('Servicio:', 'Service:') }}</strong> {{ servicio }}</p>
+          @if(peluquero) {
+            <p><strong>{{ getText('Detalles:', 'Details:') }}</strong> {{ peluquero }}</p>
+          }
+          @if(servicio) {
+            <p><strong>{{ getText('Información:', 'Info:') }}</strong> {{ servicio }}</p>
+          }
           <p><strong>{{ getText('Fecha:', 'Date:') }}</strong> {{ fecha }}</p>
           <p><strong>{{ getText('Hora:', 'Hour:') }}</strong> {{ hora }}</p>
-          <p><strong>{{ getText('Usuario:', 'User:') }}</strong> {{ nombreUsuario }} {{apellidoUsuario}} </p>
+          @if(nombreUsuario) {
+            <p><strong>{{ getText('Usuario:', 'User:') }}</strong> {{ nombreUsuario }} {{apellidoUsuario}} </p>
+          }
         </div>
       </div>
       <div class="modal-actions">
