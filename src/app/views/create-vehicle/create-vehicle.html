@@ -1,0 +1,115 @@
+<div class="sc-main">
+  <!-- Header -->
+  <header class="sc-topbar-flex">
+    <div>
+      <p class="sc-subtitle">Administración</p>
+      <h1 class="sc-title">Añadir Nuevo Vehículo</h1>
+    </div>
+  </header>
+
+  <!-- Success Alert -->
+  @if (showAlert) {
+    <div class="alert-success">
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-check-circle-fill" viewBox="0 0 16 16">
+        <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0m-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"/>
+      </svg>
+      Vehículo añadido correctamente al catálogo.
+    </div>
+  }
+
+  <!-- Form Panel -->
+  <div class="glass-panel">
+    <form [formGroup]="vehicleForm" (ngSubmit)="onSubmit()">
+      
+      <div class="form-grid">
+        <!-- Marca -->
+        <div class="form-group">
+          <label for="marca">Marca</label>
+          <input type="text" id="marca" formControlName="marca" placeholder="Ej: Audi" 
+            [class.is-invalid]="getControl('marca')?.invalid && getControl('marca')?.touched">
+          @if (getControl('marca')?.invalid && getControl('marca')?.touched) {
+            <span class="error-msg">La marca es requerida.</span>
+          }
+        </div>
+
+        <!-- Modelo -->
+        <div class="form-group">
+          <label for="modelo">Modelo</label>
+          <input type="text" id="modelo" formControlName="modelo" placeholder="Ej: Q5 Sportback"
+            [class.is-invalid]="getControl('modelo')?.invalid && getControl('modelo')?.touched">
+          @if (getControl('modelo')?.invalid && getControl('modelo')?.touched) {
+            <span class="error-msg">El modelo es requerido.</span>
+          }
+        </div>
+
+        <!-- Precio -->
+        <div class="form-group">
+          <label for="precio">Precio (€)</label>
+          <input type="number" id="precio" formControlName="precio" placeholder="Ej: 62500"
+            [class.is-invalid]="getControl('precio')?.invalid && getControl('precio')?.touched">
+          @if (getControl('precio')?.invalid && getControl('precio')?.touched) {
+            <span class="error-msg">El precio es requerido.</span>
+          }
+        </div>
+
+        <!-- Kilómetros -->
+        <div class="form-group">
+          <label for="km">Kilómetros</label>
+          <input type="number" id="km" formControlName="km" placeholder="Ej: 15000"
+            [class.is-invalid]="getControl('km')?.invalid && getControl('km')?.touched">
+          @if (getControl('km')?.invalid && getControl('km')?.touched) {
+            <span class="error-msg">Los kilómetros son requeridos.</span>
+          }
+        </div>
+
+        <!-- Motor -->
+        <div class="form-group">
+          <label for="motor">Motor</label>
+          <input type="text" id="motor" formControlName="motor" placeholder="Ej: 2.0 TDCI 130CV"
+            [class.is-invalid]="getControl('motor')?.invalid && getControl('motor')?.touched">
+          @if (getControl('motor')?.invalid && getControl('motor')?.touched) {
+            <span class="error-msg">El tipo de motor es requerido.</span>
+          }
+        </div>
+
+        <!-- Año -->
+        <div class="form-group">
+          <label for="year">Año</label>
+          <input type="number" id="year" formControlName="year" placeholder="Ej: 2024"
+            [class.is-invalid]="getControl('year')?.invalid && getControl('year')?.touched">
+          @if (getControl('year')?.invalid && getControl('year')?.touched) {
+            <span class="error-msg">Un año válido es requerido.</span>
+          }
+        </div>
+
+        <!-- Imagen -->
+        <div class="form-group full-width">
+          <label for="image_url">URL de la Imagen</label>
+          <input type="url" id="image_url" formControlName="image_url" placeholder="https://ejemplo.com/imagen.jpg">
+          <span style="color: #a78b7c; font-size: 0.7rem; margin-top: 0.5rem; display: block;">
+            * Pega una URL válida de imagen para acompañar al vehículo.
+          </span>
+        </div>
+
+        <!-- Description -->
+        <div class="form-group full-width">
+          <label for="description">Descripción Adicional</label>
+          <textarea id="description" formControlName="description" rows="4" placeholder="Detalles de equipamiento, estado del vehículo..."></textarea>
+        </div>
+      </div>
+
+      <!-- Actions -->
+      <div class="form-actions">
+        <a routerLink="/admin/catalogo" class="btn-secondary">Cancelar</a>
+        <button type="submit" class="btn-primary" [disabled]="vehicleForm.invalid || isProcessing">
+          @if (isProcessing) {
+            <span class="spinner"></span> Procesando...
+          } @else {
+            Añadir Vehículo
+          }
+        </button>
+      </div>
+
+    </form>
+  </div>
+</div>
