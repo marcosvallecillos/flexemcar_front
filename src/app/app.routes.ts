@@ -15,6 +15,7 @@ import { AsideAdmin } from './components/aside-admin/aside-admin';
 import { ReservationsComponent } from './views/reservations/reservations.component';
 import { ReserveComponent } from './views/reserve/reserve.component';
 import { reservasAnuladas } from './views/reservasAnuladas/reservasAnuladas.component';
+import { ShowCatalogo } from './views/show-catalogo/show-catalogo';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/home', pathMatch: 'full' },
@@ -39,6 +40,8 @@ export const routes: Routes = [
       { path: 'create-users', component: CreateUserComponent },
       { path: 'reservations', component: ReservationsComponent },
       { path: 'reservasAnuladas', component: reservasAnuladas },
+      { path: 'catalogo', component: ShowCatalogo },
+      { path: 'create-vehicle', loadComponent: () => import('./views/create-vehicle/create-vehicle').then(m => m.CreateVehicle) }
     ]
   },
 ];

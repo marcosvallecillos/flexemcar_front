@@ -29,7 +29,7 @@
         <svg viewBox="0 0 20 20" fill="currentColor"><path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z"/><path fill-rule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z" clip-rule="evenodd"/></svg>
         <span class="nav-label" [class.hidden]="!sidebarOpen">{{ getText('Reservas Anuladas', 'Reservations') }}</span>
       </a>
-      <a class="nav-item" routerLink="/admin/vehiculos" routerLinkActive="active"
+      <a class="nav-item" routerLink="/admin/catalogo" routerLinkActive="active"
          [title]="!sidebarOpen ? 'Vehículos' : ''">
         <svg viewBox="0 0 20 20" fill="currentColor"><path d="M8 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zM15 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0z"/><path d="M3 4h14l1.5 6H1.5L3 4zM1 11h18v2H1z"/></svg>
         <span class="nav-label" [class.hidden]="!sidebarOpen">{{ getText('Vehículos', 'Vehicles') }}</span>

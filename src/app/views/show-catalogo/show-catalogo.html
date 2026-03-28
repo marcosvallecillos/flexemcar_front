@@ -1,1 +1,111 @@
-<p>show-catalogo works!</p>
+<div class="sc-main">
+  <!-- Header -->
+  <header class="sc-topbar">
+    <div class="sc-topbar-flex">
+      <div>
+        <p class="sc-subtitle">Inventario Premium</p>
+        <h1 class="sc-title">Catálogo de Vehículos</h1>
+      </div>
+      <button class="sc-btn-primary" [routerLink]="['/admin/create-vehicle']">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-plus" viewBox="0 0 16 16">
+          <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4"/>
+        </svg>
+        Añadir Nuevo Vehículo
+      </button>
+    </div>
+  </header>
+
+  <!-- Stats -->
+  <div class="sc-stats-grid">
+    <div class="sc-stat-card">
+      <span class="sc-stat-label">Total en Catálogo</span>
+      <span class="sc-stat-value">{{ filteredVehicles.length }}</span>
+    </div>
+    <div class="sc-stat-card highlight">
+      <span class="sc-stat-label">Marcas Disponibles</span>
+      <span class="sc-stat-value">{{ marcas.length }}</span>
+    </div>
+    <div class="sc-stat-card">
+      <span class="sc-stat-label">Estado</span>
+      <span class="sc-stat-value" style="color: #41e575; font-size: 1.5rem; margin-top: 1rem;">Sincronizado</span>
+    </div>
+  </div>
+
+  <!-- Table Area -->
+  <div class="sc-table-wrapper">
+    <table class="sc-table">
+      <thead>
+        <tr>
+          <th>Thumbnail</th>
+          <th>Marca/Modelo</th>
+          <th>Precio</th>
+          <th class="align-center">Kilómetros</th>
+          <th>Motor</th>
+          <th class="align-center">Año</th>
+          <th class="align-right">Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (vehicle of filteredVehicles; track vehicle.id) {
+          <tr>
+            <td>
+              <div class="sc-thumb">
+                <img [src]="getVehicleImage(vehicle)" [alt]="vehicle.modelo">
+              </div>
+            </td>
+            <td>
+              <div class="sc-brand-col">
+                <span class="sc-brand">{{ vehicle.marca | uppercase }}</span>
+                <span class="sc-model">{{ vehicle.modelo }}</span>
+              </div>
+            </td>
+            <td>
+              <span class="sc-price">{{ vehicle.precio }} €</span>
+            </td>
+            <td class="align-center">
+              <span class="sc-pill">{{ vehicle.km }} km</span>
+            </td>
+            <td>
+              <div class="sc-engine">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#00a9fd" class="bi bi-fuel-pump" viewBox="0 0 16 16">
+                  <path d="M3 2.5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 .5.5v5a.5.5 0 0 1-.5.5h-5a.5.5 0 0 1-.5-.5z"/>
+                  <path d="M1 2a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v8a2 2 0 0 1 2 2v.5a.5.5 0 0 0 1 0V8h-.5a.5.5 0 0 1-.5-.5V4.375a.5.5 0 0 1 .5-.5h1.495c-.011-.476-.053-.894-.201-1.222a.97.97 0 0 0-.394-.4581c-.184-.11-.464-.195-.9-.195a.5.5 0 0 1 0-1c.564 0 1.034.11 1.412.336.383.228.634.551.794.907.295.655.294 1.465.294 2.081V7.5a.5.5 0 0 1-.5.5H15v4.5a1.5 1.5 0 0 1-3 0V12a1 1 0 0 0-1-1v4h.5a.5.5 0 0 1 0 1H.5a.5.5 0 0 1 0-1H1zm9 0a1 1 0 0 0-1-1H3a1 1 0 0 0-1 1v13h8z"/>
+                </svg>
+                <span>{{ vehicle.motor }}</span>
+              </div>
+            </td>
+            <td class="align-center">
+              <span class="sc-year">{{ vehicle.year }}</span>
+            </td>
+            <td>
+              <div class="sc-actions">
+                <button class="sc-btn-action edit" aria-label="Editar">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-fill" viewBox="0 0 16 16">
+                    <path d="M12.854.146a.5.5 0 0 0-.707 0L10.5 1.793 14.207 5.5l1.647-1.646a.5.5 0 0 0 0-.708zm2 2.1a1 1 0 0 1 0 1.414l-11 11a1 1 0 0 1-.39.24l-3 1a.5.5 0 0 1-.607-.607l1-3a1 1 0 0 1 .24-.39l11-11a1 1 0 0 1 1.414 0z"/>
+                  </svg>
+                </button>
+                <button class="sc-btn-action delete" aria-label="Eliminar" (click)="eliminarVehiculo(vehicle.id)">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash3-fill" viewBox="0 0 16 16">
+                    <path d="M11 1.5v1h3.5a.5.5 0 0 1 0 1h-.538l-.853 10.66A2 2 0 0 1 11.115 16h-6.23a2 2 0 0 1-1.994-1.84L2.038 3.5H1.5a.5.5 0 0 1 0-1H5v-1A1.5 1.5 0 0 1 6.5 0h3A1.5 1.5 0 0 1 11 1.5m-5 0v1h4v-1a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5M4.5 5.029l.5 8.5a.5.5 0 1 0 .998-.06l-.5-8.5a.5.5 0 1 0-.998.06m6.53-.528a.5.5 0 0 0-.528.47l-.5 8.5a.5.5 0 0 0 .998.058l.5-8.5a.5.5 0 0 0-.47-.528M8 4.5a.5.5 0 0 0-.5.5v8.5a.5.5 0 0 0 1 0V5a.5.5 0 0 0-.5-.5"/>
+                  </svg>
+                </button>
+              </div>
+            </td>
+          </tr>
+        }
+        @if (filteredVehicles.length === 0 && !isLoading) {
+          <tr>
+            <td colspan="7" class="sc-empty">No se han encontrado vehículos en el catálogo.</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+    
+    @if (isLoading) {
+      <div class="sc-loading">
+        <div class="spinner"></div>
+        <span>Cargando catálogo...</span>
+      </div>
+    }
+  </div>
+</div>
