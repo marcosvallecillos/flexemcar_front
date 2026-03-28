@@ -114,6 +114,20 @@ filterByPrice(minPrice?: number, maxPrice?: number): Observable<any> {
   return this.http.get(url, { params });
 }
 
+filterByKm(minKm?: number, maxKm?: number): Observable<any> {
+  let url = `${this.apiUrlVehiculos}/filter/km`;
+  const params: { [key: string]: string } = {};
+  
+  if (minKm !== undefined) {
+    params['min_km'] = minKm.toString();
+  }
+  if (maxKm !== undefined) {
+    params['max_km'] = maxKm.toString();
+  }
+  
+  return this.http.get(url, { params });
+}
+
 filterByDate(date: Date): Observable<FilterDateResponse> {
     const year = date.getFullYear();
     const month = String(date.getMonth() + 1).padStart(2, '0');

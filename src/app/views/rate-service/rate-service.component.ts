@@ -25,10 +25,10 @@ export class RateServiceComponent implements OnInit {
     isProcessing: boolean = false;
     isSpanish: boolean = true;
     reservaValidada: boolean = false;
-    yaValorada: boolean = false;         
-    isEditMode: boolean = false;        
-    originalRating: number = 0;           
-    originalComentario: string = '';      
+    yaValorada: boolean = false;
+    isEditMode: boolean = false;
+    originalRating: number = 0;
+    originalComentario: string = '';
     isLoadingReserve: boolean = true;
     errorLoadingReserve: boolean = false;
     errorMessage: string = '';
@@ -56,11 +56,11 @@ export class RateServiceComponent implements OnInit {
         // Obtener el ID de la ruta usando paramMap (más confiable)
         this.route.paramMap.subscribe(params => {
             const reserveIdParam = params.get('id');
-console.log('Image URL:', this.reserve?.vehiculo?.image_url);
+            console.log('Image URL:', this.reserve?.vehiculo?.image_url);
             if (reserveIdParam) {
                 const reserveId = Number(reserveIdParam);
                 console.log('ID convertido a número:', reserveId);
-                
+
                 if (!isNaN(reserveId) && reserveId > 0) {
                     this.loadReserve(reserveId);
                 } else {
@@ -71,10 +71,10 @@ console.log('Image URL:', this.reserve?.vehiculo?.image_url);
                 }
             } else {
                 // Intentar desde snapshot como fallback
-                const snapshotId = this.route.snapshot.params['id'] || 
-                                  this.route.snapshot.paramMap.get('id');
-                
-                
+                const snapshotId = this.route.snapshot.params['id'] ||
+                    this.route.snapshot.paramMap.get('id');
+
+
                 if (snapshotId) {
                     const id = Number(snapshotId);
                     if (!isNaN(id) && id > 0) {
@@ -94,15 +94,15 @@ console.log('Image URL:', this.reserve?.vehiculo?.image_url);
             }
         });
     }
-getReserveImage(reserve: Reserva): string {
-  const images = reserve.vehiculo?.image_url;
-  if (images && images.length > 0) {
-    return images[0]; // ← sin añadir backendUrl, ya viene completa
-  }
-      console.log("Iamgen",images)
+    getReserveImage(reserve: Reserva): string {
+        const images = reserve.vehiculo?.image_url;
+        if (images && images.length > 0) {
+            return images[0]; // ← sin añadir backendUrl, ya viene completa
+        }
+        console.log("Iamgen", images)
 
-  return '/images/hero_image.png';
-}
+        return '/images/hero_image.png';
+    }
     private showError(message: string) {
         this.errorLoadingReserve = true;
         this.errorMessage = message;
@@ -125,22 +125,22 @@ getReserveImage(reserve: Reserva): string {
                 console.log('Reserva obtenida:', reserve);
                 this.reserve = reserve;
 
-               this.yaValorada = !!reserve.valoracion;
+                this.yaValorada = !!reserve.valoracion;
 
-if (this.yaValorada) {
-    this.servicioRating = reserve.valoracion_servicio ?? 0;
-    this.comentario = reserve.valoracion_comentario ?? '';
-    this.originalRating = this.servicioRating;
-    this.originalComentario = this.comentario;
-    this.isEditMode = false;
-} else {
-    // No hay valoración → modo creación
-    this.servicioRating = 0;
-    this.comentario = '';
-    this.originalRating = 0;
-    this.originalComentario = '';
-    this.isEditMode = true;
-}
+                if (this.yaValorada) {
+                    this.servicioRating = reserve.valoracion_servicio ?? 0;
+                    this.comentario = reserve.valoracion_comentario ?? '';
+                    this.originalRating = this.servicioRating;
+                    this.originalComentario = this.comentario;
+                    this.isEditMode = false;
+                } else {
+                    // No hay valoración → modo creación
+                    this.servicioRating = 0;
+                    this.comentario = '';
+                    this.originalRating = 0;
+                    this.originalComentario = '';
+                    this.isEditMode = true;
+                }
 
                 this.isLoadingReserve = false;
                 setTimeout(() => {
@@ -163,10 +163,10 @@ if (this.yaValorada) {
     }
 
     retryLoadReserve() {
-        const reserveIdParam = this.route.snapshot.params['id'] || 
-                                this.route.snapshot.paramMap.get('id') ||
-                                this.route.snapshot.queryParams['id'];
-        
+        const reserveIdParam = this.route.snapshot.params['id'] ||
+            this.route.snapshot.paramMap.get('id') ||
+            this.route.snapshot.queryParams['id'];
+
         if (reserveIdParam) {
             const reserveId = Number(reserveIdParam);
             if (!isNaN(reserveId) && reserveId > 0) {
@@ -186,17 +186,17 @@ if (this.yaValorada) {
     }
 
     goBack() {
-        this.router.navigate(['/show-catalogo']);
+        this.router.navigate(['/show-reserves']);
     }
 
     getText(es: string, en: string): string {
         return this.isSpanish ? es : en;
     }
 
-    onRatingChange(tipo: 'servicio',valor: number): void {
+    onRatingChange(tipo: 'servicio', valor: number): void {
         if (tipo === 'servicio') {
             this.servicioRating = valor;
-        } 
+        }
     }
 
     reiniciarValoraciones(): void {
@@ -211,9 +211,9 @@ if (this.yaValorada) {
         this.formSubmitted = false;
     }
     getRatingLabel(): string {
-  const labels = ['', 'Malo', 'Regular', 'Bueno', 'Muy bueno', 'Excelente'];
-  return this.servicioRating > 0 ? labels[this.servicioRating] : 'Sin valorar';
-}
+        const labels = ['', 'Malo', 'Regular', 'Bueno', 'Muy bueno', 'Excelente'];
+        return this.servicioRating > 0 ? labels[this.servicioRating] : 'Sin valorar';
+    }
 
     startEdit(): void {
         this.isEditMode = true;
@@ -226,49 +226,49 @@ if (this.yaValorada) {
     }
 
     onSubmit(): void {
-    if (!this.comentario.trim()) {
-        alert(this.getText('Por favor, escribe un comentario.', 'Please write a comment.'));
-        return;
-    }
-    if (this.servicioRating === 0) {
-        alert(this.getText('Por favor, selecciona una calificación.', 'Please select a star rating.'));
-        return;
-    }
-
-    const userId = this.authService.getUserId();
-    if (!userId || !this.reserve) return;
-
-    this.isProcessing = true;
-    this.formSubmitted = true;
-
-    const valoracionData: any = {
-        rating: this.servicioRating,
-        comment: this.comentario,
-        usuario_id: userId,
-        reserva_id: this.reserve.id,
-        created_at: new Date().toISOString()
-    };
-
-    //  nueva valoración o edición según si ya existe
-    const request$ = this.reserve.valoracion
-        ? this.apiService.editValoracion(this.reserve.valoracion, valoracionData)
-        : this.apiService.newValoracion(valoracionData);
-
-    request$.subscribe({
-        next: (response) => {
-            console.log('Valoración enviada:', response);
-            this.reiniciarValoraciones();
-            this.showAlert = true;
-            this.isProcessing = false;
-            this.cdr.detectChanges();
-            setTimeout(() => this.router.navigate(['/show-catalogo']), 2000);
-        },
-        error: (error) => {
-            console.error('Error:', error);
-            alert(this.getText('Error al enviar la valoración.', 'Error sending rating.'));
-            this.isProcessing = false;
-            this.cdr.detectChanges();
+        if (!this.comentario.trim()) {
+            alert(this.getText('Por favor, escribe un comentario.', 'Please write a comment.'));
+            return;
         }
-    });
-}
+        if (this.servicioRating === 0) {
+            alert(this.getText('Por favor, selecciona una calificación.', 'Please select a star rating.'));
+            return;
+        }
+
+        const userId = this.authService.getUserId();
+        if (!userId || !this.reserve) return;
+
+        this.isProcessing = true;
+        this.formSubmitted = true;
+
+        const valoracionData: any = {
+            rating: this.servicioRating,
+            comment: this.comentario,
+            usuario_id: userId,
+            reserva_id: this.reserve.id,
+            created_at: new Date().toISOString()
+        };
+
+        //  nueva valoración o edición según si ya existe
+        const request$ = this.reserve.valoracion
+            ? this.apiService.editValoracion(this.reserve.valoracion, valoracionData)
+            : this.apiService.newValoracion(valoracionData);
+
+        request$.subscribe({
+            next: (response) => {
+                console.log('Valoración enviada:', response);
+                this.reiniciarValoraciones();
+                this.showAlert = true;
+                this.isProcessing = false;
+                this.cdr.detectChanges();
+                setTimeout(() => this.router.navigate(['/show-reserves']), 2000);
+            },
+            error: (error) => {
+                console.error('Error:', error);
+                alert(this.getText('Error al enviar la valoración.', 'Error sending rating.'));
+                this.isProcessing = false;
+                this.cdr.detectChanges();
+            }
+        });
+    }
 }
