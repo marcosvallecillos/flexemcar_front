@@ -202,8 +202,15 @@ getAllVehiculos(): Observable<Catalogo[]> {
   return this.http.get<Catalogo[]>(`${this.apiUrlVehiculos}${params}`);
 }
 
+createVehiculo(vehiculoData: any): Observable<any> {
+  return this.http.post<any>(`${this.apiUrlVehiculos}/create`, vehiculoData);
+}
+
 getVehiculos(): Catalogo[] {
   return this.Vehiculos;
+}
+deleteVehiculo(id: number): Observable<any> {
+  return this.http.delete<any>(`${this.apiUrlVehiculos}/delete/${id}`);
 }
 
 

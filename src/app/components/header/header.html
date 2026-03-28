@@ -1,36 +1,35 @@
 <div class="header" [class.header-scrolled]="isScrolled">
 
     <nav class="navbar navbar-expand-lg" [class.menu-open]="isMenuOpen">
-       
+
         <div class="container-fluid">
-            <button routerLink="/home" style="background-color:transparent;border: none;">   <img src="../../../../images/logo.png"  class="logo FlexemCar"alt="" style="font-size:36px;color:white;margin-top:-10px;cursor:pointer"> </button>
-            <button class="navbar-toggler" 
-                    type="button" 
-                    (click)="toggleMenu()"
-                    [attr.aria-expanded]="isMenuOpen">
-                <span class="navbar-toggler-icon"></span>  
+            <button routerLink="/home" style="background-color:transparent;border: none;"> <img
+                    src="../../../../images/logo.png" class="logo FlexemCar" alt=""
+                    style="font-size:36px;color:white;margin-top:-10px;cursor:pointer"> </button>
+            <button class="navbar-toggler" type="button" (click)="toggleMenu()" [attr.aria-expanded]="isMenuOpen">
+                <span class="navbar-toggler-icon"></span>
             </button>
-          
+
             <div class="collapse navbar-collapse" [class.show]="isMenuOpen">
                 <a class="navbar-brand" href="#" routerLink="/home">
-                 
+
                 </a>
                 <ul class="navbar-nav mx-auto">
-                    
-                    <hr>  
+
+                    <hr>
                     <li class="nav-item ">
-                        <a class="nav-link ms-3 " routerLink="/show-catalogo" routerLinkActive="active"
+                        <a class="nav-link ms-3 " routerLink="/show-reserves" routerLinkActive="active"
                             data-bs-toggle="dropdown" aria-expanded="false">
                             {{ getText('Reservas', 'Reservations') }}
                         </a>
                     </li>
-                    <hr>  
+                    <hr>
                     <li class="nav-item">
                         <a class="nav-link ms-3" routerLink="/show-reserve" routerLinkActive="active">
                             {{ getText('Vender', 'Sell') }}
                         </a>
                     </li>
-                    <hr>  
+                    <hr>
                     <li class="nav-item">
                         <a class="nav-link ms-3" routerLink="/contact" routerLinkActive="active">
                             {{ getText('Contacto', 'Contact') }}
@@ -43,7 +42,7 @@
                         </a>
                     </li>
 
-                    <hr>  
+                    <hr>
                     <li class="nav-item favorites-item" style="list-style: none;" (click)="openFavorites()">
                         <i class="bi bi-heart heart-icon"></i>
                     </li>
@@ -57,8 +56,8 @@
                             <button class="dropdown-item" (click)="toggleLanguage('es')">
                                 ES
                             </button>
-                            
-                      
+
+
                         </li>
                         <li>
                             <button class="dropdown-item" (click)="toggleLanguage('en')">
@@ -67,23 +66,21 @@
                         </li>
                     </ul>
                 </div>
-                <hr>  
-                 
+                <hr>
+
                 <ul class="navbar-nav">
                     <li class="nav-item ms-3">
                         <a class="nav-link login-btn" (click)="openLoginModal()" routerLinkActive="active">
-                            <i class="fas fa-sign-in-alt"></i> 
+                            <i class="fas fa-sign-in-alt"></i>
                             {{ getText('Iniciar Sesión', 'Login') }}
                         </a>
                     </li>
                 </ul>
-                
+
             </div>
         </div>
     </nav>
 </div>
 
-    <app-modal-login
-        [show]="showLoginModal"
-        (close)="closeLoginModal()">
-    </app-modal-login>
+<app-modal-login [show]="showLoginModal" (close)="closeLoginModal()">
+</app-modal-login>

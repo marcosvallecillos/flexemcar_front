@@ -5,6 +5,7 @@ import { Reserva } from '../../models/user.interface';
 import { Valoracion } from '../../models/user.interface';
 
 import { ApiService } from '../../services/api-service.service';
+import { RouterLink } from '@angular/router';
 
 interface Review {
   id: number;
@@ -19,7 +20,7 @@ interface Review {
 @Component({
   selector: 'app-reviews',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule,RouterLink],
   templateUrl: './reviews.html',
   styleUrl: './reviews.css',
 })
