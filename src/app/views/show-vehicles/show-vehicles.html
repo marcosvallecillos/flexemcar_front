@@ -39,18 +39,74 @@
 
         <div class="filter-section">
           <p class="filter-title">{{ getText('Precio', 'Price') }}</p>
-          <div class="filter-options">
-            <button class="filter-option"
-                    [ngClass]="{ 'active': selectedPrice === 'Todos' }"
-                    (click)="filterByPrice('Todos')">
-              {{ getText('Todos', 'All') }}
-            </button>
-            @for (range of priceRanges; track range.key) {
-              <button class="filter-option"
-                      [ngClass]="{ 'active': selectedPrice === range.key }"
-                      (click)="filterByPrice(range.key)">
-                {{ range.label }}
+          <div class="price-filter">
+            <div class="price-inputs">
+              <div class="input-group">
+                <label for="minPrice">{{getText('Desde','From')}}</label>
+                <div class="input-wrapper">
+                  <input type="number" id="minPrice" [(ngModel)]="minPrice" min="0" placeholder="0">
+                  <span class="currency">€</span>
+                </div>
+              </div>
+              <div class="input-group">
+                <label for="maxPrice">{{getText('Hasta','To')}}</label>
+                <div class="input-wrapper">
+                  <input type="number" id="maxPrice" [(ngModel)]="maxPrice" min="0" placeholder="Max">
+                  <span class="currency">€</span>
+                </div>
+              </div>
+            </div>
+            <div class="price-buttons">
+              <button class="filter-btn" (click)="filterByPrice()">
+                {{getText('Filtrar','Filter')}}
               </button>
+              <button class="clear-btn" (click)="clearPriceFilter()">
+                {{getText('Limpiar','Clear')}}
+              </button>
+            </div>
+            @if (priceFilterError) {
+              <div class="price-error">
+                <i class="bi bi-exclamation-circle"></i>
+                {{ priceFilterError }}
+              </div>
+            }
+          </div>
+        </div>
+
+        <div class="filter-divider"></div>
+
+        <div class="filter-section">
+          <p class="filter-title">{{ getText('Kilometraje', 'Kilometers') }}</p>
+          <div class="price-filter">
+            <div class="price-inputs">
+              <div class="input-group">
+                <label for="minKm">{{getText('Desde','From')}}</label>
+                <div class="input-wrapper">
+                  <input type="number" id="minKm" [(ngModel)]="minKm" min="0" placeholder="0">
+                  <span class="currency">km</span>
+                </div>
+              </div>
+              <div class="input-group">
+                <label for="maxKm">{{getText('Hasta','To')}}</label>
+                <div class="input-wrapper">
+                  <input type="number" id="maxKm" [(ngModel)]="maxKm" min="0" placeholder="Max">
+                  <span class="currency">km</span>
+                </div>
+              </div>
+            </div>
+            <div class="price-buttons">
+              <button class="filter-btn" (click)="filterByKm()">
+                {{getText('Filtrar','Filter')}}
+              </button>
+              <button class="clear-btn" (click)="clearKmFilter()">
+                {{getText('Limpiar','Clear')}}
+              </button>
+            </div>
+            @if (kmFilterError) {
+              <div class="price-error">
+                <i class="bi bi-exclamation-circle"></i>
+                {{ kmFilterError }}
+              </div>
             }
           </div>
         </div>
@@ -76,7 +132,7 @@
 
               <!-- Image -->
             <div class="card-image-wrapper">
-  @if (vehicle.image_url.length <= 1) {
+  @if (vehicle.image_url.length == 0) {
     
     <img [src]="getVehicleImage(vehicle)"
          [alt]="vehicle.marca + ' ' + vehicle.modelo"
@@ -157,5 +213,9 @@
       </div>
     </div>
   </div>
-
+@if(messageNoUserDisplay){
+  <div class="message-no-user">
+    <p>{{ messageNoUserDisplay }}</p>
+  </div>
+}
   <app-footer></app-footer>
