@@ -55,15 +55,15 @@
     </div>
 
     <p style="font-family: 'Syne', sans-serif; font-size: 1.15rem; font-weight: 700;
-              color: var(--text); margin: 0 0 10px;">Aún no hay valoraciones</p>
+              color: var(--text); margin: 0 0 10px;">{{getText('Aún no hay valoraciones','No reviews yet')}}</p>
 
    
 
-    <a routerLink="/reservar" style="display: inline-flex; align-items: center; gap: 8px;
+    <a routerLink="/show-vehicles" style="display: inline-flex; align-items: center; gap: 8px;
        padding: 12px 24px; border-radius: 8px; border: 1px solid rgba(251,191,36,0.35);
        background: rgba(251,191,36,0.07); color: #FBBF24; font-size: 0.875rem;
        font-weight: 600; cursor: pointer; text-decoration: none; font-family: inherit;">
-      Sé el primero en valorar
+      {{getText('Sé el primero en valorar','Be the first to rate')}}
     </a>
   </div>
 }
