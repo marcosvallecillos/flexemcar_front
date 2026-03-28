@@ -2,35 +2,36 @@
   <div class="section-header">
     <div>
       <div class="section-tag">{{getText('Catálogo','Catalog')}} </div>
-      <h2 style="margin-top:8px">{{getText('Vehículos','Vehicles')}}  <em>{{getText('destacados','featured')}} </em></h2>
+      <h2 style="margin-top:8px">{{getText('Vehículos','Vehicles')}} <em>{{getText('destacados','featured')}} </em></h2>
     </div>
-    <a href="#" class="see-all" routerLink="/show-vehicles">{{getText('Ver todos los vehículos →','Show all vehicles →')}} </a>
+    <a href="#" class="see-all" routerLink="/show-vehicles">{{getText('Ver todos los vehículos →','Show all vehicles
+      →')}} </a>
   </div>
   <div class="vehicles-grid">
     @for (vehicle of vehicles; track vehicle.id) {
-      <div class="vehicle-card">
-        <div class="vehicle-img">
-          <div class="vehicle-badge" [class.certified]="vehicle.badgeType === 'certified'">
-            {{ vehicle.badge }}
-          </div>
-          <img [src]="vehicle.image" [alt]="vehicle.name" />
+    <div class="vehicle-card">
+      <div class="vehicle-img">
+        <div class="vehicle-badge" [class.certified]="vehicle.badgeType === 'certified'">
+          {{ vehicle.badge }}
         </div>
-        <div class="vehicle-info">
-          <h3>{{ vehicle.name }}</h3>
-          <div class="vehicle-meta">
-            <span>{{ vehicle.year }}</span>
-            <span>{{ vehicle.km }}</span>
-            <span>{{ vehicle.fuel }}</span>
+        <img [src]="vehicle.image" [alt]="vehicle.name" />
+      </div>
+      <div class="vehicle-info">
+        <h3>{{ vehicle.name }}</h3>
+        <div class="vehicle-meta">
+          <span>{{ vehicle.year }}</span>
+          <span>{{ vehicle.km }}</span>
+          <span>{{ vehicle.fuel }}</span>
+        </div>
+        <div class="vehicle-price-row">
+          <div class="vehicle-price">
+            {{ vehicle.price }}
+            <small>+ IVA</small>
           </div>
-          <div class="vehicle-price-row">
-            <div class="vehicle-price">
-              {{ vehicle.price }}
-              <small>+ IVA</small>
-            </div>
-            <button class="btn-card" [routerLink]="['/show-catalogo', vehicle.id]">Ver detalle</button>
-          </div>
+          <button class="btn-card" [routerLink]="['/show-reserves', vehicle.id]">Ver detalle</button>
         </div>
       </div>
+    </div>
     }
   </div>
 </section>

@@ -1,6 +1,6 @@
 import { Routes } from '@angular/router';
 import { Home } from './views/home/home';
-import { ShowCatalogo } from './views/show-catalogo/show-catalogo';
+import { ShowReserves } from './views/show-reserves/show-reserves';
 import { ShowVehicles } from './views/show-vehicles/show-vehicles';
 import { RateServiceComponent } from './views/rate-service/rate-service.component';
 import { ModalLoginComponent } from './components/modal-login/modal-login.component';
@@ -18,10 +18,10 @@ import { reservasAnuladas } from './views/reservasAnuladas/reservasAnuladas.comp
 
 export const routes: Routes = [
   { path: '', redirectTo: '/home', pathMatch: 'full' },
-  
+
   // ✅ Admin no puede entrar al home ni a rutas de usuario
   { path: 'home', component: Home },
-  { path: 'show-catalogo', component: ShowCatalogo },
+  { path: 'show-reserves', component: ShowReserves },
   { path: 'show-vehicles', component: ShowVehicles },
   { path: 'rate-service/:id', component: RateServiceComponent },
   { path: 'login', component: ModalLoginComponent },
@@ -30,7 +30,7 @@ export const routes: Routes = [
   { path: 'new-reserve', component: ReserveComponent, canActivate: [AuthUserGuard] },
   {
     path: 'admin',
-      component: AsideAdmin,
+    component: AsideAdmin,
     canActivate: [AdminGuard],
     children: [
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },

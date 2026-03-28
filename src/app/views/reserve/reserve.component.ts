@@ -159,7 +159,7 @@ export class ReserveComponent implements OnInit {
     const month = date.getMonth() + 1;
     const day = date.getDate();
     const dateStr = this.formatearFecha(year, month, day);
-    
+
     const bookingsForDay = this.reserves.filter(reserve => {
       const matchDia = reserve.dia?.startsWith(dateStr);
       const matchVehiculo = Number(reserve.vehiculo_id) === Number(this.vehicleId);
@@ -182,7 +182,7 @@ export class ReserveComponent implements OnInit {
       const isSameDay = reserve.dia?.startsWith(dateStr);
       const isSameTime = reserve.hora?.startsWith(time.trim());
       const isSameVehicle = Number(reserve.vehiculo_id) === Number(this.vehicleId);
-      
+
       return isSameDay && isSameTime && isSameVehicle;
     });
 
@@ -304,7 +304,7 @@ export class ReserveComponent implements OnInit {
       });
     } else {
       this.apiService.newReserve(reserveData).subscribe({
-        next: () => this.router.navigate(['/show-catalogo']),
+        next: () => this.router.navigate(['/show-reserves']),
         error: (e) => console.error('Error newReserve:', e)
       });
     }
