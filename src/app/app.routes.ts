@@ -28,7 +28,7 @@ export const routes: Routes = [
   { path: 'login', component: ModalLoginComponent },
   { path: 'showProfile', component: ShowProfileComponent, canActivate: [AuthUserGuard] },
   { path: 'editProfile', component: EditProfileComponent, canActivate: [AuthUserGuard] },
-  { path: 'new-reserve', component: ReserveComponent, canActivate: [AuthUserGuard] },
+  { path: 'new-reserve/:id', component: ReserveComponent, canActivate: [AuthUserGuard] },
   {
     path: 'admin',
     component: AsideAdmin,

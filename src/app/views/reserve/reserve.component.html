@@ -4,10 +4,41 @@
     <!-- Left Column: Summary Card -->
     <div class="summary-col">
       <div class="vehicle-card">
+        @if(vehicleDetails.images.length <= 1){
         <div class="card-image">
           <img [src]="vehicleDetails.image" [alt]="vehicleDetails.name">
           <span class="badge available">DISPONIBLE</span>
         </div>
+        }@else{
+        <div class="carousel">
+          <div class="carousel-track"
+               [style.transform]="'translateX(-' + (carouselIndex * 100) + '%)'">
+            @for (img of vehicleDetails.images; track img) {
+              <img [src]="img"
+                   [alt]="vehicleDetails.name"
+                   class="card-image carousel-slide">
+            }
+          </div>
+
+          <button class="carousel-btn carousel-btn--prev"
+                  (click)="prevSlide(vehicleDetails.images.length)">
+            <i class="bi bi-chevron-left"></i>
+          </button>
+          <button class="carousel-btn carousel-btn--next"
+                  (click)="nextSlide(vehicleDetails.images.length)">
+            <i class="bi bi-chevron-right"></i>
+          </button>
+
+          <div class="carousel-dots">
+            @for (img of vehicleDetails.images; track $index) {
+              <span class="carousel-dot"
+                    [class.active]="carouselIndex === $index"
+                    (click)="setSlide($index)">
+              </span>
+            }
+          </div>
+        </div>
+        }
         <div class="card-info">
           <h3>{{ vehicleDetails.name }}</h3>
           <p class="specs">{{ vehicleDetails.year }} • {{ vehicleDetails.usage }}</p>

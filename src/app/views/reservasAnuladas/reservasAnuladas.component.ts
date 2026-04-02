@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Component, HostListener } from '@angular/core';
 import { Catalogo, Reserva, ReservaAnulada, Usuario, Valoracion } from '../../models/user.interface';
 import { LanguageService } from '../../services/language.service';
-import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ApiService } from '../../services/api-service.service';
 import { ModalDeleteComponent } from '../../components/modal-delete/modal-delete.component';
 import { AuthService } from '../../services/auth.service';
@@ -10,7 +10,7 @@ import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-reservasAnuladas',
-  imports: [RouterLink,ModalDeleteComponent,ModalUserComponent,CommonModule],
+  imports: [ModalDeleteComponent,ModalUserComponent,CommonModule],
   templateUrl: './reservasAnuladas.component.html',
   styleUrl: './reservasAnuladas.component.css'
 })

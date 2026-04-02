@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { LanguageService } from '../../services/language.service';
 import { ApiService } from '../../services/api-service.service';
-import { Router, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { UserStateService } from '../../services/user-state.service';
 import { Footer } from '../../components/footer/footer';
 import { Catalogo } from '../../models/user.interface';
@@ -50,12 +50,12 @@ export class ShowVehicles implements OnInit {
     private languageService: LanguageService,
     private apiService: ApiService,
     private router: Router,
+    private route: ActivatedRoute,
     private userStateService: UserStateService,
     private cdr: ChangeDetectorRef,
   ) {
     this.languageService.isSpanish$.subscribe(i => this.isSpanish = i);
 
-    // Escuchar cambios de sesión para saber si hay usuario logueado
     this.userStateService.isUser$.subscribe(isUser => {
       this.isUser = isUser;
       setTimeout(() => this.cdr.detectChanges(), 0);
@@ -63,9 +63,60 @@ export class ShowVehicles implements OnInit {
   }
 
   ngOnInit() {
-    // Estado inicial de usuario (por si ya estaba logueado antes de entrar)
     this.isUser = this.userStateService.getIsUser();
-    this.getAllVehicles();
+
+    this.isLoading = true;
+    this.cdr.detectChanges();
+
+    this.apiService.getAllVehiculos().subscribe({
+      next: (data: Catalogo[]) => {
+        this.vehicles = data;
+        this.marcas = [...new Set(data.map(v => v.marca))];
+
+        // Read query params from hero search bar and apply filters
+        this.route.queryParams.subscribe(params => {
+          const marca = params['marca'] || '';
+          const modelo = params['modelo'] || '';
+          const precioMin = params['precioMin'] ? +params['precioMin'] : 0;
+          const precioMax = params['precioMax'] ? +params['precioMax'] : 0;
+
+          if (marca || modelo || precioMin || precioMax) {
+            // Set sidebar filter state to reflect the search
+            if (marca) this.selectedMarca = marca;
+            if (precioMin) this.minPrice = precioMin;
+            if (precioMax) this.maxPrice = precioMax;
+
+            // Filter locally
+            let result = [...this.vehicles];
+
+            if (marca) {
+              result = result.filter(v => v.marca === marca);
+            }
+            if (modelo) {
+              result = result.filter(v => v.modelo === modelo);
+            }
+            if (precioMin) {
+              result = result.filter(v => parseFloat(v.precio) >= precioMin);
+            }
+            if (precioMax) {
+              result = result.filter(v => parseFloat(v.precio) <= precioMax);
+            }
+
+            this.filteredVehicles = result;
+          } else {
+            this.filteredVehicles = [...this.vehicles];
+          }
+
+          this.isLoading = false;
+          this.cdr.detectChanges();
+        });
+      },
+      error: (err) => {
+        console.error('Error:', err);
+        this.isLoading = false;
+        this.cdr.detectChanges();
+      }
+    });
   }
 
   getAllVehicles() {
@@ -239,18 +290,11 @@ export class ShowVehicles implements OnInit {
     }
     console.log('Vehicle seleccionado:', vehicle); // debug: verifica que vehicle.id llega
     const modelo = `${vehicle.marca} ${vehicle.modelo}`;
-    const imagen = vehicle.image_url && vehicle.image_url.length > 0
-      ? this.backendUrl + vehicle.image_url[0]
+    const imagenes = vehicle.image_url && vehicle.image_url.length > 0
+      ? vehicle.image_url.join(',')
       : '/images/hero_image.png';
-    this.router.navigate(['/new-reserve'], {
-      queryParams: {
-        vehicle_id: String(vehicle.id),   
-        vehiculo: modelo,
-        imagen: imagen,
-        marca: vehicle.marca,
-        year: vehicle.year
-      }
-    });
+     this.router.navigate(['/new-reserve', vehicle.id]);
+
   }
 
   favorite(vehicle: Catalogo): void {

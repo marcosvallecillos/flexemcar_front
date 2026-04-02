@@ -1,0 +1,86 @@
+<div class="search-bar">
+  <h3 class="search-title">La mayor red de concesionarios de ocasión de España</h3>
+
+  <div class="search-fields">
+    <!-- Marca dropdown -->
+    <div class="field-group">
+      <label for="search-marca">Marca</label>
+      <div class="select-wrapper">
+        <select
+          id="search-marca"
+          [(ngModel)]="selectedMarca"
+          (ngModelChange)="onMarcaChange()"
+        >
+          <option value="">Todas las marcas</option>
+          @for (marca of marcas; track marca) {
+            <option [value]="marca">{{ marca }}</option>
+          }
+        </select>
+        <svg class="select-arrow" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
+    </div>
+
+    <!-- Modelo dropdown -->
+    <div class="field-group">
+      <label for="search-modelo">Modelo</label>
+      <div class="select-wrapper">
+        <select
+          id="search-modelo"
+          [(ngModel)]="selectedModelo"
+          [disabled]="!selectedMarca"
+        >
+          <option value="">{{ selectedMarca ? 'Todos los modelos' : 'Selecciona marca' }}</option>
+          @for (modelo of modelos; track modelo) {
+            <option [value]="modelo">{{ modelo }}</option>
+          }
+        </select>
+        <svg class="select-arrow" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
+    </div>
+
+    <!-- Precio slider -->
+    <div class="field-group field-precio">
+      <div class="precio-header">
+        <label>Precio</label>
+        <span class="precio-value">{{ formatPrice(precioMin) }} - {{ formatPrice(precioMax) }}</span>
+      </div>
+      <div class="range-slider">
+        <div class="range-track">
+          <div class="range-fill"
+               [style.left.%]="sliderMinPercent"
+               [style.width.%]="sliderMaxPercent - sliderMinPercent">
+          </div>
+        </div>
+        <input
+          type="range"
+          class="range-input range-min"
+          [min]="PRICE_MIN"
+          [max]="PRICE_MAX"
+          [step]="PRICE_STEP"
+          [value]="precioMin"
+          (input)="onMinPriceChange($event)"
+        />
+        <input
+          type="range"
+          class="range-input range-max"
+          [min]="PRICE_MIN"
+          [max]="PRICE_MAX"
+          [step]="PRICE_STEP"
+          [value]="precioMax"
+          (input)="onMaxPriceChange($event)"
+        />
+        <div class="range-labels">
+          <span>{{ formatPrice(PRICE_MIN) }}</span>
+          <span>{{ formatPrice(PRICE_MAX) }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Search button -->
+    <div class="field-group field-action">
+      <button class="btn-search" (click)="onSubmit()">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      </button>
+    </div>
+  </div>
+</div>

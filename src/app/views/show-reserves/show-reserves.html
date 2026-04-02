@@ -240,15 +240,26 @@
     <button class="alert-btn" (click)="openLoginModal()">{{ getText('Iniciar Sesión', 'Login') }}</button>
   </div>
   }
+  @if (mostrarMensaje) {
+    <div class="alert-overlay">
+    
+
+    <div class="alert-success">
+      {{ getText('Reserva eliminada correctamente', 'Reservation deleted successfully') }}
+    </div>
+    </div>
+  }
 </body>
 
 <app-modal-delete 
   [show]="showModal" 
   [fecha]="selectedReserve?.dia ?? ''" 
   [hora]="selectedReserve?.hora ?? ''" 
-  [peluquero]="selectedReserve?.vehiculo_model || selectedReserve?.vehiculo?.modelo || ''"
-  [servicio]="'Servicio de mantenimiento'"
-  [nombreUsuario]="authService.getUserData()?.name"
+  [modelo]="selectedReserve?.vehiculo_model || selectedReserve?.vehiculo?.modelo || ''"
+  [marca]="selectedReserve?.vehiculo?.marca || ''"
+  [year]="selectedReserve?.vehiculo?.year || ''"
+  [km]="selectedReserve?.vehiculo?.km || ''"
+  [imagen]="selectedReserve?.vehiculo?.image_url?.[0] || getReserveImage(reserves[0])"
   (confirm)="onConfirmDelete()" 
   (cancel)="onCancelReserve()">
 </app-modal-delete>

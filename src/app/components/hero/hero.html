@@ -28,9 +28,80 @@
   <div class="hero-van">
     <img src="/images/hero_image.png" alt="Furgoneta FlexemCar" />
   </div>
-
-
+  <div class="search-container">
+    <app-search-vehicle></app-search-vehicle>
+  </div>
+  
   <div class="scroll-indicator">
     <button class="scroll-dot" (click)="scrollToStats()" aria-label="Scroll to stats">↓</button>
   </div>
 </section>
+
+
+<!-- HERO CON VIDEO HAY Q MEJORARLO
+<section class="hero">
+  <div class="hero-video-wrap" [class.fading]="videoFading">
+    <video
+      #heroVideo
+      class="hero-video"
+      autoplay
+      muted
+      playsinline
+      preload="auto"
+    >
+      <source src="/videos/hero-van.mp4" type="video/mp4" />
+    </video>
+    <div class="hero-video-gradient"></div>
+  </div>
+
+  <div class="hero-grid"></div>
+  <div class="hero-overlay"></div>
+
+  <div class="hero-content" [class.visible]="contentVisible">
+    <div class="hero-tag">
+      <span class="tag-dot"></span>
+      {{ getText('Furgonetas de Ocasión', 'Used Vans') }}
+    </div>
+    <h1>
+      {{ getText('No vendemos furgonetas.', "We don't sell vans.") }}
+      <em>{{ getText('Impulsamos tu negocio.', 'We boost your business.') }}</em>
+    </h1>
+    <p>
+      {{ getText(
+        'Vehículos revisados, certificados y listos para trabajar. La confianza que tu negocio necesita.',
+        'Vehicles inspected, certified, and ready to work. The confidence your business needs.'
+      ) }}
+    </p>
+    <div class="hero-cta">
+      <button class="btn-hero btn-hero-primary" routerLink="/show-vehicles">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <circle cx="11" cy="11" r="8"/>
+          <path d="M21 21l-4.35-4.35"/>
+        </svg>
+        {{ getText('Explorar catálogo', 'Explore catalog') }}
+      </button>
+      <button class="btn-hero btn-hero-secondary">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <rect x="1" y="3" width="15" height="13" rx="2"/>
+          <path d="M16 8h4l3 5v3h-7V8zM5.5 21a1.5 1.5 0 100-3 1.5 1.5 0 000 3zM18.5 21a1.5 1.5 0 100-3 1.5 1.5 0 000 3z"/>
+        </svg>
+        {{ getText('Vender mi furgoneta', 'Sell my van') }}
+      </button>
+    </div>
+  </div>
+
+  <div class="hero-labels" [class.visible]="contentVisible">
+    <span class="h-label">✓ {{ getText('Revisados', 'Inspected') }}</span>
+    <span class="h-label">✓ {{ getText('Certificados', 'Certified') }}</span>
+    <span class="h-label">✓ {{ getText('Garantía incluida', 'Warranty included') }}</span>
+  </div>
+
+  <div class="search-container">
+    <app-search-vehicle></app-search-vehicle>
+  </div>
+
+  <div class="scroll-indicator" [class.visible]="contentVisible">
+    <button class="scroll-dot" (click)="scrollToStats()" aria-label="Scroll to stats">↓</button>
+  </div>
+</section>
+-->

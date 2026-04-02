@@ -84,6 +84,15 @@
   -webkit-mask-image: linear-gradient(to right, transparent 0%, black 25%);
 }
 
+.search-container {
+  position: absolute;
+  bottom: 0;
+  margin-top: -130px;
+  left: 5%;
+  width: 90%;
+  z-index: 10;
+}
+
 /* --- Content Wrapper --- */
 .hero-content {
   position: relative; 

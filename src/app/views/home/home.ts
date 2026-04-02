@@ -13,6 +13,7 @@ import { fromReadableStreamLike } from 'rxjs/internal/observable/innerFrom';
 import { Usuario } from '../../models/user.interface';
 import { Observable } from 'rxjs';
 import { AuthService } from '../../services/auth.service';
+import { SearchVehicle } from '../../components/search-vehicle/search-vehicle';
 
 @Component({
   selector: 'app-home',

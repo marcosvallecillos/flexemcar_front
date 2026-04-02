@@ -253,7 +253,7 @@ export class ShowReserves implements OnInit, OnDestroy {
     this.selectedReserve = reserve;
     this.showModal = true;
   }
-
+  mostrarMensaje = false;
 onConfirmDelete() {
   if (this.showModal) {
     this.showModal = false;
@@ -275,9 +275,22 @@ onConfirmDelete() {
         this.selectedReserve = null;
         this.showModal = false;
         this.showDetailsModal = false;
-        this.loadUserReserves();
+        
+        // Mostrar mensaje de éxito
+        this.mostrarMensaje = true;
+        this.cdr.detectChanges();
+
+        // Ocultar mensaje después de 2 segundos
+        setTimeout(() => {
+          this.mostrarMensaje = false;
+          this.cdr.detectChanges();
+        }, 2000);
       },
-      error: (error) => console.error('Error al eliminar la reserva:', error)
+      error: (error) => {
+        console.error('Error al eliminar la reserva:', error);
+        this.isLoading = false;
+        this.cdr.detectChanges();
+      }
     });
   }
 
@@ -385,7 +398,6 @@ onConfirmDelete() {
     }, 100);
   }
   onCancelReserve() { this.showModal = false; this.selectedReserve = null; }
-  closeModalCode() { this.showModalCode = false; this.codigoReserva = ''; }
   toggleDropdown() {
     this.showDropdown = !this.showDropdown;
   }

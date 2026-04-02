@@ -1,7 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Router, RouterLink, ActivatedRoute } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { ApiService } from '../../services/api-service.service';
 import { Reserva } from '../../models/user.interface';
@@ -9,7 +9,7 @@ import { Reserva } from '../../models/user.interface';
 @Component({
   selector: 'app-reserve',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink],
+  imports: [CommonModule, FormsModule],
   templateUrl: './reserve.component.html',
   styleUrls: ['./reserve.component.css'],
 })
@@ -37,30 +37,64 @@ export class ReserveComponent implements OnInit {
   isLoading: boolean = true;
   isAuthenticated = false;
 
+  backendUrl = 'http://localhost:8000';
+  carouselIndex: number = 0;
+
   vehicleDetails = {
     id: 0,
     usuario_id: 0,
-    estado: 'pendiente',
-    name: 'Mercedes-Benz Sprinter',
-    year: '2023',
-    usage: 'CARGA PESADA',
-    image: '/images/hero_image.png'
+    marca: '',
+    modelo: '',
+    estado: '',
+    name: '',
+    year: '',
+    usage: '',
+    image: '',
+    images: [] as string[]
   };
 
   constructor(
     private authService: AuthService,
     private router: Router,
     private apiService: ApiService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private cdr: ChangeDetectorRef
   ) { }
 
   ngOnInit() {
     this.isAuthenticated = this.authService.isLoggedIn();
-    if (!this.isAuthenticated) {
-      // this.router.navigate(['/']); 1
-    }
-
+    
     this.loadReserves();
+
+    // Get vehicle ID from route parameter
+    const idParam = this.route.snapshot.paramMap.get('id');
+    if (idParam) {
+      const id = Number(idParam);
+      this.vehicleId = id;
+      this.apiService.getVehiculoById(id).subscribe({
+        next: (vehicle) => {
+          this.vehicleDetails = {
+            id: vehicle.id,
+            usuario_id: 0,
+            marca: vehicle.marca,
+            modelo: vehicle.modelo,
+            estado: 'pendiente',
+            name: `${vehicle.marca} ${vehicle.modelo}`,
+            year: vehicle.year.toString(),
+            usage: vehicle.motor || 'COMERCIAL', // Using motor as a fallback for "usage"
+            image: vehicle.image_url && vehicle.image_url.length > 0 
+                   ? this.backendUrl + vehicle.image_url[0] 
+                   : '/images/hero_image.png',
+            images: vehicle.image_url && vehicle.image_url.length > 0
+                    ? vehicle.image_url.map(img => img.startsWith('http') ? img : this.backendUrl + img)
+                    : ['/images/hero_image.png']
+          };
+          this.selectedVehicle = this.vehicleDetails.name;
+          this.cdr.detectChanges();
+        },
+        error: (e) => console.error('Error loading vehicle', e)
+      });
+    }
 
     this.route.queryParams.subscribe(params => {
       console.log('=== PARAMS RECIBIDOS EN RESERVE ===', params);
@@ -69,27 +103,8 @@ export class ReserveComponent implements OnInit {
         this.estado = params['estado'];
         this.vehicleDetails.estado = params['estado'];
       }
-      // Leer vehicle_id como string primero y convertir
-      const rawId = params['vehicle_id'];
-      if (rawId !== undefined && rawId !== null && rawId !== '') {
-        this.vehicleId = Number(rawId);
-        this.vehicleDetails.id = this.vehicleId;
-        console.log('vehicle_id leído desde URL:', this.vehicleId);
-      }
-      if (params['vehiculo']) {
-        this.selectedVehicle = params['vehiculo'];
-        this.vehicleDetails.name = params['vehiculo'];
-      }
-      if (params['imagen']) {
-        this.vehicleDetails.image = params['imagen'];
-      }
-      if (params['marca']) {
-        this.vehicleDetails.usage = params['marca'].toUpperCase();
-      }
-      if (params['year']) {
-        this.vehicleDetails.year = params['year'];
-      }
-      // Datos de edición de una reserva existente (rid = reserve_id)
+
+      // If rid is present, we are editing an existing reserve
       if (params['rid']) {
         this.isEditing = true;
         this.reserveId = Number(params['rid']);
@@ -103,6 +118,7 @@ export class ReserveComponent implements OnInit {
         }
       }
     });
+
     this.isLoading = false;
   }
 
@@ -308,5 +324,17 @@ export class ReserveComponent implements OnInit {
         error: (e) => console.error('Error newReserve:', e)
       });
     }
+  }
+
+  nextSlide(total: number) {
+    this.carouselIndex = (this.carouselIndex + 1) % total;
+  }
+
+  prevSlide(total: number) {
+    this.carouselIndex = (this.carouselIndex - 1 + total) % total;
+  }
+
+  setSlide(index: number) {
+    this.carouselIndex = index;
   }
 }

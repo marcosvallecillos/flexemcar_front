@@ -1,10 +1,11 @@
 import { Component } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { LanguageService } from '../../services/language.service';
+import { SearchVehicle } from '../search-vehicle/search-vehicle';
 
 @Component({
   selector: 'app-hero',
-  imports: [RouterModule],
+  imports: [RouterModule,SearchVehicle],
   templateUrl: './hero.html',
   styleUrl: './hero.css',
 })

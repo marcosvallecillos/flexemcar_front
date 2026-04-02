@@ -51,7 +51,7 @@ export interface Usuario {
   modelo: string;
   year: number;
   motor: string;
-  km: number;
+  km: string;
   description: string;
   is_favorite: boolean;
   image_url: string[];

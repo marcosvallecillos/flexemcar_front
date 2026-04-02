@@ -132,8 +132,7 @@
 
               <!-- Image -->
             <div class="card-image-wrapper">
-  @if (vehicle.image_url.length == 0) {
-    
+  @if (vehicle.image_url.length <= 1) {
     <img [src]="getVehicleImage(vehicle)"
          [alt]="vehicle.marca + ' ' + vehicle.modelo"
          class="card-image">
@@ -142,7 +141,7 @@
       <div class="carousel-track"
            [style.transform]="'translateX(-' + (carouselIndex[vehicle.id] || 0) * 100 + '%)'">
         @for (img of vehicle.image_url; track img) {
-          <img [src]="img"
+          <img [src]="backendUrl + img"
                [alt]="vehicle.marca + ' ' + vehicle.modelo"
                class="card-image carousel-slide">
         }

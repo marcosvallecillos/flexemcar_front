@@ -3,6 +3,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { BehaviorSubject, Observable, throwError, tap } from 'rxjs';
 import { Reserva, ReservaAnulada, Catalogo,Usuario, Valoracion, ValoracionesResponse, FilterDateResponse } from '../models/user.interface';
 import { AuthService } from '../services/auth.service';
+import { Vehicles } from '../components/vehicles/vehicles';
 @Injectable({
   providedIn: 'root'
 })
@@ -66,6 +67,17 @@ searchUser(name: string, apellidos: string): Observable<Usuario[]> {
   const apellidosParam = encodeURIComponent(apellidos || '');
   return this.http.get<Usuario[]>(`${this.apiUrlUsuarios}/search?nombre=${nombreParam}&apellidos=${apellidosParam}`);
 }
+searchVehicle(marca: string, modelo: string, precioMin: number, precioMax: number, kmMin: number, kmMax: number ): Observable<Catalogo[]> {
+  // El backend requiere ambos pará- que los enviamos siempre
+  const nombreParam = encodeURIComponent(marca || '');
+  const apellidosParam = encodeURIComponent(modelo || '');
+  const precioMinParam = encodeURIComponent(precioMin || '');
+  const precioMaxParam = encodeURIComponent(precioMax || '');
+  const kmMinParam = encodeURIComponent(kmMin || '');
+  const kmMaxParam = encodeURIComponent(kmMax || '');
+  return this.http.get<Catalogo[]>(`${this.apiUrlVehiculos}/search?marca=${nombreParam}&modelo=${apellidosParam}&precioMin=${precioMinParam}&precioMax=${precioMaxParam}&kmMin=${kmMinParam}&kmMax=${kmMaxParam}`);
+}
+
 getReserves(): Observable<Reserva[]> {
   return this.http.get<Reserva[]>(`${this.apiUrlReservas}`);
 }
@@ -208,6 +220,9 @@ createVehiculo(vehiculoData: any): Observable<any> {
 
 getVehiculos(): Catalogo[] {
   return this.Vehiculos;
+}
+getVehiculoById(id: number): Observable<Catalogo> {
+  return this.http.get<Catalogo>(`${this.apiUrlVehiculos}/show/${id}`);
 }
 deleteVehiculo(id: number): Observable<any> {
   return this.http.delete<any>(`${this.apiUrlVehiculos}/delete/${id}`);
