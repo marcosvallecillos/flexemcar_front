@@ -9,23 +9,41 @@
         }}
       </h2>
       <div class="modal-body">
-        @if (!isReservePast(fecha ?? '', hora)) {
-          <h5>{{ getText('¿Estás seguro que deseas anular esta reserva?', 'Are you sure you want to cancel this reservation?') }}</h5>
-        }
-        <div class="reservation-details">
-          @if(peluquero) {
-            <p><strong>{{ getText('Detalles:', 'Details:') }}</strong> {{ peluquero }}</p>
-          }
-          @if(servicio) {
-            <p><strong>{{ getText('Información:', 'Info:') }}</strong> {{ servicio }}</p>
-          }
-          <p><strong>{{ getText('Fecha:', 'Date:') }}</strong> {{ fecha }}</p>
-          <p><strong>{{ getText('Hora:', 'Hour:') }}</strong> {{ hora }}</p>
-          @if(nombreUsuario) {
-            <p><strong>{{ getText('Usuario:', 'User:') }}</strong> {{ nombreUsuario }} {{apellidoUsuario}} </p>
-          }
-        </div>
+  @if (!isReservePast(fecha ?? '', hora)) {
+    <h5 style="color: #000000;">{{ getText('¿Estás seguro que deseas anular esta reserva?', 'Are you sure you want to cancel this reservation?') }}</h5>
+  }
+  <div class="reservation-details">
+    <div class="vehicle-image-wrapper">
+      <img [src]="imagen" alt="" class="vehicle-image">
+      <span class="status-badge">PENDIENTE</span>
+    </div>
+
+    <div class="details-grid">
+      <div class="detail-item">
+        <span class="detail-label">{{ getText('MARCA:', 'BRAND:') }}</span>
+        <span class="detail-value">{{ marca }}</span>
       </div>
+      <div class="detail-item">
+        <span class="detail-label">{{ getText('MODELO:', 'MODEL:') }}</span>
+        <span class="detail-value">{{ modelo }}</span>
+      </div>
+      <div class="detail-item">
+        <span class="detail-label">{{ getText('AÑO / KM:', 'YEAR / KM:') }}</span>
+        <span class="detail-value">{{ year }} · {{ km }} km</span>
+      </div>
+      <div class="detail-item">
+        <span class="detail-label">{{ getText('FECHA / HORA:', 'DATE / HOUR:') }}</span>
+        <span class="detail-value">{{ fecha }} · {{ hora }}</span>
+      </div>
+      @if(usuario_rol?.rol == "admin") {
+        <div class="detail-item full-width">
+          <span class="detail-label">{{ getText('USUARIO:', 'USER:') }}</span>
+          <span class="detail-value">{{ nombreUsuario }} {{ apellidoUsuario }}</span>
+        </div>
+      }
+    </div>
+  </div>
+</div>
       <div class="modal-actions">
         <button class="btn-confirm" (click)="onCancel()">{{ getText('Cancelar', 'Cancel') }}</button>
         <button class="btn-cancel" (click)="onConfirm()">

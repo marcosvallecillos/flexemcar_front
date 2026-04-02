@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { LanguageService } from '../../services/language.service';
 import { UserStateService } from '../../services/user-state.service';
+import { Usuario } from '../../models/user.interface';
 
 @Component({
   selector: 'app-modal-delete',
@@ -10,10 +11,15 @@ import { UserStateService } from '../../services/user-state.service';
 })
 export class ModalDeleteComponent {
    @Input() show: boolean = false;
+  @Input() imagen: string | null = '';
   @Input() fecha: string | null = '';
   @Input() hora: string = '';
-  @Input() servicio: string = '';
-  @Input() peluquero: string = '';
+  @Input() modelo: string = '';
+  @Input() marca: string = '';
+  @Input() year: number | string = '';
+  @Input() km: number | string = '';
+  usuario_rol: Usuario | null = null;
+  
   @Input() usuario: number | null = null;
   @Input() nombreUsuario: string | null = '';
   @Input() apellidoUsuario: string | null = '';
@@ -30,6 +36,7 @@ export class ModalDeleteComponent {
 
   ngOnInit() {
     this.isAdmin = this.userStateService.getIsAdmin();
+    console.log("usuario_rol", this.usuario_rol)
   }
 
   onCancel() {
